@@ -87,6 +87,7 @@ function createApp(database) {
   function isHoliday(date) {
     const holidays = database.getHolidays();
     for (let row of holidays) {
+      console.log('row',row.holiday);
       let holiday = convert(row.holiday)
       if (
         date.equals(holiday)
