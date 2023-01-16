@@ -5,4 +5,8 @@ export class Block {
     this.color = color;
   }
 
+  getColor() {
+    return this.color
+  }
+
 }

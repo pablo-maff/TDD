@@ -12,8 +12,22 @@ export class Board {
     this.block = null;
   }
 
-  // ! REMEMBER RULES OF TETRIS
+  /* // TODO: 
+          ? How to use methods defined within the class in other methods inside the class?
+          * Clean up a bit of the mess before continuing
+          * hasFalling can contain the logic to return the position of the blocks at least for the next step
+          * define Block methods and use them
+          * toString should only stringify the board
+          * drop is just the entry point for a block
+          * tick only moves the block one row down
+          * After having the above working, a new method should take care of moving the blocks around the board
+  */
   // * LESSON 1 (* 2): If possible, make sure to know how things work before coding them!
+  // * LESSON 2 (record it with fire in your mind): Each method should just take care of one thing and its name must indicate what that thing is.
+  // * LESSON 3 (same than on 2): Try to understand the problem and the solution that I'm trying before running the tests again instead of executing tests like a monkey with a keyboard.
+  // * LESSON 4 (same, I've seen it all in the readings): Refactor only with green tests, if a new test fails and refactoring is needed. Comment it out until the app is ready to code more functionality in it.
+
+  // ! REMEMBER RULES OF TETRIS
   // * A Block is a symbol different than dot
   // * When a block is placed on the upper round then is GAME OVER!
   // * If a block reaches the bottom row, or it reaches the upper row of a piece in place, and is ticked one more time then the piece has stopped falling
