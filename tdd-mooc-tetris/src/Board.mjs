@@ -83,13 +83,12 @@ export class Board {
   }
 
   moveBlock(y, x, previousPositionY) {
-    if (y < this.height) {
-      if (this.board[y][x] === this.boardSquare) {
-        this.board[previousPositionY][x] = this.boardSquare
-        this.board[y][x] = this.block.getColor()
-      } else {
-        this.block = null
-      }
+    if (y >= this.height) {
+      this.block = null
+    }
+    else if (this.board[y][x] === this.boardSquare) {
+      this.board[previousPositionY][x] = this.boardSquare
+      this.board[y][x] = this.block.getColor()
     }
     else {
       this.block = null
