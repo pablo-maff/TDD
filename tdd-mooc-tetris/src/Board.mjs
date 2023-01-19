@@ -86,7 +86,7 @@ export class Board {
     if (y >= this.height) {
       this.block = null
     }
-    else if (this.board[y][x] === this.boardSquare) {
+    else if (this.isEmptyBoardSquare(y, x)) {
       this.board[previousPositionY][x] = this.boardSquare
       this.board[y][x] = this.block.getColor()
     }
@@ -101,5 +101,9 @@ export class Board {
 
   boardIsCreated() {
     return !!this.board.length
+  }
+
+  isEmptyBoardSquare(y, x) {
+    return this.board[y][x] === this.boardSquare
   }
 }
