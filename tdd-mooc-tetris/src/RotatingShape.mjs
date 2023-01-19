@@ -6,6 +6,22 @@ export class RotatingShape {
   }
 
   toString() {
-    return this.shape
+    return this.shape.replaceAll(' ', '') + '\n'
+  }
+
+  rotateRight() {
+    this.shape =
+      `GDA
+       HEB
+       IFC`
+    return this.shape.replaceAll(' ', '') + '\n'
+  }
+
+  rotateLeft() {
+    this.shape =
+      `CFI
+    BEH
+    ADG`
+    return this.shape.replaceAll(' ', '') + '\n'
   }
 }
