@@ -57,7 +57,6 @@ export class Board {
       this.#board[y][this.#height] = '\n';
     }
     // * End of #board
-    return this.#board
   }
 
   // * When toString is executed the final state of the #board at the moment of execution is returned
