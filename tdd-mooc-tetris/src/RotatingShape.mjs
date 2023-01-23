@@ -9,92 +9,44 @@ export class RotatingShape {
   toString() {
     if (!this.#rotate) return this.shape.replaceAll(' ', '') + '\n'
 
+    return this.rotateShape().join().replaceAll(',', '')
+  }
+
+  rotateShape = () => {
+    const shape = this.shape.split('').filter(shapeBit => shapeBit !== ' ' && shapeBit !== '\n')
     const shapeWidthAndHeight = Math.sqrt(this.shape.replaceAll(' ', '').replaceAll('\n', '').length);
-    const shapeToArray = this.shape.split('').filter(shapeBit => shapeBit !== ' ' && shapeBit !== '\n')
 
-    let rotatedRight = []
+    let newShape = []
+    let colNum = 0
 
-    const getColumnX = (shape, colNum) => {
-      let colX = []
-      // * Need to get a column of the length of shapeWidthAndHeight
-      for (let i = 0; i < shapeWidthAndHeight; i++) {
-        colX.push(shape[shapeWidthAndHeight * i + colNum])
-        colX.flat(1)
+    for (let y = 0; y < shapeWidthAndHeight; y++) {
+      newShape[y] = []
+      for (let x = 0; x < shapeWidthAndHeight; x++) {
+        newShape[y].push(shape[shapeWidthAndHeight * x + colNum])
       }
-      return colX.reverse()
+      // * It would be better to separate them into two different functions
+      // * rotates right
+      if (this.#rotate === 1) {
+        newShape[y].reverse()
+      }
+      newShape[y].push('\n')
+      colNum++
     }
-
-    // ! Awful, but it works! It is time to clean it up!
-    while (this.#rotate) {
-      if (!rotatedRight.length) {
-        if (this.#rotate === 1) {
-          const firstCol = getColumnX(shapeToArray, 0) + '\n'
-          const secondCol = getColumnX(shapeToArray, 1) + '\n'
-          const thirdCol = getColumnX(shapeToArray, 2) + '\n'
-          rotatedRight = [firstCol, secondCol, thirdCol].flat(1)
-          if (shapeWidthAndHeight === 5) {
-            const fourthCol = getColumnX(shapeToArray, 3) + '\n'
-            const fifthCol = getColumnX(shapeToArray, 4) + '\n'
-            rotatedRight = [...rotatedRight, fourthCol, fifthCol].flat(1)
-          }
-        }
-        else {
-          const firstCol = getColumnX(shapeToArray, 0)
-          const secondCol = getColumnX(shapeToArray, 1)
-          const thirdCol = getColumnX(shapeToArray, 2)
-          rotatedRight = [firstCol, secondCol, thirdCol].flat(1)
-          if (shapeWidthAndHeight === 5) {
-            const fourthCol = getColumnX(shapeToArray, 3)
-            const fifthCol = getColumnX(shapeToArray, 4)
-            rotatedRight = [...rotatedRight, fourthCol, fifthCol].flat(1)
-
-          }
-        }
-      }
-      else {
-        if (this.#rotate === 1) {
-          let tempResult = []
-          const firstCol = getColumnX(rotatedRight, 0) + '\n'
-          const secondCol = getColumnX(rotatedRight, 1) + '\n'
-          const thirdCol = getColumnX(rotatedRight, 2) + '\n'
-          tempResult = [firstCol, secondCol, thirdCol].flat(1)
-          if (shapeWidthAndHeight === 5) {
-            const fourthCol = getColumnX(rotatedRight, 3) + '\n'
-            const fifthCol = getColumnX(rotatedRight, 4) + '\n'
-            rotatedRight = [...tempResult, fourthCol, fifthCol].flat(1)
-          }
-          else {
-            rotatedRight = [firstCol, secondCol, thirdCol].flat(1)
-          }
-        } else {
-          let tempResult = []
-          const firstCol = getColumnX(rotatedRight, 0)
-          const secondCol = getColumnX(rotatedRight, 1)
-          const thirdCol = getColumnX(rotatedRight, 2)
-          tempResult = [firstCol, secondCol, thirdCol].flat(1)
-          if (shapeWidthAndHeight === 5) {
-            const fourthCol = getColumnX(rotatedRight, 3)
-            const fifthCol = getColumnX(rotatedRight, 4)
-            rotatedRight = [...tempResult, fourthCol, fifthCol].flat(1)
-          }
-          else {
-            rotatedRight = [firstCol, secondCol, thirdCol].flat(1)
-          }
-        }
-      }
-      --this.#rotate
+    // * rotates left
+    if (this.#rotate === 3) {
+      newShape.reverse()
     }
-    return rotatedRight.join().replaceAll(',', '')
+    return newShape
   }
 
   rotateRight() {
-    this.#rotate += 1
+    this.#rotate = 1
 
     return this
   }
 
   rotateLeft() {
-    this.#rotate += 3
+    this.#rotate = 3
 
     return this
   }
