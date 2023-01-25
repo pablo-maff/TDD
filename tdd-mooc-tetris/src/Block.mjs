@@ -1,6 +1,7 @@
 export class Block {
   color;
 
+  // * better to return a new block instead of modifying this one
   constructor(color) {
     this.block = {
       color: color,

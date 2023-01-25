@@ -47,6 +47,7 @@ export class Board {
   // * When a block is placed on the upper round then is GAME OVER!
   // * If a block reaches the bottom row, or it reaches the upper row of a piece in place, and is ticked one more time then the piece has stopped falling
 
+  // * Don't use side effects, return instead of modifying current one
   createBoard() {
     for (let y = 0; y < this.#height; y++) {
       this.#board[y] = []
