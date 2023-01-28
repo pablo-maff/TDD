@@ -19,12 +19,24 @@ export class Tetromino extends RotatingShape {
   static T_SHAPE = new Tetromino(this.#T_SHAPE)
   static I_SHAPE = new Tetromino(this.#I_SHAPE)
 
-  // toString() {
-  //   return super.toString()
-  // }
+  // * Overrides
+  #rotationCounter = 0
 
-  // rotateLeft() {
-  //   return super.rotateLeft()
-  // }
+  rotateRight() {
+    if (this.shape.includes('I')) {
+      if (this.#rotationCounter > 1) {
+        return this
+      }
+    }
+
+    this.#rotationCounter += 1
+    return super.rotateRight()
+  }
+
+  rotateLeft() {
+    if (this.shape.includes('I')) return this
+
+    return super.rotateLeft()
+  }
 
 }
