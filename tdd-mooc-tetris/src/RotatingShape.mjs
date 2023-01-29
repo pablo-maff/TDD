@@ -1,24 +1,25 @@
 export class RotatingShape {
   shape;
-  #shapeToArray
-  #cleanShape
+  #shapeToArray;
+  #cleanShape;
+  #shapeLength
   // * filter and clean data here. make shape a 2D array, it will be easier to rotate
   constructor(shape) {
-    // ! this.shape was returned with spaces because is set to the initial shape
     this.shape = shape
     this.#shapeToArray = shape.split(' ').filter(shapeBit =>
       shapeBit !== '')
 
-    const shapeLength = this.#shapeToArray.at(-1).length
+    this.#shapeLength = this.#shapeToArray.at(-1).length
     this.#cleanShape = []
 
-    for (let y = 0; y < shapeLength; y++) {
+    for (let y = 0; y < this.#shapeLength; y++) {
       this.#cleanShape[y] = []
-      for (let x = 0; x < shapeLength; x++) {
+      for (let x = 0; x < this.#shapeLength; x++) {
         this.#cleanShape[y][x] = this.#shapeToArray[y][x]
-        this.#cleanShape[y][shapeLength] = '\n'
+        this.#cleanShape[y][this.#shapeLength] = '\n'
       }
     }
+    this.parsedShape = [...this.#cleanShape]
   }
 
   toString() {
@@ -27,13 +28,12 @@ export class RotatingShape {
 
   rotateRight() {
     let result = []
-    const shapeLength = this.#shapeToArray.at(-1).length
 
-    for (let y = 0; y < shapeLength; y++) {
+    for (let y = 0; y < this.#shapeLength; y++) {
       result[y] = []
-      for (let x = 0; x < shapeLength; x++) {
-        result[y][x] = this.#cleanShape[shapeLength - x - 1][y]
-        result[y][shapeLength] = '\n'
+      for (let x = 0; x < this.#shapeLength; x++) {
+        result[y][x] = this.#cleanShape[this.#shapeLength - x - 1][y]
+        result[y][this.#shapeLength] = '\n'
       }
     }
     this.#cleanShape = [...result]
