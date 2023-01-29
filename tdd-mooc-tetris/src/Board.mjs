@@ -11,7 +11,7 @@ export class Board {
   #board = [];
   #boardSquare = '.'
 
-  /* // TODO: 
+  /*
           * Clean up a bit of the mess before continuing
           * hasFalling can contain the logic to return the position of the blocks at least for the next step
           * define Block methods and use them
@@ -24,7 +24,6 @@ export class Board {
   // * LESSON 2 (record it with fire in your mind): Each method should just take care of one thing and its name must indicate what that thing is.
   // * LESSON 3 (same than on 2): Try to understand the problem and the solution that I'm trying before running the tests again instead of executing tests like a monkey with a keyboard.
   // * LESSON 4 (same, I've seen it all in the readings): Refactor only with green tests, if a new test fails and refactoring is needed. Comment it out until the app is ready to code more functionality in it.
-
   // * LESSON 5: Think about what you need, write down the problem, the steps to solve it and apply it
 
   /*
@@ -55,7 +54,10 @@ export class Board {
         this.#board[y][x] = this.#boardSquare;
       }
       // * End of row
-      this.#board[y][this.#height] = '\n';
+      // console.log('board', this.#board);
+      // console.log('this.#height', this.#height);
+      // console.log('y', y);
+      this.#board[y][this.#width] = '\n';
     }
     // * End of #board
   }
@@ -68,12 +70,15 @@ export class Board {
   drop(block) {
     // * Multiple blocks will be falling during the turn but there can be only one block falling at a time
     if (!this.hasFalling()) {
+      // ! The tetromino doesn't have a getColor methods (could be better to change its name to getShape)
       this.block = block
+      console.log('block', block);
       this.#board[0][1] = this.block.getColor()
     }
     else {
       throw new Error('already falling')
     }
+    return this
   }
 
   tick() {

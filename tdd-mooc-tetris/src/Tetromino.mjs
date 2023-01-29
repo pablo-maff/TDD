@@ -1,8 +1,6 @@
 import { RotatingShape } from "./RotatingShape.mjs";
 
 export class Tetromino extends RotatingShape {
-  #piece
-
   static #T_SHAPE =
     `.T.
    TTT
