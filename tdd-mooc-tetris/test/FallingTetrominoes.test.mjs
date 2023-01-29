@@ -12,7 +12,6 @@ describe("Falling tetrominoes", () => {
   let board;
   beforeEach(() => {
     board = new Board(10, 6);
-    console.log('board', board);
   });
 
   xit("start from the top middle", () => {

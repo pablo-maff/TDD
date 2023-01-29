@@ -54,9 +54,6 @@ export class Board {
         this.#board[y][x] = this.#boardSquare;
       }
       // * End of row
-      // console.log('board', this.#board);
-      // console.log('this.#height', this.#height);
-      // console.log('y', y);
       this.#board[y][this.#width] = '\n';
     }
     // * End of #board
@@ -70,10 +67,14 @@ export class Board {
   drop(block) {
     // * Multiple blocks will be falling during the turn but there can be only one block falling at a time
     if (!this.hasFalling()) {
-      // ! The tetromino doesn't have a getColor methods (could be better to change its name to getShape)
       this.block = block
-      console.log('block', block);
-      this.#board[0][1] = this.block.getColor()
+      const middleSpot = Math.floor((this.#board[0].length - 1) / 2)
+      const blockColor = this.block.getColor().split(' ').filter(a => a !== '')
+      const initialShapeIndex = blockColor.find(a => a !== '.')
+      // console.log('initialShapeIndex', initialShapeIndex);
+      this.#board[0][middleSpot] = blockColor
+
+
     }
     else {
       throw new Error('already falling')

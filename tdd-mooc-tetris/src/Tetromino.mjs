@@ -42,4 +42,8 @@ export class Tetromino extends RotatingShape {
     return super.rotateLeft()
   }
 
+  getColor() {
+    return this.shape
+  }
+
 }
