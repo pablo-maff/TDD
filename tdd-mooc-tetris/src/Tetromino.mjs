@@ -43,7 +43,7 @@ export class Tetromino extends RotatingShape {
   }
 
   getColor() {
-    return this.shape
+    return this.parsedShape
   }
 
 }

@@ -1,23 +1,11 @@
 export class Block {
-  // color;
+  color;
+
   constructor(color) {
-    this.block = {
-      color: color,
-      positionX: 1,
-      positionY: 0,
-    };
+    this.color = color;
   }
 
   getColor() {
-    return this.block.color;
+    return this.color
   }
-
-  getPositionY() {
-    return this.block.positionY
-  }
-
-  setPositionY(newPositionY) {
-    this.block.positionY = newPositionY
-  }
-
 }

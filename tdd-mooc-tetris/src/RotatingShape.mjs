@@ -6,7 +6,7 @@ export class RotatingShape {
   // * filter and clean data here. make shape a 2D array, it will be easier to rotate
   constructor(shape) {
     this.shape = shape
-    this.#shapeToArray = shape.split(' ').filter(shapeBit =>
+    this.#shapeToArray = this.shape.split(' ').filter(shapeBit =>
       shapeBit !== '')
 
     this.#shapeLength = this.#shapeToArray.at(-1).length
@@ -19,7 +19,6 @@ export class RotatingShape {
         this.#cleanShape[y][this.#shapeLength] = '\n'
       }
     }
-    this.parsedShape = [...this.#cleanShape]
   }
 
   toString() {
