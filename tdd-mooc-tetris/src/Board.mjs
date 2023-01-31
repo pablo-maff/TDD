@@ -11,10 +11,8 @@ export class Board {
   }
 
   #boardSquare = '.';
-  #currentRow = 0;
-  #currentCol = 1;
-  #currentRow2;
-  #currentCol2;
+  #currentRow;
+  #currentCol;
 
   #createEmptyBoard() {
     let emptyBoard = []
@@ -29,10 +27,17 @@ export class Board {
   }
 
   toString() {
+    const { currentBlockRow, currentBlockCol } = this.getCurrentBlockPosition()
     let result = ''
     for (let row = 0; row < this.#height; row++) {
       for (let col = 0; col < this.#width; col++) {
+        // TODO: Works for #2 but breaks the rest
+        // if (row === currentBlockRow && col === currentBlockCol) {
+        //   result += this.block.getColor();
+        // }
+        // else {
         result += this.board[row][col];
+        // }
       }
       result += '\n';
     }
@@ -47,41 +52,52 @@ export class Board {
   }
 
   tick() {
-    if (this.#currentRow < this.#height - 1) {
-      this.#currentRow += 1
-      this.moveBlock(this.#currentRow, this.#currentCol)
+    const { currentBlockRow, currentBlockCol } = this.getCurrentBlockPosition()
+
+    if (currentBlockRow < this.#height - 1) {
+      this.moveBlock(currentBlockRow + 1, currentBlockCol)
     }
     else {
-      this.block = null
-      this.#currentRow = 0
+      this.setStationaryBlockInBoard(currentBlockRow, currentBlockCol)
     }
   }
 
   moveBlock(row, col) {
     if (this.isEmptyBoardSquare(row, col)) {
+      this.setCurrentBlockPosition(row, col)
       this.board[row - 1][col] = this.#boardSquare;
       this.board[row][col] = this.block.getColor();
     }
     else {
-      this.block = null;
-      this.#currentRow = 0;
+      this.setStationaryBlockInBoard(row, col)
     };
   };
 
   setCurrentBlockPosition(row, col) {
-    this.#currentRow2 = row;
-    this.#currentCol2 = col;
+    this.#currentRow = row;
+    this.#currentCol = col;
   };
 
   getCurrentBlockPosition() {
-    return { currentRow: this.#currentRow2, currentCol: this.#currentCol2 };
+    return { currentBlockRow: this.#currentRow, currentBlockCol: this.#currentCol };
   };
+
+  setStationaryBlockInBoard(row, col) {
+    this.board2[row][col] = this.block.getColor();
+    this.stopBlockMovement()
+  }
+
+  stopBlockMovement() {
+    this.block = null;
+    this.#currentRow = null;
+    this.#currentCol = null
+  }
 
   hasFalling() {
     return !!this.block
   }
 
-  isEmptyBoardSquare(y, x) {
-    return this.board[y][x] === this.#boardSquare
+  isEmptyBoardSquare(row, col) {
+    return this.board[row][col] === this.#boardSquare;
   }
 }
