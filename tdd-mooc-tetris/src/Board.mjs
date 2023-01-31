@@ -27,8 +27,14 @@ export class Board {
   }
 
   toString() {
-    // ? How do I avoid the board mutation while always passing the same variable here?
-    return this.board.join('').replaceAll(',', '')
+    let result = ''
+    for (let row = 0; row < this.#height; row++) {
+      for (let col = 0; col < this.#width; col++) {
+        result += this.board[row][col];
+      }
+      result += '\n';
+    }
+    return result
   }
 
   drop(block) {
