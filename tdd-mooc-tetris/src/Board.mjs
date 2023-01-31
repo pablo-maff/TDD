@@ -7,12 +7,14 @@ export class Board {
   constructor(width, height) {
     this.#width = width;
     this.#height = height;
-    this.board = this.#createEmptyBoard()
+    this.board = this.#createEmptyBoard();
   }
 
-  #boardSquare = '.'
-  #currentRow = 0
-  #currentCol = 1
+  #boardSquare = '.';
+  #currentRow = 0;
+  #currentCol = 1;
+  #currentRow2;
+  #currentCol2;
 
   #createEmptyBoard() {
     let emptyBoard = []
@@ -40,6 +42,7 @@ export class Board {
   drop(block) {
     if (this.hasFalling()) throw new Error("already falling")
     this.block = block;
+    this.setCurrentBlockPosition(0, 1)
     this.board[0][1] = this.block.getColor()
   }
 
@@ -56,14 +59,23 @@ export class Board {
 
   moveBlock(row, col) {
     if (this.isEmptyBoardSquare(row, col)) {
-      this.board[row - 1][col] = this.#boardSquare
-      this.board[row][col] = this.block.getColor()
+      this.board[row - 1][col] = this.#boardSquare;
+      this.board[row][col] = this.block.getColor();
     }
     else {
-      this.block = null
-      this.#currentRow = 0
-    }
-  }
+      this.block = null;
+      this.#currentRow = 0;
+    };
+  };
+
+  setCurrentBlockPosition(row, col) {
+    this.#currentRow2 = row;
+    this.#currentCol2 = col;
+  };
+
+  getCurrentBlockPosition() {
+    return { currentRow: this.#currentRow2, currentCol: this.#currentCol2 };
+  };
 
   hasFalling() {
     return !!this.block
