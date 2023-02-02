@@ -5,7 +5,7 @@ export class Block {
     this.color = color;
   }
 
-  getColor() {
+  getShape() {
     return this.color
   }
 }

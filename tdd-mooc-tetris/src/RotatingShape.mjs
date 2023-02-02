@@ -46,4 +46,8 @@ export class RotatingShape {
 
     return rotateShape
   }
+
+  getShape() {
+    return this.#cleanShape
+  }
 }

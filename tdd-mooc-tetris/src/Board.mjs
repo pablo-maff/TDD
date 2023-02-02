@@ -32,7 +32,7 @@ export class Board {
     for (let row = 0; row < this.#height; row++) {
       for (let col = 0; col < this.#width; col++) {
         if (row === currentBlockRow && col === currentBlockCol) {
-          result += this.block.getColor();
+          result += this.block.getShape();
         }
         else {
           result += this.board[row][col];
@@ -46,7 +46,10 @@ export class Board {
   drop(block) {
     if (this.hasFalling()) throw new Error("already falling")
     this.block = block;
-    this.#setCurrentBlockPosition(0, 1)
+
+    const getBoardMiddleCol = Math.round((this.#width / 2) - 1)
+
+    this.#setCurrentBlockPosition(0, getBoardMiddleCol)
   }
 
   tick() {
@@ -85,7 +88,7 @@ export class Board {
   #stopBlockMovement() {
     const { currentBlockRow, currentBlockCol } = this.#getCurrentBlockPosition()
 
-    this.board[currentBlockRow][currentBlockCol] = this.block.getColor();
+    this.board[currentBlockRow][currentBlockCol] = this.block.getShape();
 
     this.#setCurrentBlockPosition(null, null)
     this.block = null;
