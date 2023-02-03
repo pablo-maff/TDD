@@ -32,8 +32,15 @@ export class Board {
     let shapeIndex = 0
     for (let row = 0; row < this.#height; row++) {
       for (let col = 0; col < this.#width; col++) {
-        if (row >= currentBlockRow?.start && row <= currentBlockRow?.end && col >= currentBlockCol2?.start && col <= currentBlockCol2?.end) {
-          result += this.block.getShape();
+        if (this.block?.getShape()[shapeIndex] === '\n') shapeIndex++
+        if (row >= currentBlockRow?.start && row <= currentBlockRow?.end && col >= currentBlockCol2?.start && col < currentBlockCol2?.end) {
+          if (this.block.getShape()[shapeIndex] !== undefined) {
+            result += this.block.getShape()[shapeIndex];
+            shapeIndex++
+          }
+          else {
+            result += this.board[row][col];
+          }
         }
         else {
           result += this.board[row][col];
