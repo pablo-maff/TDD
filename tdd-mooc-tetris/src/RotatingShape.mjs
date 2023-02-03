@@ -48,6 +48,10 @@ export class RotatingShape {
   }
 
   getShape() {
-    return this.#cleanShape
+    return this.toString()
+  }
+
+  getLength() {
+    return this.#shapeLength
   }
 }

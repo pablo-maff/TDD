@@ -29,9 +29,11 @@ export class Board {
   toString() {
     const { currentBlockRow, currentBlockCol } = this.#getCurrentBlockPosition()
     let result = ''
+    let shapeIndex = 0
     for (let row = 0; row < this.#height; row++) {
       for (let col = 0; col < this.#width; col++) {
-        if (row === currentBlockRow && col === currentBlockCol) {
+        if (row >= currentBlockRow?.start && row <= currentBlockRow?.end && col === currentBlockCol) {
+          console.log('this.block.getShape()', this.block.getShape());
           result += this.block.getShape();
         }
         else {
@@ -47,16 +49,14 @@ export class Board {
     if (this.hasFalling()) throw new Error("already falling")
     this.block = block;
 
-    const getBoardMiddleCol = Math.round((this.#width / 2) - 1)
-
-    this.#setCurrentBlockPosition(0, getBoardMiddleCol)
+    this.#setBlockInitialPosition(this.block.getLength())
   }
 
   tick() {
-    const { currentBlockRow, currentBlockCol } = this.#getCurrentBlockPosition()
+    const { currentBlockCol, currentBlockRow } = this.#getCurrentBlockPosition()
 
-    if (currentBlockRow < this.#height - 1) {
-      this.#moveBlock(currentBlockRow + 1, currentBlockCol)
+    if (currentBlockRow.end < this.#height - 1) {
+      this.#moveBlock(currentBlockRow.end, currentBlockCol)
     }
     else {
       this.#stopBlockMovement()
@@ -69,15 +69,27 @@ export class Board {
 
   #moveBlock(row, col) {
     if (this.#isEmptyBoardSquare(row, col)) {
-      this.#setCurrentBlockPosition(row, col)
+      this.#setBlockCurrentPosition(col)
     }
     else {
       this.#stopBlockMovement()
     };
   };
 
-  #setCurrentBlockPosition(row, col) {
-    this.#currentRow = row;
+  #setBlockInitialPosition(tetrominoLength) {
+    const boardMiddleCol = Math.round((this.#width / 2) - 1)
+    const tetrominoOffset = Math.round(tetrominoLength / 2 - 1)
+
+    this.#currentRow = { start: 0, end: tetrominoLength }
+    this.#currentCol = tetrominoLength > 0 ? boardMiddleCol - tetrominoOffset : 1
+  }
+
+  #setBlockCurrentPosition(col, empty) {
+    this.#currentRow = !empty ? {
+      start: this.#currentRow.start + 1,
+      end: this.#currentRow.end + 1
+    } : null
+
     this.#currentCol = col;
   };
 
@@ -88,13 +100,13 @@ export class Board {
   #stopBlockMovement() {
     const { currentBlockRow, currentBlockCol } = this.#getCurrentBlockPosition()
 
-    this.board[currentBlockRow][currentBlockCol] = this.block.getShape();
+    this.board[currentBlockRow.start][currentBlockCol] = this.block.getShape();
 
-    this.#setCurrentBlockPosition(null, null)
+    this.#setBlockCurrentPosition(null, true)
     this.block = null;
   }
 
   #isEmptyBoardSquare(row, col) {
-    return this.board[row][col] === this.#boardSquare;
+    return this.board[row + 1][col] === this.#boardSquare
   }
 }
