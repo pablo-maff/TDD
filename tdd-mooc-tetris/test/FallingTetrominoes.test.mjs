@@ -27,7 +27,10 @@ describe("Falling tetrominoes", () => {
     );
   });
 
-  xit("stop when they hit the bottom", () => {
+  // TODO: Add tests for I shape
+  // TODO: Check if some cases contemplated in FallingBlocks are missing here, write them and eliminate FallingBlocks test suite
+
+  it("stop when they hit the bottom", () => {
     board.drop(Tetromino.T_SHAPE);
     fallToBottom(board);
 

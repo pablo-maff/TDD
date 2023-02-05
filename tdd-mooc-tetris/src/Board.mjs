@@ -27,14 +27,16 @@ export class Board {
   }
 
   toString() {
-    const { currentBlockRow, currentBlockCol2 } = this.#getCurrentBlockPosition()
+    const { currentBlockRow, currentBlockCol } = this.#getCurrentBlockPosition()
     let result = ''
     let shapeIndex = 0
     for (let row = 0; row < this.#height; row++) {
       for (let col = 0; col < this.#width; col++) {
+        // ! NEXT TODO: Refactor
+        // console.log('start, end', currentBlockRow?.start, currentBlockRow?.end);
         if (this.block?.getShape()[shapeIndex] === '\n') shapeIndex++
-        if (row >= currentBlockRow?.start && row <= currentBlockRow?.end && col >= currentBlockCol2?.start && col < currentBlockCol2?.end) {
-          if (this.block.getShape()[shapeIndex] !== undefined) {
+        if (row >= currentBlockRow?.start && row <= currentBlockRow?.end && col >= currentBlockCol?.start && col < currentBlockCol?.end) {
+          if (this.block?.getShape()[shapeIndex] !== undefined) {
             result += this.block.getShape()[shapeIndex];
             shapeIndex++
           }
@@ -59,12 +61,12 @@ export class Board {
   }
 
   tick() {
-    const { currentBlockRow, currentBlockCol2 } = this.#getCurrentBlockPosition()
+    const { currentBlockRow, currentBlockCol } = this.#getCurrentBlockPosition()
 
-    if (currentBlockRow.end < this.#height - 1) {
-      this.#moveBlock(currentBlockRow.end, currentBlockCol2.end)
+    if (this.#isEmptyBoardSquare(currentBlockRow.end, currentBlockCol.end)) {
+      this.#moveBlock()
     }
-    else {
+    else if (this.hasFalling()) {
       this.#stopBlockMovement()
     }
   }
@@ -73,13 +75,8 @@ export class Board {
     return !!this.block
   }
 
-  #moveBlock(row, col) {
-    if (this.#isEmptyBoardSquare(row, col)) {
-      this.#setBlockCurrentPosition()
-    }
-    else {
-      this.#stopBlockMovement()
-    };
+  #moveBlock() {
+    this.#setBlockCurrentPosition()
   };
 
   #setBlockInitialPosition(tetrominoLength) {
@@ -109,19 +106,54 @@ export class Board {
   };
 
   #getCurrentBlockPosition() {
-    return { currentBlockRow: this.#currentRow, currentBlockCol2: this.#currentCol };
+    return { currentBlockRow: this.#currentRow, currentBlockCol: this.#currentCol };
   };
 
   #stopBlockMovement() {
-    const { currentBlockRow, currentBlockCol2 } = this.#getCurrentBlockPosition()
+    const { currentBlockRow, currentBlockCol } = this.#getCurrentBlockPosition()
 
-    this.board[currentBlockRow.start][currentBlockCol2.start] = this.block.getShape();
+    let result = []
+    let shapeIndex = 0
+    for (let row = 0; row < this.#height; row++) {
+      result[row] = []
+      for (let col = 0; col < this.#width; col++) {
+        // ! NEXT TODO: Refactor
+        if (this.block?.getShape()[shapeIndex] === '\n') shapeIndex++
+        if (row >= currentBlockRow?.start && row <= currentBlockRow?.end && col >= currentBlockCol?.start && col < currentBlockCol?.end) {
+          if (this.block?.getShape()[shapeIndex] !== undefined) {
+            result[row][col] = this.block.getShape()[shapeIndex];
+            shapeIndex++
+          }
+          else {
+            result[row][col] = this.board[row][col];
+          }
+        }
+        else {
+          result[row][col] = this.board[row][col];
+        }
+      }
+      result[row].push('\n');
+    }
 
-    this.#setBlockCurrentPosition(true)
+    this.board = result
+
     this.block = null;
   }
 
   #isEmptyBoardSquare(row, col) {
-    return this.board[row + 1][col] === this.#boardSquare
+    const { currentBlockRow, currentBlockCol } = this.#getCurrentBlockPosition()
+
+    // TODO: Need to check if the last row of the block is empty
+    // ? Probably should refactor what block.getShape returns to be the 2d array instead of the string and make necessary changes to work like that
+    // ? Probably need to check a range of rows and cols like in to string
+    // * if row >= this.height return false
+    // * else if last row of block is not empty and board[row + 1][col] is not empty return false
+    // * if last row of block is empty and board[row + 1] !== boardsquare. Make the movement but remove last row of block and call stopBlockMovement
+    // * else return true
+    if (row < this.#height + 1) { // ! It works only with an empty board
+      return true
+      return this.board[row + 1][col] === this.#boardSquare
+    }
+    return false
   }
 }
