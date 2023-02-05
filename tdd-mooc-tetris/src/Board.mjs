@@ -63,7 +63,7 @@ export class Board {
   tick() {
     const { currentBlockRow, currentBlockCol } = this.#getCurrentBlockPosition()
 
-    if (this.#isEmptyBoardSquare(currentBlockRow.end, currentBlockCol.end)) {
+    if (this.#isEmptyBoardSquare(currentBlockRow?.end, currentBlockCol?.end)) {
       this.#moveBlock()
     }
     else if (this.hasFalling()) {
@@ -141,19 +141,19 @@ export class Board {
   }
 
   #isEmptyBoardSquare(row, col) {
-    const { currentBlockRow, currentBlockCol } = this.#getCurrentBlockPosition()
+    // ! Only works for 3x3 blocks with T shape
+    const blockLastRow = this.block?.getShape().substring(this.block?.getShape().length - 4, this.block?.getShape().length - 1)
 
-    // TODO: Need to check if the last row of the block is empty
-    // ? Probably should refactor what block.getShape returns to be the 2d array instead of the string and make necessary changes to work like that
-    // ? Probably need to check a range of rows and cols like in to string
-    // * if row >= this.height return false
-    // * else if last row of block is not empty and board[row + 1][col] is not empty return false
-    // * if last row of block is empty and board[row + 1] !== boardsquare. Make the movement but remove last row of block and call stopBlockMovement
-    // * else return true
-    if (row < this.#height + 1) { // ! It works only with an empty board
-      return true
-      return this.board[row + 1][col] === this.#boardSquare
+    if (row > this.#height) return false
+    else if (this.board[row]?.includes('T') && [blockLastRow].includes('T')) {
+      return false
     }
-    return false
+    else if (this.board[row]?.includes('T') && ![blockLastRow].includes('T')) {
+      this.block?.trimEnd()
+      this.#setBlockCurrentPosition()
+      this.#stopBlockMovement()
+      return false
+    }
+    return true
   }
 }

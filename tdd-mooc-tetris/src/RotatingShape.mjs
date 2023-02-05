@@ -21,6 +21,10 @@ export class RotatingShape {
     }
   }
 
+  trimEnd() {
+    this.#cleanShape = [this.#cleanShape[0], this.#cleanShape[1]]
+  }
+
   toString() {
     return this.#cleanShape.flat(1).join().replaceAll(',', '')
   }
