@@ -151,7 +151,6 @@ export class Board {
     else if (this.board[row]?.includes('T') && ![blockLastRow].includes('T')) {
       this.block?.trimEnd()
       this.#setBlockCurrentPosition()
-      this.#stopBlockMovement()
       return false
     }
     return true
