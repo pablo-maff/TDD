@@ -1,42 +1,56 @@
 export class RotatingShape {
   shape;
-  #shapeToArray;
+  #shapeToArray
   #cleanShape;
-  #shapeLength
+  #shapeWidth
   // * filter and clean data here. make shape a 2D array, it will be easier to rotate
   constructor(shape) {
     this.shape = shape
     this.#shapeToArray = this.shape.split(' ').filter(shapeBit =>
       shapeBit !== '')
 
-    this.#shapeLength = this.#shapeToArray.at(-1).length
+    this.#shapeToArray = this.shape.replaceAll(' ', '').split('\n')
+
+    this.#shapeWidth = this.#shapeToArray.length
+
     this.#cleanShape = []
 
-    for (let y = 0; y < this.#shapeLength; y++) {
-      this.#cleanShape[y] = []
-      for (let x = 0; x < this.#shapeLength; x++) {
-        this.#cleanShape[y][x] = this.#shapeToArray[y][x]
-        this.#cleanShape[y][this.#shapeLength] = '\n'
+    for (let row = 0; row < this.#shapeWidth; row++) {
+      this.#cleanShape[row] = []
+      for (let col = 0; col < this.#shapeWidth; col++) {
+        this.#cleanShape[row][col] = this.#shapeToArray[row][col]
       }
     }
   }
 
+  // TODO: Get rid of this method
   trimEnd() {
     this.#cleanShape = [this.#cleanShape[0], this.#cleanShape[1]]
   }
 
   toString() {
-    return this.#cleanShape.flat(1).join().replaceAll(',', '')
+    let result = ''
+
+    for (let row = 0; row < this.#shapeWidth; row++) {
+      for (let col = 0; col < this.#shapeWidth; col++) {
+        // TODO: Get rid of this conditional (needed because of trimEnd)
+        if (this.#cleanShape[row]) {
+          result += this.#cleanShape[row][col]
+        }
+      }
+      result += '\n'
+    }
+
+    return result
   }
 
   rotateRight() {
     let result = []
 
-    for (let y = 0; y < this.#shapeLength; y++) {
+    for (let y = 0; y < this.#shapeWidth; y++) {
       result[y] = []
-      for (let x = 0; x < this.#shapeLength; x++) {
-        result[y][x] = this.#cleanShape[this.#shapeLength - x - 1][y]
-        result[y][this.#shapeLength] = '\n'
+      for (let x = 0; x < this.#shapeWidth; x++) {
+        result[y][x] = this.#cleanShape[this.#shapeWidth - x - 1][y]
       }
     }
     this.#cleanShape = [...result]
@@ -52,10 +66,11 @@ export class RotatingShape {
   }
 
   getShape() {
+    // TODO: Pass cleanShape instead, need to fix Board to work without trimming the clean shape first
     return this.toString()
   }
 
   getLength() {
-    return this.#shapeLength
+    return this.#shapeWidth
   }
 }

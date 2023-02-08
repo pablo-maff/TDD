@@ -1,5 +1,3 @@
-import { RotatingShape } from "./RotatingShape.mjs";
-
 export class Board {
   #width;
   #height;
@@ -27,6 +25,8 @@ export class Board {
   }
 
   toString() {
+    // TODO: Make it work by asking or getting the current position of the shape (not the block)
+
     const { currentBlockRow, currentBlockCol } = this.#getCurrentBlockPosition()
     let result = ''
     let shapeIndex = 0
@@ -79,6 +79,7 @@ export class Board {
     this.#setBlockCurrentPosition()
   };
 
+  // ? Check positions in board instead of tetrominolength
   #setBlockInitialPosition(tetrominoLength) {
     const boardMiddleCol = Math.round((this.#width / 2) - 1)
     const tetrominoOffset = Math.round(tetrominoLength / 2 - 1)
@@ -109,8 +110,10 @@ export class Board {
     return { currentBlockRow: this.#currentRow, currentBlockCol: this.#currentCol };
   };
 
+  // ? ask the board if there is something at coordinate x,y
   #stopBlockMovement() {
     const { currentBlockRow, currentBlockCol } = this.#getCurrentBlockPosition()
+    // TODO: Make it work by asking or getting the current position of the shape (not the block)
 
     let result = []
     let shapeIndex = 0
@@ -142,6 +145,7 @@ export class Board {
 
   #isEmptyBoardSquare(row, col) {
     // ! Only works for 3x3 blocks with T shape
+    // TODO: Make it work by asking or getting the current position of the shape (not the block)
     const blockLastRow = this.block?.getShape().substring(this.block?.getShape().length - 4, this.block?.getShape().length - 1)
 
     if (row > this.#height) return false
