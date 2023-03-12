@@ -1,8 +1,10 @@
 export class RotatingShape {
   shape;
-  #shapeToArray
+  #shapeToArray;
   #cleanShape;
-  #shapeWidth
+  #shapeWidth;
+  #coordinates = [];
+
   // * filter and clean data here. make shape a 2D array, it will be easier to rotate
   constructor(shape) {
     this.shape = shape
@@ -19,6 +21,9 @@ export class RotatingShape {
       this.#cleanShape[row] = []
       for (let col = 0; col < this.#shapeWidth; col++) {
         this.#cleanShape[row][col] = this.#shapeToArray[row][col]
+        if (this.#shapeToArray[row][col] !== ".") {
+          this.setCoordinates(row, col)
+        }
       }
     }
   }
@@ -63,6 +68,14 @@ export class RotatingShape {
     rotateShape.rotateRight().rotateRight().rotateRight()
 
     return rotateShape
+  }
+
+  getCoordinates() {
+    return this.#coordinates
+  }
+
+  setCoordinates(row, col) {
+    return this.#coordinates = [...this.#coordinates, { row, column: col }]
   }
 
   getShape() {

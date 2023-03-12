@@ -14,7 +14,7 @@ describe("Falling tetrominoes", () => {
     board = new Board(10, 6);
   });
 
-  xit("start from the top middle", () => {
+  it("start from the top middle", () => {
     board.drop(Tetromino.T_SHAPE);
 
     expect(board.toString()).to.equalShape(
@@ -30,7 +30,7 @@ describe("Falling tetrominoes", () => {
   // TODO: Add tests for I shape
   // TODO: Check if some cases contemplated in FallingBlocks are missing here, write them and eliminate FallingBlocks test suite
 
-  xit("stop when they hit the bottom", () => {
+  it("stop when they hit the bottom", () => {
     board.drop(Tetromino.T_SHAPE);
     fallToBottom(board);
 

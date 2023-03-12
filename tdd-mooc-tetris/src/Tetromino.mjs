@@ -24,6 +24,7 @@ export class Tetromino extends RotatingShape {
   static O_SHAPE = new Tetromino(this.#O_SHAPE)
 
   // ! TODO NEXT: Ask for the coordinates where the block exists or return the list of block coordinates directly. May be other alternatives
+  // TODO: Write the tests for this exercise inside of a new describe block.
 
   // * Overrides
   #rotationCounter = 0

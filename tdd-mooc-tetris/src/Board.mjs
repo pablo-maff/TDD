@@ -11,6 +11,8 @@ export class Board {
   #boardSquare = '.';
   #currentRow;
   #currentCol;
+  #currentBlockPosition;
+  #allBlocksPositions = [];
 
   #createEmptyBoard() {
     let emptyBoard = []
@@ -57,6 +59,8 @@ export class Board {
     if (this.hasFalling()) throw new Error("already falling")
     this.block = block;
 
+    this.#setBlockInitialPosition2(this.block.getCoordinates())
+
     this.#setBlockInitialPosition(this.block.getLength())
   }
 
@@ -91,6 +95,40 @@ export class Board {
       start: startingCol,
       end: startingCol + tetrominoLength
     }
+  }
+
+  #setBlockInitialPosition2(coordinates) {
+    const boardMiddleCol = Math.round((this.#width / 2) - 1)
+    const boardColumnInitialPosition = coordinates[0].column
+
+    const mapBlockToBoardColumn = coordinates.reduce((mappedCoordinates, coordinate) => {
+      let mappedBoardColumn = boardMiddleCol;
+      if (coordinate.column > boardColumnInitialPosition) {
+        mappedBoardColumn = boardMiddleCol - (boardColumnInitialPosition - coordinate.column)
+      }
+      else if (coordinate.column < boardColumnInitialPosition) {
+        mappedBoardColumn = boardMiddleCol + (coordinate.column - boardColumnInitialPosition)
+      }
+
+      return [...mappedCoordinates, { row: coordinate.row, column: mappedBoardColumn }]
+    }, [])
+
+    this.#currentBlockPosition = mapBlockToBoardColumn
+
+    console.log('this.#currentBlockPosition', this.#currentBlockPosition);
+
+    // this.#currentBlockPosition = 
+
+    // const tetrominoOffset = Math.round(tetrominoLength / 2 - 1)
+    // const startingCol = tetrominoLength > 0 ? boardMiddleCol - tetrominoOffset : 1
+
+
+    // this.#currentRow2 = { start: 0, end: tetrominoLength }
+    // this.#currentCol2 = tetrominoLength > 0 ? boardMiddleCol - tetrominoOffset : 1
+    // this.#currentCol2 = {
+    //   start: startingCol,
+    //   end: startingCol + tetrominoLength
+    // }
   }
 
   #setBlockCurrentPosition(empty) {
