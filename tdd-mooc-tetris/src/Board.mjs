@@ -1,18 +1,20 @@
 export class Board {
   #width;
   #height;
+  #boardMiddleCol
 
   constructor(width, height) {
     this.#width = width;
     this.#height = height;
     this.board = this.#createEmptyBoard();
+    this.#boardMiddleCol = Math.round((this.#width / 2) - 1)
   }
 
   #boardSquare = '.';
   #currentRow;
   #currentCol;
-  #currentBlockPosition;
-  #allBlocksPositions = [];
+  #boardCurrentTopRow = 0;
+  #blocksOnBoard = [];
 
   #createEmptyBoard() {
     let emptyBoard = []
@@ -21,7 +23,7 @@ export class Board {
       for (let col = 0; col < this.#width; col++) {
         emptyBoard[row][col] = this.#boardSquare;
       }
-      emptyBoard[row][this.#width] = '\n';
+      // emptyBoard[row][this.#width] = '\n';
     }
     return emptyBoard
   }
@@ -29,49 +31,57 @@ export class Board {
   toString() {
     // TODO: Make it work by asking or getting the current position of the shape (not the block)
 
-    const { currentBlockRow, currentBlockCol } = this.#getCurrentBlockPosition()
-    let result = ''
-    let shapeIndex = 0
+    // * Print blocksOnBoard and if there is a currentBlock, print it as well
+    let result2 = ''
+
+    const blocksInPlace = this.#blocksOnBoard
+    const currentBlock = this.getBlockCurrentPosition2(this.#boardCurrentTopRow, this.#boardMiddleCol)
+    console.log('#blocksOnBoard', this.#blocksOnBoard)
+    // console.log('currentBlock', this.getBlockCurrentPosition2(this.#boardCurrentTopRow, this.#boardMiddleCol))
+
     for (let row = 0; row < this.#height; row++) {
       for (let col = 0; col < this.#width; col++) {
-        // ! NEXT TODO: Refactor
-        // console.log('start, end', currentBlockRow?.start, currentBlockRow?.end);
-        if (this.block?.getShape()[shapeIndex] === '\n') shapeIndex++
-        if (row >= currentBlockRow?.start && row <= currentBlockRow?.end && col >= currentBlockCol?.start && col < currentBlockCol?.end) {
-          if (this.block?.getShape()[shapeIndex] !== undefined) {
-            result += this.block.getShape()[shapeIndex];
-            shapeIndex++
-          }
-          else {
-            result += this.board[row][col];
-          }
+        const currentBlockInBoard = currentBlock?.find(block => block.row === row && block.column === col)
+
+        // ! TODO NEXT: print in the board the blocks that stopped moving in stopBlockMovement2
+        const allBlocksInBoard = blocksInPlace?.find(block => block.row === row && block.column === col)
+        if (currentBlockInBoard || allBlocksInBoard) {
+          result2 += this.block.getShape2();
         }
         else {
-          result += this.board[row][col];
+          result2 += this.board[row][col];
         }
       }
-      result += '\n';
+      result2 += '\n';
     }
-    return result
+
+    console.log('result2', result2);
+
+    return result2
   }
 
   drop(block) {
     if (this.hasFalling()) throw new Error("already falling")
     this.block = block;
 
-    this.#setBlockInitialPosition2(this.block.getCoordinates())
+    // this.#setBlockCurrentPosition()
 
-    this.#setBlockInitialPosition(this.block.getLength())
+    // !Deprecated
+    // this.#setBlockInitialPosition(this.block.getLength())
   }
 
   tick() {
     const { currentBlockRow, currentBlockCol } = this.#getCurrentBlockPosition()
 
-    if (this.#isEmptyBoardSquare(currentBlockRow?.end, currentBlockCol?.end)) {
+    // TODO: new implementation of isEmptyBoardSquare
+
+    if (this.#isEmptyBoardSquare2(this.#boardCurrentTopRow + 1, this.#boardMiddleCol)) {
       this.#moveBlock()
     }
+
     else if (this.hasFalling()) {
-      this.#stopBlockMovement()
+      this.#stopBlockMovement2(this.#boardCurrentTopRow, this.#boardMiddleCol)
+      // this.#stopBlockMovement()
     }
   }
 
@@ -97,56 +107,46 @@ export class Board {
     }
   }
 
-  #setBlockInitialPosition2(coordinates) {
-    const boardMiddleCol = Math.round((this.#width / 2) - 1)
-    const boardColumnInitialPosition = coordinates[0].column
+  getBlockCurrentPosition2(row, col) {
+    if (!this.hasFalling()) return null
 
-    const mapBlockToBoardColumn = coordinates.reduce((mappedCoordinates, coordinate) => {
-      let mappedBoardColumn = boardMiddleCol;
-      if (coordinate.column > boardColumnInitialPosition) {
-        mappedBoardColumn = boardMiddleCol - (boardColumnInitialPosition - coordinate.column)
-      }
-      else if (coordinate.column < boardColumnInitialPosition) {
-        mappedBoardColumn = boardMiddleCol + (coordinate.column - boardColumnInitialPosition)
-      }
+    const currentPosition = this.block.mapToBoardCoordinates(row, col)
 
-      return [...mappedCoordinates, { row: coordinate.row, column: mappedBoardColumn }]
-    }, [])
+    // console.log('currentPosition', currentPosition);
 
-    this.#currentBlockPosition = mapBlockToBoardColumn
-
-    console.log('this.#currentBlockPosition', this.#currentBlockPosition);
-
-    // this.#currentBlockPosition = 
-
-    // const tetrominoOffset = Math.round(tetrominoLength / 2 - 1)
-    // const startingCol = tetrominoLength > 0 ? boardMiddleCol - tetrominoOffset : 1
-
-
-    // this.#currentRow2 = { start: 0, end: tetrominoLength }
-    // this.#currentCol2 = tetrominoLength > 0 ? boardMiddleCol - tetrominoOffset : 1
-    // this.#currentCol2 = {
-    //   start: startingCol,
-    //   end: startingCol + tetrominoLength
-    // }
+    return currentPosition
   }
 
   #setBlockCurrentPosition(empty) {
-    this.#currentRow = !empty ? {
-      start: this.#currentRow.start + 1,
-      end: this.#currentRow.end + 1
-    } : null
+    // console.log('this.#boardCurrentTopRow', this.#boardCurrentTopRow);
+    this.#boardCurrentTopRow = !empty ? this.#boardCurrentTopRow + 1 : null
+    // this.#currentRow = !empty ? {
+    //   start: this.#currentRow.start + 1,
+    //   end: this.#currentRow.end + 1
+    // } : null
 
-    this.#currentCol = !empty ? {
-      start: this.#currentCol.start, // * For now the piece can't move to the sides
-      end: this.#currentCol.end
-    } : null
+    // this.#currentCol = !empty ? {
+    //   start: this.#currentCol.start, // * For now the piece can't move to the sides
+    //   end: this.#currentCol.end
+    // } : null
 
   };
 
   #getCurrentBlockPosition() {
     return { currentBlockRow: this.#currentRow, currentBlockCol: this.#currentCol };
   };
+
+  #stopBlockMovement2(row, col) {
+    const currentBlockPosition = this.getBlockCurrentPosition2(row, col)
+
+    // console.log('this.board', this.board);
+
+    this.#blocksOnBoard = [...this.#blocksOnBoard, ...currentBlockPosition]
+
+    // ! TODO NEXT: Fix toString
+
+    this.block = null
+  }
 
   // ? ask the board if there is something at coordinate x,y
   #stopBlockMovement() {
@@ -179,6 +179,27 @@ export class Board {
     this.board = result
 
     this.block = null;
+  }
+
+  #isEmptyBoardSquare2(row, col) {
+    if (!this.hasFalling()) return false
+    const nextBlockPosition = this.getBlockCurrentPosition2(row, col)
+
+    const willColide = nextBlockPosition.reduce((collision, nextPosition) => {
+      if (nextPosition.row >= this.#height || nextPosition.column >= this.#width) {
+        collision = true
+      }
+      this.#blocksOnBoard.forEach(blockPosition => {
+        if (nextPosition.row === blockPosition.row && nextPosition.column === blockPosition.column) {
+          collision = true
+        }
+      })
+      return collision
+    }, false)
+
+    if (willColide) return false
+
+    return true
   }
 
   #isEmptyBoardSquare(row, col) {

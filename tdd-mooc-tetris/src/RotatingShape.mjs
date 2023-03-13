@@ -3,6 +3,7 @@ export class RotatingShape {
   #shapeToArray;
   #cleanShape;
   #shapeWidth;
+  #tempCoordinates = [];
   #coordinates = [];
 
   // * filter and clean data here. make shape a 2D array, it will be easier to rotate
@@ -22,10 +23,12 @@ export class RotatingShape {
       for (let col = 0; col < this.#shapeWidth; col++) {
         this.#cleanShape[row][col] = this.#shapeToArray[row][col]
         if (this.#shapeToArray[row][col] !== ".") {
-          this.setCoordinates(row, col)
+          this.#tempCoordinates = [...this.#tempCoordinates, { row, column: col }]
         }
       }
     }
+    this.setCoordinates(this.#tempCoordinates)
+
   }
 
   // TODO: Get rid of this method
@@ -52,13 +55,19 @@ export class RotatingShape {
   rotateRight() {
     let result = []
 
-    for (let y = 0; y < this.#shapeWidth; y++) {
-      result[y] = []
-      for (let x = 0; x < this.#shapeWidth; x++) {
-        result[y][x] = this.#cleanShape[this.#shapeWidth - x - 1][y]
+    for (let row = 0; row < this.#shapeWidth; row++) {
+      result[row] = []
+      for (let col = 0; col < this.#shapeWidth; col++) {
+        result[row][col] = this.#cleanShape[this.#shapeWidth - col - 1][row]
+        if (result[row][col] !== ".") {
+          this.#tempCoordinates = [...this.#tempCoordinates, { row, column: col }]
+        }
       }
     }
+    this.setCoordinates(this.#tempCoordinates)
+
     this.#cleanShape = [...result]
+
 
     return this
   }
@@ -74,13 +83,47 @@ export class RotatingShape {
     return this.#coordinates
   }
 
-  setCoordinates(row, col) {
-    return this.#coordinates = [...this.#coordinates, { row, column: col }]
+  setCoordinates(newCoordinates) {
+    this.#coordinates = newCoordinates
+    this.#tempCoordinates = []
+  }
+
+  mapToBoardCoordinates(boardRowAxis, boardColAxis) {
+    const boardColumnInitialPosition = this.#coordinates[0].column
+    const boardRowInitialPosition = this.#coordinates[0].row
+
+    const mapBlockToBoardCoordinates = this.#coordinates.reduce((mappedCoordinates, coordinate) => {
+      let mappedBoardColumn = boardColAxis;
+      let mappedBoardRow = boardRowAxis
+
+      if (coordinate.column > boardColumnInitialPosition) {
+        mappedBoardColumn = boardColAxis - (boardColumnInitialPosition - coordinate.column)
+      }
+      else if (coordinate.column < boardColumnInitialPosition) {
+        mappedBoardColumn = boardColAxis + (coordinate.column - boardColumnInitialPosition)
+      }
+
+      if (coordinate.row > boardRowInitialPosition) {
+        mappedBoardRow = boardRowAxis - (boardRowInitialPosition - coordinate.row)
+      }
+      else if (coordinate.row < boardRowInitialPosition) {
+        mappedBoardRow = boardRowAxis + (coordinate.row - boardRowInitialPosition)
+      }
+
+      return [...mappedCoordinates, { row: mappedBoardRow, column: mappedBoardColumn }]
+    }, [])
+
+    return mapBlockToBoardCoordinates
   }
 
   getShape() {
     // TODO: Pass cleanShape instead, need to fix Board to work without trimming the clean shape first
     return this.toString()
+  }
+
+  getShape2() {
+    const { row, column } = this.getCoordinates()[0]
+    return this.#cleanShape.flat()[row, column]
   }
 
   getLength() {
