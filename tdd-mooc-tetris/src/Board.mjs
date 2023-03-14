@@ -11,11 +11,12 @@ export class Board {
   }
 
   #boardSquare = '.';
-  #boardCurrentTopRow = 0;
+  #blockCurrentTopRow = 0;
   #blocksOnBoard = [];
 
   #createEmptyBoard() {
     let emptyBoard = []
+
     for (let row = 0; row < this.#height; row++) {
       emptyBoard[row] = []
       for (let col = 0; col < this.#width; col++) {
@@ -28,15 +29,13 @@ export class Board {
   toString() {
     let result = ''
 
-    const blocksInPlace = this.#blocksOnBoard
-    const currentBlock = this.getBlockCurrentPosition(this.#boardCurrentTopRow, this.#boardMiddleCol)
+    const currentBlock = this.#getBlockCurrentPosition(this.#blockCurrentTopRow, this.#boardMiddleCol)
 
     for (let row = 0; row < this.#height; row++) {
       for (let col = 0; col < this.#width; col++) {
-        const currentBlockInBoard = currentBlock?.find(block => block.row === row && block.column === col)
-        const allBlocksInBoard = blocksInPlace?.find(block => block.row === row && block.column === col)
+        const currentBlockInBoard = currentBlock && currentBlock.find(block => block.row === row && block.column === col)
 
-        if (this.block && (currentBlockInBoard || allBlocksInBoard)) {
+        if (currentBlockInBoard) {
           result += this.block.getShape2();
         }
         else {
@@ -56,13 +55,14 @@ export class Board {
   }
 
   tick() {
-    if (this.#isEmptyBoardSquare(this.#boardCurrentTopRow + 1, this.#boardMiddleCol)) {
+    if (!this.hasFalling()) return
+
+    if (this.#isEmptyBoardSquare(this.#blockCurrentTopRow + 1, this.#boardMiddleCol)) {
       this.#moveBlock()
+      return
     }
 
-    else if (this.hasFalling()) {
-      this.#stopBlockMovement(this.#boardCurrentTopRow, this.#boardMiddleCol)
-    }
+    this.#stopBlockMovement(this.#blockCurrentTopRow, this.#boardMiddleCol)
   }
 
   hasFalling() {
@@ -70,10 +70,10 @@ export class Board {
   }
 
   #moveBlock() {
-    this.#setBlockCurrentPosition()
+    this.#blockCurrentTopRow += 1
   };
 
-  getBlockCurrentPosition(row, col) {
+  #getBlockCurrentPosition(row, col) {
     if (!this.hasFalling()) return null
 
     const currentPosition = this.block.mapToBoardCoordinates(row, col)
@@ -81,27 +81,17 @@ export class Board {
     return currentPosition
   }
 
-  #setBlockCurrentPosition() {
-    this.#boardCurrentTopRow += 1
-  };
-
   #stopBlockMovement(row, col) {
-    const currentBlockPosition = this.getBlockCurrentPosition(row, col)
-
-    this.#blocksOnBoard = [...this.#blocksOnBoard, ...currentBlockPosition]
+    const currentBlockPosition = this.#getBlockCurrentPosition(row, col)
 
     let result = []
-
-    const blocksInPlace = this.#blocksOnBoard
-    const currentBlock = this.getBlockCurrentPosition(this.#boardCurrentTopRow, this.#boardMiddleCol)
 
     for (let row = 0; row < this.#height; row++) {
       result[row] = []
       for (let col = 0; col < this.#width; col++) {
-        const currentBlockInBoard = currentBlock?.find(block => block.row === row && block.column === col)
-        const allBlocksInBoard = blocksInPlace?.find(block => block.row === row && block.column === col)
+        const currentBlockInBoard = currentBlockPosition?.find(block => block.row === row && block.column === col)
 
-        if (currentBlockInBoard || allBlocksInBoard) {
+        if (currentBlockInBoard) {
           result[row][col] = this.block.getShape2();
         }
         else {
@@ -112,30 +102,29 @@ export class Board {
 
     this.board = result
 
-    this.#boardCurrentTopRow = 0
+    this.#blocksOnBoard = [...this.#blocksOnBoard, ...currentBlockPosition]
+
+    this.#blockCurrentTopRow = 0
 
     this.block = null
   }
 
   #isEmptyBoardSquare(row, col) {
-    if (!this.hasFalling()) return false
-    const nextBlockPosition = this.getBlockCurrentPosition(row, col)
+    const nextBlockPosition = this.#getBlockCurrentPosition(row, col)
 
-    const willColide = nextBlockPosition.reduce((collision, nextPosition) => {
+    const isEmpty = nextBlockPosition.reduce((isEmpty, nextPosition) => {
       if (nextPosition.row >= this.#height || nextPosition.column >= this.#width) {
-        collision = true
-        return collision
+        isEmpty = false
+        return isEmpty
       }
       this.#blocksOnBoard.forEach(blockPosition => {
         if (nextPosition.row === blockPosition.row && nextPosition.column === blockPosition.column) {
-          collision = true
+          isEmpty = false
         }
       })
-      return collision
-    }, false)
+      return isEmpty
+    }, true)
 
-    if (willColide) return false
-
-    return true
+    return isEmpty
   }
 }
