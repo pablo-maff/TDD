@@ -9,7 +9,4 @@ export class Block {
     return this.color
   }
 
-  getLength() {
-    return 0
-  }
 }

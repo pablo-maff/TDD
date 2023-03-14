@@ -27,7 +27,7 @@ describe("Falling tetrominoes", () => {
     );
   });
 
-  // TODO: Add tests for I shape
+  // ! NEXT TODO: Add tests for I shape
   // TODO: Check if some cases contemplated in FallingBlocks are missing here, write them and eliminate FallingBlocks test suite
 
   it("stop when they hit the bottom", () => {

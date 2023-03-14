@@ -36,7 +36,7 @@ export class Board {
         const currentBlockInBoard = currentBlock && currentBlock.find(block => block.row === row && block.column === col)
 
         if (currentBlockInBoard) {
-          result += this.block.getShape2();
+          result += this.block.getShape();
         }
         else {
           result += this.board[row][col];
@@ -92,7 +92,7 @@ export class Board {
         const currentBlockInBoard = currentBlockPosition?.find(block => block.row === row && block.column === col)
 
         if (currentBlockInBoard) {
-          result[row][col] = this.block.getShape2();
+          result[row][col] = this.block.getShape();
         }
         else {
           result[row][col] = this.board[row][col];
