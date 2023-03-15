@@ -34,7 +34,6 @@ export class Board {
     for (let row = 0; row < this.#height; row++) {
       for (let col = 0; col < this.#width; col++) {
         const currentBlockInBoard = currentBlock && currentBlock.find(block => block.row === row && block.column === col)
-
         if (currentBlockInBoard) {
           result += this.block.getShape();
         }
@@ -45,6 +44,7 @@ export class Board {
       result += '\n';
     }
 
+    // console.log('result', result);
     return result
   }
 

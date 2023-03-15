@@ -77,7 +77,8 @@ export class RotatingShape {
   }
 
   mapToBoardCoordinates(boardRowAxis, boardColAxis) {
-    const boardColumnInitialPosition = this.#coordinates[0].column
+    // TODO: Will need a declarative solution here at some point
+    const boardColumnInitialPosition = this.#coordinates[0].column === 0 ? 1 : this.#coordinates[0].column
     const boardRowInitialPosition = this.#coordinates[0].row
 
     const mapBlockToBoardCoordinates = this.#coordinates.reduce((mappedCoordinates, coordinate) => {
@@ -106,6 +107,6 @@ export class RotatingShape {
 
   getShape() {
     const { row, column } = this.#coordinates[0]
-    return this.#cleanShape.flat()[row, column]
+    return this.#cleanShape[row][column]
   }
 }
