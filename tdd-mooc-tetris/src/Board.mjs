@@ -127,4 +127,17 @@ export class Board {
 
     return isEmpty
   }
+
+  // * User Controls
+  moveBlockLeft() {
+    this.#boardMiddleCol -= 1
+  }
+
+  moveBlockRight() {
+    this.#boardMiddleCol += 1
+  }
+
+  moveBlockDown() {
+    this.#blockCurrentTopRow += 1
+  }
 }
