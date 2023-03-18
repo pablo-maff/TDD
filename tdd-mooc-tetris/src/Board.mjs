@@ -59,7 +59,7 @@ export class Board {
     if (!this.hasFalling()) return
 
     if (this.#isEmptyBoardSquare(this.#blockCurrentTopRow + 1, this.#boardMiddleCol)) {
-      this.moveBlockDown()
+      this.#blockCurrentTopRow += 1
       return
     }
 
@@ -150,9 +150,6 @@ export class Board {
   }
 
   moveBlockDown() {
-    if (!this.hasFalling()) return
-    if (this.#isEmptyBoardSquare(this.#blockCurrentTopRow + 1, this.#boardMiddleCol)) {
-      this.#blockCurrentTopRow += 1
-    }
+    this.tick()
   }
 }

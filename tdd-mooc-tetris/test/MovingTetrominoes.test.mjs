@@ -137,13 +137,67 @@ describe("Moving tetrominoes", () => {
       fallToBottom(board)
 
       board.drop(Tetromino.T_SHAPE);
-      board.tick()
-      board.tick()
-      board.tick()
+      board.moveBlockDown()
+      board.moveBlockDown()
+      board.moveBlockDown()
 
       moveLeft(board, 10)
 
-      board.tick()
+      expect(board.toString()).to.equalShape(
+        `..........
+       ..........
+       ..........
+       ...T......
+       .TTTT.....
+       TTT.......`
+      );
+
+      expect(
+        board.hasFalling(),
+        "the player should be able to move the block"
+      ).to.be.true;
+    })
+
+    it("cannot be moved right through other blocks and block stops on top of the other block", () => {
+      board.drop(Tetromino.T_SHAPE);
+      moveRight(board, 5)
+      fallToBottom(board)
+
+      board.drop(Tetromino.T_SHAPE);
+      board.moveBlockDown()
+      board.moveBlockDown()
+      board.moveBlockDown()
+
+      moveRight(board, 10)
+
+      expect(board.toString()).to.equalShape(
+        `..........
+       ..........
+       ..........
+       ......T...
+       .....TTTT.
+       .......TTT`
+      );
+
+      expect(
+        board.hasFalling(),
+        "the player should be able to move the block"
+      ).to.be.true;
+    })
+
+    it("cannot be moved down through other blocks and block stops falling", () => {
+      board.drop(Tetromino.T_SHAPE);
+      moveLeft(board, 5)
+      fallToBottom(board)
+
+      board.drop(Tetromino.T_SHAPE);
+      board.moveBlockDown()
+      board.moveBlockDown()
+      board.moveBlockDown()
+
+      moveLeft(board, 10)
+
+      board.moveBlockDown()
 
       expect(board.toString()).to.equalShape(
         `..........
@@ -310,6 +364,39 @@ describe("Moving tetrominoes", () => {
        ..........
        IIIIIIII..
        IIII......`
+      );
+
+      expect(
+        board.hasFalling(),
+        "the player should be able to move the block"
+      ).to.be.true;
+    })
+
+    it("cannot be moved right through other blocks", () => {
+      board.drop(Tetromino.I_SHAPE);
+      moveRight(board, 5)
+      fallToBottom(board)
+
+      board.drop(Tetromino.I_SHAPE);
+      moveRight(board, 5)
+      fallToBottom(board)
+
+      board.drop(Tetromino.I_SHAPE);
+      board.moveBlockLeft()
+      board.tick()
+      board.tick()
+      board.tick()
+      board.tick()
+
+      moveRight(board, 10)
+
+      expect(board.toString()).to.equalShape(
+        `..........
+       ..........
+       ..........
+       ..........
+       ..IIIIIIII
+       ......IIII`
       );
 
       expect(
