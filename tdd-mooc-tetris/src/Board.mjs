@@ -44,13 +44,14 @@ export class Board {
       result += '\n';
     }
 
-    // console.log('result', result);
     return result
   }
 
   drop(block) {
     if (this.hasFalling()) throw new Error("already falling")
 
+    this.#blockCurrentTopRow = 0
+    this.#boardMiddleCol = Math.round((this.#width / 2) - 1)
     this.block = block;
   }
 
@@ -58,7 +59,7 @@ export class Board {
     if (!this.hasFalling()) return
 
     if (this.#isEmptyBoardSquare(this.#blockCurrentTopRow + 1, this.#boardMiddleCol)) {
-      this.#moveBlock()
+      this.moveBlockDown()
       return
     }
 
@@ -68,10 +69,6 @@ export class Board {
   hasFalling() {
     return !!this.block
   }
-
-  #moveBlock() {
-    this.#blockCurrentTopRow += 1
-  };
 
   #getBlockCurrentPosition(row, col) {
     if (!this.hasFalling()) return null
@@ -104,8 +101,6 @@ export class Board {
 
     this.#blocksOnBoard = [...this.#blocksOnBoard, ...currentBlockPosition]
 
-    this.#blockCurrentTopRow = 0
-
     this.block = null
   }
 
@@ -113,15 +108,24 @@ export class Board {
     const nextBlockPosition = this.#getBlockCurrentPosition(row, col)
 
     const isEmpty = nextBlockPosition.reduce((isEmpty, nextPosition) => {
+      if (nextPosition.row < 0 || nextPosition.column < 0) {
+        isEmpty = false
+        return
+      }
       if (nextPosition.row >= this.#height || nextPosition.column >= this.#width) {
         isEmpty = false
-        return isEmpty
+        return
       }
-      this.#blocksOnBoard.forEach(blockPosition => {
-        if (nextPosition.row === blockPosition.row && nextPosition.column === blockPosition.column) {
-          isEmpty = false
-        }
-      })
+
+      const blocksCollisions = this.#blocksOnBoard.some(blockPosition => {
+        return nextPosition.row === blockPosition.row && nextPosition.column === blockPosition.column;
+      }
+      )
+
+      if (blocksCollisions) {
+        isEmpty = false
+      }
+
       return isEmpty
     }, true)
 
@@ -130,14 +134,25 @@ export class Board {
 
   // * User Controls
   moveBlockLeft() {
-    this.#boardMiddleCol -= 1
+    if (!this.hasFalling()) return
+
+    if (this.#isEmptyBoardSquare(this.#blockCurrentTopRow, this.#boardMiddleCol - 1)) {
+      this.#boardMiddleCol -= 1
+    }
   }
 
   moveBlockRight() {
-    this.#boardMiddleCol += 1
+    if (!this.hasFalling()) return
+
+    if (this.#isEmptyBoardSquare(this.#blockCurrentTopRow, this.#boardMiddleCol + 1)) {
+      this.#boardMiddleCol += 1
+    }
   }
 
   moveBlockDown() {
-    this.#blockCurrentTopRow += 1
+    if (!this.hasFalling()) return
+    if (this.#isEmptyBoardSquare(this.#blockCurrentTopRow + 1, this.#boardMiddleCol)) {
+      this.#blockCurrentTopRow += 1
+    }
   }
 }
