@@ -48,7 +48,9 @@ export class Board {
   }
 
   drop(block) {
-    if (this.hasFalling()) throw new Error("already falling")
+    if (this.hasFalling()) {
+      throw new Error("already falling")
+    }
 
     this.#blockCurrentTopRow = 0
     this.#boardMiddleCol = Math.round((this.#width / 2) - 1)
@@ -151,5 +153,13 @@ export class Board {
 
   moveBlockDown() {
     this.tick()
+  }
+
+  rotateRight() {
+    this.block.rotateRight()
+  }
+
+  rotateLeft() {
+    this.block.rotateLeft()
   }
 }

@@ -19,13 +19,27 @@ export class Tetromino extends RotatingShape {
     .OO
     ...`
 
-  static T_SHAPE = new Tetromino(this.#T_SHAPE)
-  static I_SHAPE = new Tetromino(this.#I_SHAPE)
-  static O_SHAPE = new Tetromino(this.#O_SHAPE)
+  static getTShape() {
+    return new Tetromino(Tetromino.#T_SHAPE);
+  }
+
+  static getIShape() {
+    return new Tetromino(Tetromino.#I_SHAPE);
+  }
+
+  static getOShape() {
+    return new Tetromino(Tetromino.#O_SHAPE);
+  }
+
+  constructor(shape) {
+    super(shape);
+    this.#rotationCounter = 0;
+  }
 
   // * Overrides
-  #rotationCounter = 0
+  #rotationCounter;
 
+  // ! TODO NEXT: Proper implementation to check orientations
   rotateRight() {
     // TODO: Make a method called orientationChecker
     if (this.shape.includes('O')) return this
@@ -38,8 +52,14 @@ export class Tetromino extends RotatingShape {
   }
 
   rotateLeft() {
-    if (this.shape.includes('I') || this.shape.includes('O')) return this
+    if (this.shape.includes('I')) return super.rotateRight()
+
+    if (this.shape.includes('O')) return this
 
     return super.rotateLeft()
   }
 }
+
+Tetromino.T_SHAPE = Tetromino.getTShape();
+Tetromino.I_SHAPE = Tetromino.getIShape();
+Tetromino.O_SHAPE = Tetromino.getOShape();

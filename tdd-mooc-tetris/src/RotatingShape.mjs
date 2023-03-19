@@ -1,7 +1,7 @@
 export class RotatingShape {
   shape;
   #shapeToArray;
-  #cleanShape;
+  cleanShape;
   #shapeWidth;
   #tempCoordinates = [];
   #coordinates = [];
@@ -15,12 +15,12 @@ export class RotatingShape {
 
     this.#shapeWidth = this.#shapeToArray.length
 
-    this.#cleanShape = []
+    this.cleanShape = []
 
     for (let row = 0; row < this.#shapeWidth; row++) {
-      this.#cleanShape[row] = []
+      this.cleanShape[row] = []
       for (let col = 0; col < this.#shapeWidth; col++) {
-        this.#cleanShape[row][col] = this.#shapeToArray[row][col]
+        this.cleanShape[row][col] = this.#shapeToArray[row][col]
         if (this.#shapeToArray[row][col] !== ".") {
           this.#tempCoordinates = [...this.#tempCoordinates, { row, column: col }]
         }
@@ -29,13 +29,14 @@ export class RotatingShape {
     this.#setCoordinates(this.#tempCoordinates)
   }
 
+
   toString() {
     let result = ''
 
     for (let row = 0; row < this.#shapeWidth; row++) {
       for (let col = 0; col < this.#shapeWidth; col++) {
-        if (this.#cleanShape[row]) {
-          result += this.#cleanShape[row][col]
+        if (this.cleanShape[row]) {
+          result += this.cleanShape[row][col]
         }
       }
       result += '\n'
@@ -46,11 +47,12 @@ export class RotatingShape {
 
   rotateRight() {
     let result = []
+    this.#tempCoordinates = [];
 
     for (let row = 0; row < this.#shapeWidth; row++) {
       result[row] = []
       for (let col = 0; col < this.#shapeWidth; col++) {
-        result[row][col] = this.#cleanShape[this.#shapeWidth - col - 1][row]
+        result[row][col] = this.cleanShape[this.#shapeWidth - col - 1][row]
         if (result[row][col] !== ".") {
           this.#tempCoordinates = [...this.#tempCoordinates, { row, column: col }]
         }
@@ -58,22 +60,30 @@ export class RotatingShape {
     }
     this.#setCoordinates(this.#tempCoordinates)
 
-    this.#cleanShape = [...result]
-
-
-    return this
+    return new RotatingShape(result.join('\n').replaceAll(',', ''))
   }
 
   rotateLeft() {
-    const rotateShape = new RotatingShape(this.shape)
-    rotateShape.rotateRight().rotateRight().rotateRight()
+    let result = []
+    this.#tempCoordinates = [];
 
-    return rotateShape
+    for (let row = 0; row < this.#shapeWidth; row++) {
+      result[row] = []
+      for (let col = 0; col < this.#shapeWidth; col++) {
+        result[row][col] = this.cleanShape[col][this.#shapeWidth - row - 1]
+        if (result[row][col] !== ".") {
+          this.#tempCoordinates = [...this.#tempCoordinates, { row, column: col }]
+        }
+      }
+    }
+    this.#setCoordinates(this.#tempCoordinates)
+
+    return new RotatingShape(result.join('\n').replaceAll(',', ''))
   }
 
   #setCoordinates(newCoordinates) {
-    this.#coordinates = newCoordinates
     this.#tempCoordinates = []
+    this.#coordinates = newCoordinates
   }
 
   mapToBoardCoordinates(boardRowAxis, boardColAxis) {
@@ -107,6 +117,6 @@ export class RotatingShape {
 
   getShape() {
     const { row, column } = this.#coordinates[0]
-    return this.#cleanShape[row][column]
+    return this.cleanShape[row][column]
   }
 }
