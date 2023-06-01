@@ -31,35 +31,41 @@ export class Tetromino extends RotatingShape {
     return new Tetromino(Tetromino.#O_SHAPE);
   }
 
-  constructor(shape) {
+  constructor(shape, rotationCounter = 0) {
     super(shape);
-    this.#rotationCounter = 0;
+    this.#rotationCounter = rotationCounter;
   }
 
   // * Overrides
   #rotationCounter;
 
-  // ! TODO NEXT: Proper implementation to check orientations
   rotateRight() {
-    // TODO: Make a method called orientationChecker
-    if (this.shape.includes('O')) return this
-    if (this.shape.includes('I') && this.#rotationCounter > 1) {
-      return this
+    if (this.shape.includes('O')) return new Tetromino(this.toString())
+    if (this.shape.includes('I')) {
+      if (this.#rotationCounter === 0) {
+        return new Tetromino(super.rotateRight().toString(), this.#rotationCounter + 1)
+      }
+      else {
+        return new Tetromino(super.rotateLeft().toString(), this.#rotationCounter - 1)
+      }
     }
 
-    this.#rotationCounter += 1
-    return super.rotateRight()
+    return new Tetromino(super.rotateRight().toString(), this.#rotationCounter + 1)
   }
 
   rotateLeft() {
-    if (this.shape.includes('I')) return super.rotateRight()
+    if (this.shape.includes('I')) {
 
-    if (this.shape.includes('O')) return this
+      return this.rotateRight()
+    }
 
-    return super.rotateLeft()
+    if (this.shape.includes('O')) return new Tetromino(this.toString())
+
+    return new Tetromino(super.rotateLeft().toString())
   }
 }
 
+// ! These 3 are being called always
 Tetromino.T_SHAPE = Tetromino.getTShape();
 Tetromino.I_SHAPE = Tetromino.getIShape();
 Tetromino.O_SHAPE = Tetromino.getOShape();

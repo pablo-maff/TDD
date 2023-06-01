@@ -8,10 +8,9 @@ export class RotatingShape {
 
   constructor(shape) {
     this.shape = shape
-    this.#shapeToArray = this.shape.split(' ').filter(shapeBit =>
-      shapeBit !== '')
+    // TODO: Should simplify what's going on in the constructor at some point
 
-    this.#shapeToArray = this.shape.replaceAll(' ', '').split('\n')
+    this.#shapeToArray = this.shape.replaceAll(' ', '').split('\n').filter(value => value.trim() !== '');
 
     this.#shapeWidth = this.#shapeToArray.length
 
@@ -35,11 +34,17 @@ export class RotatingShape {
 
     for (let row = 0; row < this.#shapeWidth; row++) {
       for (let col = 0; col < this.#shapeWidth; col++) {
-        if (this.cleanShape[row]) {
+        if (this.cleanShape[row] && this.cleanShape[row][col] !== undefined) {
           result += this.cleanShape[row][col]
         }
       }
-      result += '\n'
+
+      const lastChar = result.slice(-1);
+      const isNewLine = /\r|\n/.test(lastChar);
+
+      if (!isNewLine) {
+        result += '\n'
+      }
     }
 
     return result
@@ -65,7 +70,7 @@ export class RotatingShape {
 
   rotateLeft() {
     let result = []
-    this.#tempCoordinates = [];
+    this.#tempCoordinates = []
 
     for (let row = 0; row < this.#shapeWidth; row++) {
       result[row] = []
