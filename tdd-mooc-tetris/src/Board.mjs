@@ -156,10 +156,10 @@ export class Board {
   }
 
   rotateRight() {
-    this.block.rotateRight()
+    this.block = this.block.rotateRight()
   }
 
   rotateLeft() {
-    this.block.rotateLeft()
+    this.block = this.block.rotateLeft()
   }
 }
