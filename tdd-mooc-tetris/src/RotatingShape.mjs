@@ -51,39 +51,37 @@ export class RotatingShape {
   }
 
   rotateRight() {
-    let result = []
+    let result = [];
     this.#tempCoordinates = [];
 
     for (let row = 0; row < this.#shapeWidth; row++) {
-      result[row] = []
+      result[row] = [];
       for (let col = 0; col < this.#shapeWidth; col++) {
-        result[row][col] = this.cleanShape[this.#shapeWidth - col - 1][row]
+        result[row][col] = this.cleanShape[this.#shapeWidth - col - 1][row];
         if (result[row][col] !== ".") {
-          this.#tempCoordinates = [...this.#tempCoordinates, { row, column: col }]
+          this.#tempCoordinates = [...this.#tempCoordinates, { row, column: col }];
         }
       }
     }
-    this.#setCoordinates(this.#tempCoordinates)
 
-    return new RotatingShape(result.join('\n').replaceAll(',', ''))
+    return new RotatingShape(result.join('\n').replaceAll(',', ''));;
   }
 
   rotateLeft() {
-    let result = []
-    this.#tempCoordinates = []
+    let result = [];
+    this.#tempCoordinates = [];
 
     for (let row = 0; row < this.#shapeWidth; row++) {
-      result[row] = []
+      result[row] = [];
       for (let col = 0; col < this.#shapeWidth; col++) {
-        result[row][col] = this.cleanShape[col][this.#shapeWidth - row - 1]
+        result[row][col] = this.cleanShape[col][this.#shapeWidth - row - 1];
         if (result[row][col] !== ".") {
-          this.#tempCoordinates = [...this.#tempCoordinates, { row, column: col }]
+          this.#tempCoordinates = [...this.#tempCoordinates, { row, column: col }];
         }
       }
     }
-    this.#setCoordinates(this.#tempCoordinates)
 
-    return new RotatingShape(result.join('\n').replaceAll(',', ''))
+    return new RotatingShape(result.join('\n').replaceAll(',', ''));;
   }
 
   #setCoordinates(newCoordinates) {

@@ -51,7 +51,6 @@ export class Board {
     if (this.hasFalling()) {
       throw new Error("already falling")
     }
-
     this.#blockCurrentTopRow = 0
     this.#boardMiddleCol = Math.round((this.#width / 2) - 1)
     this.block = block;

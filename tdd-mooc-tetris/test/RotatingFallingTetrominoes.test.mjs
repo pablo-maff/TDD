@@ -9,6 +9,7 @@ describe("Rotating Falling tetrominoes", () => {
     board = new Board(10, 6);
   });
 
+
   it("can be rotated right", () => {
     board.drop(Tetromino.T_SHAPE);
     board.rotateRight()
@@ -17,6 +18,19 @@ describe("Rotating Falling tetrominoes", () => {
       `....T.....
        ....TT....
        ....T.....
+       ..........
+       ..........
+       ..........`
+    );
+  });
+
+  it("are placed in their initial position in the board", () => {
+    board.drop(Tetromino.T_SHAPE);
+
+    expect(board.toString()).to.equalShape(
+      `....T.....
+       ...TTT....
+       ..........
        ..........
        ..........
        ..........`
@@ -67,6 +81,27 @@ describe("Rotating Falling tetrominoes", () => {
     );
   });
 
+  it("cannot be rotated right if it has stopped falling", () => {
+
+    board.drop(Tetromino.T_SHAPE);
+    fallToBottom(board)
+    // board.rotateRight()
+
+    expect(board.toString()).to.equalShape(
+      `..........
+       ..........
+       ..........
+       ..........
+       ....T.....
+       ...TTT....`
+    );
+
+    expect(
+      board.hasFalling(),
+      "the player should not be able to move the block"
+    ).to.be.false;
+  });
+
   xit("cannot be rotated when there is no room to rotate", () => {
     board.drop(Tetromino.T_SHAPE);
     board.rotateLeft()
@@ -74,11 +109,9 @@ describe("Rotating Falling tetrominoes", () => {
     board.drop(Tetromino.T_SHAPE);
     board.rotateRight()
     board.moveBlockRight()
-    board.rotateRight()
-
-    // board.tick()
-    // board.tick()
-    // board.tick()
+    board.tick()
+    board.tick()
+    board.tick()
     board.rotateRight()
     // board.rotateRight()
     // board.rotateLeft()

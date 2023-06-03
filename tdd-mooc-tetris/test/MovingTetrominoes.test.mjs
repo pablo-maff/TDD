@@ -406,21 +406,11 @@ describe("Moving tetrominoes", () => {
     })
     it("cannot be moved down through other blocks and block stops falling", () => {
       board.drop(Tetromino.I_SHAPE);
-      // moveLeft(board, 5)
       fallToBottom(board)
 
       board.drop(Tetromino.I_SHAPE);
-      // board.moveBlockDown()
-      // board.moveBlockDown()
-      // board.moveBlockDown()
       fallToBottom(board)
-
-
-      // moveLeft(board, 10)
-
       board.moveBlockDown()
-
-      console.log("board.toString()", board.toString());
 
       expect(board.toString()).to.equalShape(
         `..........
