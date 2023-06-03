@@ -16,8 +16,8 @@ export class Tetromino extends RotatingShape {
 
   static #O_SHAPE =
     `.OO
-    .OO
-    ...`
+   .OO
+   ...`
 
   static T_SHAPE = new Tetromino(Tetromino.#T_SHAPE);
 

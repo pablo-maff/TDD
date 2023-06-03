@@ -404,5 +404,37 @@ describe("Moving tetrominoes", () => {
         "the player should be able to move the block"
       ).to.be.true;
     })
+    it("cannot be moved down through other blocks and block stops falling", () => {
+      board.drop(Tetromino.I_SHAPE);
+      // moveLeft(board, 5)
+      fallToBottom(board)
+
+      board.drop(Tetromino.I_SHAPE);
+      // board.moveBlockDown()
+      // board.moveBlockDown()
+      // board.moveBlockDown()
+      fallToBottom(board)
+
+
+      // moveLeft(board, 10)
+
+      board.moveBlockDown()
+
+      console.log("board.toString()", board.toString());
+
+      expect(board.toString()).to.equalShape(
+        `..........
+       ..........
+       ..........
+       ..........
+       ...IIII...
+       ...IIII...`
+      );
+
+      expect(
+        board.hasFalling(),
+        "the player should not be able to move the block"
+      ).to.be.false;
+    })
   })
 });
