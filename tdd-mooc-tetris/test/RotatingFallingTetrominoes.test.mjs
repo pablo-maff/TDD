@@ -102,7 +102,7 @@ describe("Rotating Falling tetrominoes", () => {
     ).to.be.false;
   });
 
-  xit("cannot be rotated when there is no room to rotate", () => {
+  it("cannot be rotated right when there is no room to rotate", () => {
     board.drop(Tetromino.T_SHAPE);
     board.rotateLeft()
     fallToBottom(board)
@@ -113,9 +113,6 @@ describe("Rotating Falling tetrominoes", () => {
     board.tick()
     board.tick()
     board.rotateRight()
-    // board.rotateRight()
-    // board.rotateLeft()
-    console.log("board", board.toString());
 
     expect(board.toString()).to.equalShape(
       `..........

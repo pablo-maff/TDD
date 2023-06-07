@@ -105,8 +105,8 @@ export class Board {
     this.block = null
   }
 
-  #isEmptyBoardSquare(row, col) {
-    const nextBlockPosition = this.#getBlockCurrentPosition(row, col)
+  #isEmptyBoardSquare(row, col, rotatedBlockCoordinates) {
+    const nextBlockPosition = !rotatedBlockCoordinates ? this.#getBlockCurrentPosition(row, col) : rotatedBlockCoordinates
 
     const isEmpty = nextBlockPosition.reduce((isEmpty, nextPosition) => {
       if (nextPosition.row < 0 || nextPosition.column < 0) {
@@ -155,7 +155,20 @@ export class Board {
   }
 
   rotateRight() {
-    this.block = this.block.rotateRight()
+    const tempRotatedBlockCoordinates = this.block.rotateRight().mapToBoardCoordinates(this.#blockCurrentTopRow, this.#boardMiddleCol)
+
+    const tempTopRow = Math.min(...tempRotatedBlockCoordinates.map(item => item.row));
+
+    const columns = tempRotatedBlockCoordinates.map(item => item.column);
+    const tempMiddleCol = columns[Math.floor(columns.length / 2) - 1];
+
+    if (this.#isEmptyBoardSquare(tempTopRow, tempMiddleCol, tempRotatedBlockCoordinates)) {
+      this.block = this.block.rotateRight()
+      this.#blockCurrentTopRow = tempTopRow
+      this.#boardMiddleCol = tempMiddleCol
+    }
+
+    return
   }
 
   rotateLeft() {
