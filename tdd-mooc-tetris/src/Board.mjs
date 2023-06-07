@@ -159,19 +159,24 @@ export class Board {
 
     const tempTopRow = Math.min(...tempRotatedBlockCoordinates.map(item => item.row));
 
-    const columns = tempRotatedBlockCoordinates.map(item => item.column);
-    const tempMiddleCol = columns[Math.floor(columns.length / 2) - 1];
-
-    if (this.#isEmptyBoardSquare(tempTopRow, tempMiddleCol, tempRotatedBlockCoordinates)) {
+    if (this.#isEmptyBoardSquare(tempTopRow, this.#boardMiddleCol, tempRotatedBlockCoordinates)) {
       this.block = this.block.rotateRight()
       this.#blockCurrentTopRow = tempTopRow
-      this.#boardMiddleCol = tempMiddleCol
     }
 
     return
   }
 
   rotateLeft() {
-    this.block = this.block.rotateLeft()
+    const tempRotatedBlockCoordinates = this.block.rotateLeft().mapToBoardCoordinates(this.#blockCurrentTopRow, this.#boardMiddleCol)
+
+    const tempTopRow = Math.min(...tempRotatedBlockCoordinates.map(item => item.row));
+
+    if (this.#isEmptyBoardSquare(tempTopRow, this.#boardMiddleCol, tempRotatedBlockCoordinates)) {
+      this.block = this.block.rotateLeft()
+      this.#blockCurrentTopRow = tempTopRow
+    }
+
+    return
   }
 }
