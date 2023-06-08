@@ -160,10 +160,7 @@ export class Board {
 
     const tempTopRow = Math.min(...tempRotatedBlockCoordinates.map(item => item.row));
 
-    console.log("canWallKick", canWallKick);
-
     if (canWallKick) {
-      console.log("this.#boardMiddleCol", this.#boardMiddleCol);
       this.#boardMiddleCol += 1
       this.block = this.block.rotateRight()
       this.#blockCurrentTopRow = tempTopRow
@@ -181,7 +178,16 @@ export class Board {
   rotateLeft() {
     const tempRotatedBlockCoordinates = this.block.rotateLeft().mapToBoardCoordinates(this.#blockCurrentTopRow, this.#boardMiddleCol)
 
+    const canWallKick = this.#canWallKick(this.#blockCurrentTopRow, this.#boardMiddleCol, tempRotatedBlockCoordinates)
+
     const tempTopRow = Math.min(...tempRotatedBlockCoordinates.map(item => item.row));
+
+    if (canWallKick) {
+      this.#boardMiddleCol -= 1
+      this.block = this.block.rotateRight()
+      this.#blockCurrentTopRow = tempTopRow
+      return
+    }
 
     if (this.#isEmptyBoardSquare(tempTopRow, this.#boardMiddleCol, tempRotatedBlockCoordinates)) {
       this.block = this.block.rotateLeft()
@@ -192,23 +198,16 @@ export class Board {
   }
 
   #canWallKick(row, col, rotatedBlockCoordinates) {
-    // console.log("rotatedBlockCoordinates", rotatedBlockCoordinates);
-    const currentPosition = this.#getBlockCurrentPosition(row, col)
-    // console.log("currentPosition", currentPosition);
-
     const isAgainstTheWall = rotatedBlockCoordinates.some(coordinate =>
       coordinate.column < 0 || coordinate.column > this.#width - 1)
 
+    // TODO NEXT: wallKick against blocks
     // const isAgainstBlock = this.#blocksOnBoard.some(blockPosition =>
     //   nextPosition.row === blockPosition.row && nextPosition.column === blockPosition.column)
 
-    console.log("isAgainstTheWall", isAgainstTheWall);
-    console.log("col", col);
-    console.log("emptyDestination", this.#isEmptyBoardSquare(row, col + 1));
-
-    // ! Only works for left side of wall
-    if (isAgainstTheWall && this.#isEmptyBoardSquare(row, col + 1)) {
-      return true
+    if (isAgainstTheWall) {
+      const leftOrRightWallOffset = col === 0 ? 1 : -1
+      return this.#isEmptyBoardSquare(row, col + leftOrRightWallOffset)
     }
     return false
   }
