@@ -120,8 +120,7 @@ export class Board {
 
       const blocksCollisions = this.#blocksOnBoard.some(blockPosition => {
         return nextPosition.row === blockPosition.row && nextPosition.column === blockPosition.column;
-      }
-      )
+      })
 
       if (blocksCollisions) {
         isEmpty = false
@@ -157,7 +156,19 @@ export class Board {
   rotateRight() {
     const tempRotatedBlockCoordinates = this.block.rotateRight().mapToBoardCoordinates(this.#blockCurrentTopRow, this.#boardMiddleCol)
 
+    const canWallKick = this.#canWallKick(this.#blockCurrentTopRow, this.#boardMiddleCol, tempRotatedBlockCoordinates)
+
     const tempTopRow = Math.min(...tempRotatedBlockCoordinates.map(item => item.row));
+
+    console.log("canWallKick", canWallKick);
+
+    if (canWallKick) {
+      console.log("this.#boardMiddleCol", this.#boardMiddleCol);
+      this.#boardMiddleCol += 1
+      this.block = this.block.rotateRight()
+      this.#blockCurrentTopRow = tempTopRow
+      return
+    }
 
     if (this.#isEmptyBoardSquare(tempTopRow, this.#boardMiddleCol, tempRotatedBlockCoordinates)) {
       this.block = this.block.rotateRight()
@@ -179,4 +190,27 @@ export class Board {
 
     return
   }
+
+  #canWallKick(row, col, rotatedBlockCoordinates) {
+    // console.log("rotatedBlockCoordinates", rotatedBlockCoordinates);
+    const currentPosition = this.#getBlockCurrentPosition(row, col)
+    // console.log("currentPosition", currentPosition);
+
+    const isAgainstTheWall = rotatedBlockCoordinates.some(coordinate =>
+      coordinate.column < 0 || coordinate.column > this.#width - 1)
+
+    // const isAgainstBlock = this.#blocksOnBoard.some(blockPosition =>
+    //   nextPosition.row === blockPosition.row && nextPosition.column === blockPosition.column)
+
+    console.log("isAgainstTheWall", isAgainstTheWall);
+    console.log("col", col);
+    console.log("emptyDestination", this.#isEmptyBoardSquare(row, col + 1));
+
+    // ! Only works for left side of wall
+    if (isAgainstTheWall && this.#isEmptyBoardSquare(row, col + 1)) {
+      return true
+    }
+    return false
+  }
 }
+
