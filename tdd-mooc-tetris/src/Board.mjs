@@ -201,9 +201,17 @@ export class Board {
     const isAgainstTheWall = rotatedBlockCoordinates.some(coordinate =>
       coordinate.column < 0 || coordinate.column > this.#width - 1)
 
-    // TODO NEXT: wallKick against blocks
-    // const isAgainstBlock = this.#blocksOnBoard.some(blockPosition =>
-    //   nextPosition.row === blockPosition.row && nextPosition.column === blockPosition.column)
+    const isAgainstBlock = this.#blocksOnBoard.some(blockOnBoardPosition =>
+      rotatedBlockCoordinates.some(rotatedBlockPosition =>
+        blockOnBoardPosition.row === rotatedBlockPosition.row &&
+        blockOnBoardPosition.column === rotatedBlockPosition.column))
+
+    console.log("isAgainstBlock", isAgainstBlock);
+
+    if (isAgainstBlock) {
+      const leftOrRightWallOffset = -1
+      return this.#isEmptyBoardSquare(row, col + 1)
+    }
 
     if (isAgainstTheWall) {
       const leftOrRightWallOffset = col === 0 ? 1 : -1

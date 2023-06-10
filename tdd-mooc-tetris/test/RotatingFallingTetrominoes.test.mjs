@@ -102,28 +102,6 @@ describe("Rotating Falling tetrominoes", () => {
     ).to.be.false;
   });
 
-  it("cannot be rotated right when there is no room to rotate", () => {
-    board.drop(Tetromino.T_SHAPE);
-    board.rotateLeft()
-    fallToBottom(board)
-    board.drop(Tetromino.T_SHAPE);
-    board.rotateRight()
-    board.moveBlockRight()
-    board.tick()
-    board.tick()
-    board.tick()
-    board.rotateRight()
-
-    expect(board.toString()).to.equalShape(
-      `..........
-       ..........
-       ..........
-       ....TT....
-       ...TTTT...
-       ....TT....`
-    );
-  });
-
   it("cannot be rotated left when there is no room to rotate", () => {
     board.drop(Tetromino.T_SHAPE);
     board.moveBlockRight()
@@ -147,7 +125,7 @@ describe("Rotating Falling tetrominoes", () => {
     );
   });
 
-  it("can do a wall kick if there is room to rotate on the left side of the wall", () => {
+  it("can do a wall kick rotating right if there is room to rotate on the left side of the wall", () => {
     board.drop(Tetromino.T_SHAPE);
     board.tick()
     board.rotateRight()
@@ -167,7 +145,7 @@ describe("Rotating Falling tetrominoes", () => {
     );
   });
 
-  it("can do a wall kick if there is room to rotate on the right side of the wall", () => {
+  it("can do a wall kick rotating left if there is room to rotate on the right side of the wall", () => {
     board.drop(Tetromino.T_SHAPE);
     board.tick()
     board.rotateLeft()
@@ -185,6 +163,35 @@ describe("Rotating Falling tetrominoes", () => {
        ..........
        ..........
        ..........`
+    );
+  });
+
+  it("can do a wall kick if rotating right if against another block", () => {
+    board.drop(Tetromino.I_SHAPE);
+    board.tick()
+    board.rotateRight()
+    board.moveBlockLeft()
+    board.moveBlockLeft()
+    board.moveBlockLeft()
+    board.moveBlockLeft()
+    board.tick()
+    board.tick()
+    board.drop(Tetromino.T_SHAPE)
+    board.rotateRight()
+    board.tick()
+    board.tick()
+    board.moveBlockLeft()
+    board.moveBlockLeft()
+    board.moveBlockLeft()
+    board.rotateRight()
+
+    expect(board.toString()).to.equalShape(
+      `..........
+       ..........
+       ITTT......
+       I.T.......
+       I.........
+       I.........`
     );
   });
 })
