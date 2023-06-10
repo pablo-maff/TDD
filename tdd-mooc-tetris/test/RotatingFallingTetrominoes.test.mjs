@@ -194,6 +194,37 @@ describe("Rotating Falling tetrominoes", () => {
        I.........`
     );
   });
+
+  it("can do a wall kick rotating left if against another block", () => {
+    board.drop(Tetromino.I_SHAPE);
+    board.tick()
+    board.rotateRight()
+    board.moveBlockRight()
+    board.moveBlockRight()
+    board.moveBlockRight()
+    board.moveBlockRight()
+    board.moveBlockRight()
+    board.tick()
+    board.tick()
+    board.drop(Tetromino.T_SHAPE)
+    board.rotateLeft()
+    board.tick()
+    board.tick()
+    board.moveBlockRight()
+    board.moveBlockRight()
+    board.moveBlockRight()
+    board.moveBlockRight()
+    board.rotateLeft()
+
+    expect(board.toString()).to.equalShape(
+      `..........
+       ..........
+       .......T.I
+       ......TTTI
+       .........I
+       .........I`
+    );
+  });
 })
 
 

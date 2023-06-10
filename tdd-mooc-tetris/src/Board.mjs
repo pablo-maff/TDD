@@ -1,13 +1,13 @@
 export class Board {
   #width;
   #height;
-  #boardMiddleCol
+  #currentBlockMiddleColOnBoard
 
   constructor(width, height) {
     this.#width = width;
     this.#height = height;
     this.board = this.#createEmptyBoard();
-    this.#boardMiddleCol = Math.round((this.#width / 2) - 1)
+    this.#currentBlockMiddleColOnBoard = Math.round((this.#width / 2) - 1)
   }
 
   #boardSquare = '.';
@@ -29,7 +29,7 @@ export class Board {
   toString() {
     let result = ''
 
-    const currentBlock = this.#getBlockCurrentPosition(this.#blockCurrentTopRow, this.#boardMiddleCol)
+    const currentBlock = this.#getBlockCurrentPosition(this.#blockCurrentTopRow, this.#currentBlockMiddleColOnBoard)
 
     for (let row = 0; row < this.#height; row++) {
       for (let col = 0; col < this.#width; col++) {
@@ -52,19 +52,19 @@ export class Board {
       throw new Error("already falling")
     }
     this.#blockCurrentTopRow = 0
-    this.#boardMiddleCol = Math.round((this.#width / 2) - 1)
+    this.#currentBlockMiddleColOnBoard = Math.round((this.#width / 2) - 1)
     this.block = block;
   }
 
   tick() {
     if (!this.hasFalling()) return
 
-    if (this.#isEmptyBoardSquare(this.#blockCurrentTopRow + 1, this.#boardMiddleCol)) {
+    if (this.#isEmptyBoardSquare(this.#blockCurrentTopRow + 1, this.#currentBlockMiddleColOnBoard)) {
       this.#blockCurrentTopRow += 1
       return
     }
 
-    this.#stopBlockMovement(this.#blockCurrentTopRow, this.#boardMiddleCol)
+    this.#stopBlockMovement(this.#blockCurrentTopRow, this.#currentBlockMiddleColOnBoard)
   }
 
   hasFalling() {
@@ -136,16 +136,16 @@ export class Board {
   moveBlockLeft() {
     if (!this.hasFalling()) return
 
-    if (this.#isEmptyBoardSquare(this.#blockCurrentTopRow, this.#boardMiddleCol - 1)) {
-      this.#boardMiddleCol -= 1
+    if (this.#isEmptyBoardSquare(this.#blockCurrentTopRow, this.#currentBlockMiddleColOnBoard - 1)) {
+      this.#currentBlockMiddleColOnBoard -= 1
     }
   }
 
   moveBlockRight() {
     if (!this.hasFalling()) return
 
-    if (this.#isEmptyBoardSquare(this.#blockCurrentTopRow, this.#boardMiddleCol + 1)) {
-      this.#boardMiddleCol += 1
+    if (this.#isEmptyBoardSquare(this.#blockCurrentTopRow, this.#currentBlockMiddleColOnBoard + 1)) {
+      this.#currentBlockMiddleColOnBoard += 1
     }
   }
 
@@ -154,20 +154,20 @@ export class Board {
   }
 
   rotateRight() {
-    const tempRotatedBlockCoordinates = this.block.rotateRight().mapToBoardCoordinates(this.#blockCurrentTopRow, this.#boardMiddleCol)
+    const tempRotatedBlockCoordinates = this.block.rotateRight().mapToBoardCoordinates(this.#blockCurrentTopRow, this.#currentBlockMiddleColOnBoard)
 
-    const canWallKick = this.#canWallKick(this.#blockCurrentTopRow, this.#boardMiddleCol, tempRotatedBlockCoordinates)
+    const canWallKick = this.#canWallKick(this.#blockCurrentTopRow, this.#currentBlockMiddleColOnBoard, tempRotatedBlockCoordinates)
 
     const tempTopRow = Math.min(...tempRotatedBlockCoordinates.map(item => item.row));
 
     if (canWallKick) {
-      this.#boardMiddleCol += 1
+      this.#currentBlockMiddleColOnBoard += 1
       this.block = this.block.rotateRight()
       this.#blockCurrentTopRow = tempTopRow
       return
     }
 
-    if (this.#isEmptyBoardSquare(tempTopRow, this.#boardMiddleCol, tempRotatedBlockCoordinates)) {
+    if (this.#isEmptyBoardSquare(tempTopRow, this.#currentBlockMiddleColOnBoard, tempRotatedBlockCoordinates)) {
       this.block = this.block.rotateRight()
       this.#blockCurrentTopRow = tempTopRow
     }
@@ -176,20 +176,20 @@ export class Board {
   }
 
   rotateLeft() {
-    const tempRotatedBlockCoordinates = this.block.rotateLeft().mapToBoardCoordinates(this.#blockCurrentTopRow, this.#boardMiddleCol)
+    const tempRotatedBlockCoordinates = this.block.rotateLeft().mapToBoardCoordinates(this.#blockCurrentTopRow, this.#currentBlockMiddleColOnBoard)
 
-    const canWallKick = this.#canWallKick(this.#blockCurrentTopRow, this.#boardMiddleCol, tempRotatedBlockCoordinates)
+    const canWallKick = this.#canWallKick(this.#blockCurrentTopRow, this.#currentBlockMiddleColOnBoard, tempRotatedBlockCoordinates)
 
     const tempTopRow = Math.min(...tempRotatedBlockCoordinates.map(item => item.row));
 
     if (canWallKick) {
-      this.#boardMiddleCol -= 1
+      this.#currentBlockMiddleColOnBoard -= 1
       this.block = this.block.rotateRight()
       this.#blockCurrentTopRow = tempTopRow
       return
     }
 
-    if (this.#isEmptyBoardSquare(tempTopRow, this.#boardMiddleCol, tempRotatedBlockCoordinates)) {
+    if (this.#isEmptyBoardSquare(tempTopRow, this.#currentBlockMiddleColOnBoard, tempRotatedBlockCoordinates)) {
       this.block = this.block.rotateLeft()
       this.#blockCurrentTopRow = tempTopRow
     }
@@ -206,16 +206,15 @@ export class Board {
         blockOnBoardPosition.row === rotatedBlockPosition.row &&
         blockOnBoardPosition.column === rotatedBlockPosition.column))
 
-    console.log("isAgainstBlock", isAgainstBlock);
-
     if (isAgainstBlock) {
-      const leftOrRightWallOffset = -1
-      return this.#isEmptyBoardSquare(row, col + 1)
+      const boardMiddleCol = Math.round((this.#width / 2) - 1)
+      const leftOrRightColumnOffset = this.#currentBlockMiddleColOnBoard > boardMiddleCol ? -1 : 1
+      return this.#isEmptyBoardSquare(row, col + leftOrRightColumnOffset)
     }
 
     if (isAgainstTheWall) {
-      const leftOrRightWallOffset = col === 0 ? 1 : -1
-      return this.#isEmptyBoardSquare(row, col + leftOrRightWallOffset)
+      const leftOrRightColumnOffset = col === 0 ? 1 : -1
+      return this.#isEmptyBoardSquare(row, col + leftOrRightColumnOffset)
     }
     return false
   }
