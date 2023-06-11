@@ -156,12 +156,12 @@ export class Board {
   rotateRight() {
     const tempRotatedBlockCoordinates = this.block.rotateRight().mapToBoardCoordinates(this.#blockCurrentTopRow, this.#currentBlockMiddleColOnBoard)
 
-    const canWallKick = this.#canWallKick(this.#blockCurrentTopRow, this.#currentBlockMiddleColOnBoard, tempRotatedBlockCoordinates)
+    const canWallKick = this.#canWallKick(tempRotatedBlockCoordinates)
 
     const tempTopRow = Math.min(...tempRotatedBlockCoordinates.map(item => item.row));
 
     if (canWallKick) {
-      this.#currentBlockMiddleColOnBoard += 1
+      this.#currentBlockMiddleColOnBoard += canWallKick
       this.block = this.block.rotateRight()
       this.#blockCurrentTopRow = tempTopRow
       return
@@ -178,13 +178,15 @@ export class Board {
   rotateLeft() {
     const tempRotatedBlockCoordinates = this.block.rotateLeft().mapToBoardCoordinates(this.#blockCurrentTopRow, this.#currentBlockMiddleColOnBoard)
 
-    const canWallKick = this.#canWallKick(this.#blockCurrentTopRow, this.#currentBlockMiddleColOnBoard, tempRotatedBlockCoordinates)
+    const canWallKick = this.#canWallKick(tempRotatedBlockCoordinates)
 
     const tempTopRow = Math.min(...tempRotatedBlockCoordinates.map(item => item.row));
 
+    console.log("canWallKick", canWallKick);
     if (canWallKick) {
-      this.#currentBlockMiddleColOnBoard -= 1
-      this.block = this.block.rotateRight()
+      console.log("currentBlockMiddleColOnBoard", this.#currentBlockMiddleColOnBoard);
+      this.#currentBlockMiddleColOnBoard += canWallKick
+      this.block = this.block.rotateLeft()
       this.#blockCurrentTopRow = tempTopRow
       return
     }
@@ -197,26 +199,32 @@ export class Board {
     return
   }
 
-  #canWallKick(row, col, rotatedBlockCoordinates) {
+  #canWallKick(rotatedBlockCoordinates) {
+    function getLeftOrRightColumnOffset(column1, column2) {
+      return column1 < column2 ? 1 : -1
+    }
+
+    const boardMiddleCol = Math.round((this.#width / 2) - 1)
+
     const isAgainstTheWall = rotatedBlockCoordinates.some(coordinate =>
       coordinate.column < 0 || coordinate.column > this.#width - 1)
 
-    const isAgainstBlock = this.#blocksOnBoard.some(blockOnBoardPosition =>
+    const isAgainstBlock = this.#blocksOnBoard.find(blockOnBoardPosition =>
       rotatedBlockCoordinates.some(rotatedBlockPosition =>
         blockOnBoardPosition.row === rotatedBlockPosition.row &&
         blockOnBoardPosition.column === rotatedBlockPosition.column))
 
-    if (isAgainstBlock) {
-      const boardMiddleCol = Math.round((this.#width / 2) - 1)
-      const leftOrRightColumnOffset = this.#currentBlockMiddleColOnBoard > boardMiddleCol ? -1 : 1
-      return this.#isEmptyBoardSquare(row, col + leftOrRightColumnOffset)
-    }
+    if (!isAgainstTheWall && !isAgainstBlock) return false
 
-    if (isAgainstTheWall) {
-      const leftOrRightColumnOffset = col === 0 ? 1 : -1
-      return this.#isEmptyBoardSquare(row, col + leftOrRightColumnOffset)
-    }
-    return false
+    const leftOrRightColumnOffset = isAgainstTheWall
+      ? getLeftOrRightColumnOffset(this.#currentBlockMiddleColOnBoard, boardMiddleCol)
+      : getLeftOrRightColumnOffset(isAgainstBlock.column, this.#currentBlockMiddleColOnBoard)
+
+    const nextBlockPositionIsEmpty = this.#isEmptyBoardSquare(rotatedBlockCoordinates.row, rotatedBlockCoordinates.col + leftOrRightColumnOffset)
+
+    if (!nextBlockPositionIsEmpty) return false
+
+    return leftOrRightColumnOffset
   }
 }
 
