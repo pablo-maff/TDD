@@ -9,7 +9,6 @@ describe("Rotating Falling tetrominoes", () => {
     board = new Board(10, 6);
   });
 
-
   it("can be rotated right", () => {
     board.drop(Tetromino.T_SHAPE);
     board.rotateRight()

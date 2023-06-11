@@ -108,14 +108,13 @@ export class Board {
   #isEmptyBoardSquare(row, col, rotatedBlockCoordinates) {
     const nextBlockPosition = !rotatedBlockCoordinates ? this.#getBlockCurrentPosition(row, col) : rotatedBlockCoordinates
 
-    const isEmpty = nextBlockPosition.reduce((isEmpty, nextPosition) => {
+    const emptyDestination = nextBlockPosition.reduce((isEmpty, nextPosition) => {
       if (nextPosition.row < 0 || nextPosition.column < 0) {
-        isEmpty = false
-        return
+        return false
       }
+
       if (nextPosition.row >= this.#height || nextPosition.column >= this.#width) {
-        isEmpty = false
-        return
+        return false
       }
 
       const blocksCollisions = this.#blocksOnBoard.some(blockPosition => {
@@ -123,13 +122,13 @@ export class Board {
       })
 
       if (blocksCollisions) {
-        isEmpty = false
+        return false
       }
 
       return isEmpty
     }, true)
 
-    return isEmpty
+    return emptyDestination
   }
 
   // * User Controls
@@ -219,7 +218,14 @@ export class Board {
       ? getLeftOrRightColumnOffset(this.#currentBlockMiddleColOnBoard, boardMiddleCol)
       : getLeftOrRightColumnOffset(isAgainstBlock.column, this.#currentBlockMiddleColOnBoard)
 
-    const nextBlockPositionIsEmpty = this.#isEmptyBoardSquare(rotatedBlockCoordinates.row, rotatedBlockCoordinates.col + leftOrRightColumnOffset)
+    const newRotatedBlockCoordinates = rotatedBlockCoordinates.map(block => {
+      return {
+        ...block,
+        column: block.column + leftOrRightColumnOffset
+      }
+    })
+
+    const nextBlockPositionIsEmpty = this.#isEmptyBoardSquare(null, null, newRotatedBlockCoordinates)
 
     if (!nextBlockPositionIsEmpty) return false
 
