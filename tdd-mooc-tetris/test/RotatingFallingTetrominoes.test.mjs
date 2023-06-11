@@ -102,27 +102,34 @@ describe("Rotating Falling tetrominoes", () => {
     ).to.be.false;
   });
 
-  // TODO: Fix the following two after they break
-  xit("cannot be rotated left when there is no room to rotate", () => {
+  it("cannot be rotated left when there is no room to rotate", () => {
     board.drop(Tetromino.T_SHAPE);
     board.moveBlockRight()
-    board.rotateRight()
     fallToBottom(board)
     board.drop(Tetromino.T_SHAPE);
     board.rotateLeft()
+    board.moveBlockRight()
+    board.moveBlockRight()
+    board.moveBlockRight()
+    fallToBottom(board)
+    board.drop(Tetromino.T_SHAPE);
+    board.moveBlockRight()
+    board.moveBlockRight()
+    board.moveBlockRight()
+    board.moveBlockRight()
+    board.rotateRight()
     board.tick()
     board.tick()
     board.tick()
-
     board.rotateLeft()
 
     expect(board.toString()).to.equalShape(
       `..........
        ..........
        ..........
-       ....TT....
-       ...TTTT...
-       ....TT....`
+       .......TT.
+       .....TTTTT
+       ....TTTTT.`
     );
   });
 

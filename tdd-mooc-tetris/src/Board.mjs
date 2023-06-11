@@ -156,12 +156,12 @@ export class Board {
   rotateRight() {
     const tempRotatedBlockCoordinates = this.block.rotateRight().mapToBoardCoordinates(this.#blockCurrentTopRow, this.#currentBlockMiddleColOnBoard)
 
-    const canWallKick = this.#canWallKick(tempRotatedBlockCoordinates)
+    const wallKickOffset = this.#wallKickOffset(tempRotatedBlockCoordinates)
 
     const tempTopRow = Math.min(...tempRotatedBlockCoordinates.map(item => item.row));
 
-    if (canWallKick) {
-      this.#currentBlockMiddleColOnBoard += canWallKick
+    if (wallKickOffset) {
+      this.#currentBlockMiddleColOnBoard += wallKickOffset
       this.block = this.block.rotateRight()
       this.#blockCurrentTopRow = tempTopRow
       return
@@ -178,14 +178,12 @@ export class Board {
   rotateLeft() {
     const tempRotatedBlockCoordinates = this.block.rotateLeft().mapToBoardCoordinates(this.#blockCurrentTopRow, this.#currentBlockMiddleColOnBoard)
 
-    const canWallKick = this.#canWallKick(tempRotatedBlockCoordinates)
+    const wallKickOffset = this.#wallKickOffset(tempRotatedBlockCoordinates)
 
     const tempTopRow = Math.min(...tempRotatedBlockCoordinates.map(item => item.row));
 
-    console.log("canWallKick", canWallKick);
-    if (canWallKick) {
-      console.log("currentBlockMiddleColOnBoard", this.#currentBlockMiddleColOnBoard);
-      this.#currentBlockMiddleColOnBoard += canWallKick
+    if (wallKickOffset) {
+      this.#currentBlockMiddleColOnBoard += wallKickOffset
       this.block = this.block.rotateLeft()
       this.#blockCurrentTopRow = tempTopRow
       return
@@ -199,7 +197,8 @@ export class Board {
     return
   }
 
-  #canWallKick(rotatedBlockCoordinates) {
+
+  #wallKickOffset(rotatedBlockCoordinates) {
     function getLeftOrRightColumnOffset(column1, column2) {
       return column1 < column2 ? 1 : -1
     }
