@@ -196,9 +196,12 @@ export class Board {
     return
   }
 
-
   #wallKickOffset(rotatedBlockCoordinates) {
-    function getLeftOrRightColumnOffset(column1, column2) {
+    function getLeftOrRightColumnOffset(column1, column2, block) {
+      if (block.getShape() === "I") {
+        return column1 < column2 ? 1 : -2
+      }
+
       return column1 < column2 ? 1 : -1
     }
 
@@ -215,8 +218,8 @@ export class Board {
     if (!isAgainstTheWall && !isAgainstBlock) return false
 
     const leftOrRightColumnOffset = isAgainstTheWall
-      ? getLeftOrRightColumnOffset(this.#currentBlockMiddleColOnBoard, boardMiddleCol)
-      : getLeftOrRightColumnOffset(isAgainstBlock.column, this.#currentBlockMiddleColOnBoard)
+      ? getLeftOrRightColumnOffset(this.#currentBlockMiddleColOnBoard, boardMiddleCol, this.block)
+      : getLeftOrRightColumnOffset(isAgainstBlock.column, this.#currentBlockMiddleColOnBoard, this.block)
 
     const newRotatedBlockCoordinates = rotatedBlockCoordinates.map(block => {
       return {
