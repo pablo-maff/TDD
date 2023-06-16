@@ -46,9 +46,7 @@ export class TetrominoArika extends RotatingShape2 {
 
   static O_SHAPE = new TetrominoArika(TetrominoArika.#O_SHAPE);
 
-  // TODO NEXT: Need to define toString here
-  // TODO: Create RotatingShape2 class and make this one inherit from there
-  // TODO: Get rid of RotatingShape2 constructor stuff while keeping things working
+  // TODO NEXT: Get rid of RotatingShape2 constructor stuff while keeping things working
   constructor(shape, rotationIndex = 0) {
     console.log("rotationIndex", rotationIndex);
     super(shape[getRotationIndex(shape, rotationIndex)]);
@@ -56,6 +54,7 @@ export class TetrominoArika extends RotatingShape2 {
     this.#rotationIndex = rotationIndex
     // console.log("this.#rotationIndex", this.#rotationIndex);
 
+    // TODO: Move it outside of the constructor and update this.rotationIndex to simplify the logic here
     function getRotationIndex(shape, rotationIndex) {
       if (rotationIndex + shape.length < 0) return 0
       if (rotationIndex < 0) {
