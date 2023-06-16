@@ -1,6 +1,8 @@
-import { RotatingShape } from "./RotatingShape.mjs";
+import { RotatingShape2 } from "./RotatingShape2.mjs";
 
-export class TetrominoArika extends RotatingShape {
+export class TetrominoArika extends RotatingShape2 {
+  #rotationIndex;
+
   static #T_SHAPE = [
     `....
      TTT.
@@ -38,38 +40,59 @@ export class TetrominoArika extends RotatingShape {
      ....`
   ]
 
-  static T_SHAPE = new TetrominoArika(TetrominoArika.#T_SHAPE, 0);
+  static T_SHAPE = new TetrominoArika(TetrominoArika.#T_SHAPE);
 
-  static I_SHAPE = new TetrominoArika(TetrominoArika.#I_SHAPE, 0);
+  static I_SHAPE = new TetrominoArika(TetrominoArika.#I_SHAPE);
 
-  static O_SHAPE = new TetrominoArika(TetrominoArika.#O_SHAPE, 0);
+  static O_SHAPE = new TetrominoArika(TetrominoArika.#O_SHAPE);
 
-  constructor(shape, rotationIndex) {
-    super(shape[rotationIndex]);
+  // TODO NEXT: Need to define toString here
+  // TODO: Create RotatingShape2 class and make this one inherit from there
+  // TODO: Get rid of RotatingShape2 constructor stuff while keeping things working
+  constructor(shape, rotationIndex = 0) {
+    console.log("rotationIndex", rotationIndex);
+    super(shape[getRotationIndex(shape, rotationIndex)]);
+
+    this.#rotationIndex = rotationIndex
+    // console.log("this.#rotationIndex", this.#rotationIndex);
+
+    function getRotationIndex(shape, rotationIndex) {
+      if (rotationIndex + shape.length < 0) return 0
+      if (rotationIndex < 0) {
+        console.log("shape.length", shape.length);
+        console.log("shape.length - rotationIndex", shape.length + rotationIndex);
+        return rotationIndex + shape.length
+      }
+      else if (rotationIndex < shape.length) {
+        return rotationIndex
+      }
+      return 0
+    }
+
   }
 
   // * Overrides
-  // rotateRight() {
-  //   if (this.shape.includes('O')) return new TetrominoArika(this.toString())
-  //   if (this.shape.includes('I')) {
-  //     if (this.#rotationCounter === 0) {
-  //       return new TetrominoArika(super.rotateRight().toString(), this.#rotationCounter + 1)
-  //     }
-  //     else {
-  //       return new TetrominoArika(super.rotateLeft().toString(), this.#rotationCounter - 1)
-  //     }
-  //   }
+  toString() {
+    return this.shape.split("\n").map(block => block.trim()).join("\n") + "\n"
+  }
 
-  //   return new TetrominoArika(super.rotateRight().toString(), this.#rotationCounter + 1)
-  // }
+  rotateRight() {
+    // if (this.shape.includes('O')) return new TetrominoArika(this.toString())
+    // if (this.shape.includes('I')) {
+    //   return new TetrominoArika(super.rotateRight().toString(), this.#rotationCounter + 1)
+    // }
 
-  // rotateLeft() {
-  //   if (this.shape.includes('I')) {
-  //     return this.rotateRight()
-  //   }
 
-  //   if (this.shape.includes('O')) return new TetrominoArika(this.toString())
+    return new TetrominoArika(TetrominoArika.#T_SHAPE, this.#rotationIndex + 1)
+  }
 
-  //   return new TetrominoArika(super.rotateLeft().toString())
-  // }
+  rotateLeft() {
+    // if (this.shape.includes('I')) {
+    //   return this.rotateRight()
+    // }
+
+    // if (this.shape.includes('O')) return new TetrominoArika(this.toString())
+
+    return new TetrominoArika(TetrominoArika.#T_SHAPE, this.#rotationIndex - 1)
+  }
 }
