@@ -1,94 +1,40 @@
 export class RotatingShape2 {
   shape;
   #shapeToArray;
-  cleanShape;
+  blockType;
   #shapeWidth;
   #tempCoordinates = [];
   #coordinates = [];
 
-  constructor(shape) {
+  constructor(shape, blockType) {
     this.shape = shape
-    // TODO: Should simplify what's going on in the constructor at some point
 
-    this.#shapeToArray = this.shape.replaceAll(' ', '').split('\n').filter(value => value.trim() !== '');
+    this.blockType = blockType
 
-    this.#shapeWidth = this.#shapeToArray.length
+    this.#shapeToArray = this.shape.split("\n").map(block => block.trim());
 
-    this.cleanShape = []
+    this.#shapeWidth = 4
 
     for (let row = 0; row < this.#shapeWidth; row++) {
-      this.cleanShape[row] = []
       for (let col = 0; col < this.#shapeWidth; col++) {
-        this.cleanShape[row][col] = this.#shapeToArray[row][col]
         if (this.#shapeToArray[row][col] !== ".") {
           this.#tempCoordinates = [...this.#tempCoordinates, { row, column: col }]
         }
       }
     }
+
+    // console.log("this.#tempCoordinates", this.#tempCoordinates);
     this.#setCoordinates(this.#tempCoordinates)
-  }
-
-
-  // toString() {
-  //   let result = ''
-
-  //   for (let row = 0; row < this.#shapeWidth; row++) {
-  //     for (let col = 0; col < this.#shapeWidth; col++) {
-  //       if (this.cleanShape[row] && this.cleanShape[row][col] !== undefined) {
-  //         result += this.cleanShape[row][col]
-  //       }
-  //     }
-
-  //     const lastChar = result.slice(-1);
-  //     const isNewLine = /\r|\n/.test(lastChar);
-
-  //     if (!isNewLine) {
-  //       result += '\n'
-  //     }
-  //   }
-
-  //   return result
-  // }
-
-  rotateRight() {
-    let result = [];
-    this.#tempCoordinates = [];
-
-    for (let row = 0; row < this.#shapeWidth; row++) {
-      result[row] = [];
-      for (let col = 0; col < this.#shapeWidth; col++) {
-        result[row][col] = this.cleanShape[this.#shapeWidth - col - 1][row];
-        if (result[row][col] !== ".") {
-          this.#tempCoordinates = [...this.#tempCoordinates, { row, column: col }];
-        }
-      }
-    }
-
-    return new RotatingShape2(result.join('\n').replaceAll(',', ''));;
-  }
-
-  rotateLeft() {
-    let result = [];
-    this.#tempCoordinates = [];
-
-    for (let row = 0; row < this.#shapeWidth; row++) {
-      result[row] = [];
-      for (let col = 0; col < this.#shapeWidth; col++) {
-        result[row][col] = this.cleanShape[col][this.#shapeWidth - row - 1];
-        if (result[row][col] !== ".") {
-          this.#tempCoordinates = [...this.#tempCoordinates, { row, column: col }];
-        }
-      }
-    }
-
-    return new RotatingShape2(result.join('\n').replaceAll(',', ''));;
+    // this.mapToBoardCoordinates(boardRowAxis, boardColAxis)
   }
 
   #setCoordinates(newCoordinates) {
     this.#tempCoordinates = []
     this.#coordinates = newCoordinates
+    console.log("this.#coordinates", this.#coordinates);
   }
 
+  //! TODO NEXT: Find a way to get rid of this method. The coordinates should be always the board coordinates now that there is no need for keeping track of internal block cooridnates
   mapToBoardCoordinates(boardRowAxis, boardColAxis) {
     // TODO: Will need a declarative solution here at some point
     const boardColumnInitialPosition = this.#coordinates[0].column === 0 ? 1 : this.#coordinates[0].column
@@ -119,7 +65,6 @@ export class RotatingShape2 {
   }
 
   getShape() {
-    const { row, column } = this.#coordinates[0]
-    return this.cleanShape[row][column]
+    return this.blockType
   }
 }

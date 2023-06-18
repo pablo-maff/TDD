@@ -40,16 +40,15 @@ export class TetrominoArika extends RotatingShape2 {
      ....`
   ]
 
-  static T_SHAPE = new TetrominoArika(TetrominoArika.#T_SHAPE);
+  static T_SHAPE = new TetrominoArika(TetrominoArika.#T_SHAPE, 0, "T");
 
-  static I_SHAPE = new TetrominoArika(TetrominoArika.#I_SHAPE);
+  static I_SHAPE = new TetrominoArika(TetrominoArika.#I_SHAPE, 0, "I");
 
-  static O_SHAPE = new TetrominoArika(TetrominoArika.#O_SHAPE);
+  static O_SHAPE = new TetrominoArika(TetrominoArika.#O_SHAPE, 0, "O");
 
   // TODO NEXT: Get rid of RotatingShape2 constructor stuff while keeping things working
-  constructor(shape, rotationIndex = 0) {
-    console.log("rotationIndex", rotationIndex);
-    super(shape[getRotationIndex(shape, rotationIndex)]);
+  constructor(shape, rotationIndex = 0, blockType) {
+    super(shape[getRotationIndex(shape, rotationIndex)], blockType);
 
     this.#rotationIndex = rotationIndex
     // console.log("this.#rotationIndex", this.#rotationIndex);
@@ -58,8 +57,6 @@ export class TetrominoArika extends RotatingShape2 {
     function getRotationIndex(shape, rotationIndex) {
       if (rotationIndex + shape.length < 0) return 0
       if (rotationIndex < 0) {
-        console.log("shape.length", shape.length);
-        console.log("shape.length - rotationIndex", shape.length + rotationIndex);
         return rotationIndex + shape.length
       }
       else if (rotationIndex < shape.length) {
@@ -82,7 +79,7 @@ export class TetrominoArika extends RotatingShape2 {
     // }
 
 
-    return new TetrominoArika(TetrominoArika.#T_SHAPE, this.#rotationIndex + 1)
+    return new TetrominoArika(TetrominoArika.#T_SHAPE, this.#rotationIndex + 1, "T")
   }
 
   rotateLeft() {
@@ -92,6 +89,6 @@ export class TetrominoArika extends RotatingShape2 {
 
     // if (this.shape.includes('O')) return new TetrominoArika(this.toString())
 
-    return new TetrominoArika(TetrominoArika.#T_SHAPE, this.#rotationIndex - 1)
+    return new TetrominoArika(TetrominoArika.#T_SHAPE, this.#rotationIndex - 1, "T")
   }
 }

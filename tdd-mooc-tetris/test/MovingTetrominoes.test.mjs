@@ -1,12 +1,12 @@
 import { expect } from "chai";
-import { Board } from "../src/Board.mjs";
 import { fallToBottom, moveLeft, moveRight } from "./utils.mjs";
 import { TetrominoArika } from "../src/TetrominoArika.mjs";
+import { Board2 } from "../src/Board2.mjs";
 
 describe("Moving tetrominoes", () => {
   let board;
   beforeEach(() => {
-    board = new Board(10, 6);
+    board = new Board2(10, 6);
   });
 
   describe("The T shape", () => {
