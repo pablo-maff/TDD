@@ -1,5 +1,4 @@
-export interface IBoard {
-  // Returns a string representation of the board.
+interface IBoard {
   toString(): string;
   // Initiates the dropping of a block onto the board.
   drop(block: string): void;
