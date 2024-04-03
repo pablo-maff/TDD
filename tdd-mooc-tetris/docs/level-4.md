@@ -6,7 +6,8 @@ Open the [test/FallingTetrominoes.test.mjs](../test/FallingTetrominoes.test.mjs)
 one.
 
 The `Board` class needs to be updated to work with complex block shapes. You will need to find and update every place
-where the old code assumes 1×1 blocks (and a 3×3 board).
+where the old code assumes 1×1 blocks (and a 3×3 board). Create an appropriate abstraction so that the same code works
+for all block shapes.
 
 It may be useful to temporarily disable the one new failing test, so that you can refactor on green and make the next
 test easier to pass.
@@ -21,4 +22,10 @@ Remember the [small steps exercise](https://github.com/luontola/tdd-mooc-small-s
 there, changing only a few lines at a time between running tests. If the tests fail, undo your changes and try another
 tiny change.
 
-## 🚀 [Continue to the next level](level-5.md)
+After this level you should have enough code for [duplication](https://tdd.mooc.fi/2-design#duplication) to start
+becoming an issue. Go through
+the [sparrow decks](https://llewellynfalco.blogspot.com/p/sparrow-decks.html) for duplication, and maybe also the other
+code smells, to train your ability to detect code smells. Then read through your code looking for duplication, and
+refactor to remove it.
+
+## 45% done 🚀 [Continue to the next level](level-5.md)
