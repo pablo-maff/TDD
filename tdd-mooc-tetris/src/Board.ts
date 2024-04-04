@@ -1,10 +1,7 @@
 interface IBoard {
   toString(): string;
-  // Initiates the dropping of a block onto the board.
   drop(block: string): void;
-  // Advances the game state by one tick, typically moving a falling block.
   tick(): void;
-  // Checks if there is a block currently in the process of falling.
   hasFalling(): boolean;
 }
 

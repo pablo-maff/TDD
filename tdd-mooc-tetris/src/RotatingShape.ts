@@ -27,7 +27,6 @@ export class RotatingShape implements IRotatingShape {
     let boardString = "";
     for (let row = 0; row < this.#shape.length; row++) {
       for (let col = 0; col < this.#shape[row].length; col++) {
-        // Fixed to use the row's length.
         boardString += this.#shape[row][col];
       }
       boardString += "\n";
