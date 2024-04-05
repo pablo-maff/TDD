@@ -83,11 +83,12 @@ export class Board implements IBoard {
 
   // Returns true if a block is falling; otherwise, false.
   hasFalling(): boolean {
-    return !!this.#block;
+    return !!this.#block && !!this.#block2;
   }
 
   #stopMovement() {
     this.#block = null;
+    this.#block2 = null;
     this.#blockCurrentRow = 0;
   }
 
@@ -98,6 +99,7 @@ export class Board implements IBoard {
 
     this.#board[this.#blockCurrentRow][this.#middleCol] = EMPTY;
     this.#board[++this.#blockCurrentRow][this.#middleCol] = this.#block;
+    this.#block2?.moveDown();
   }
 
   // Private method to check if the falling block will collide.
