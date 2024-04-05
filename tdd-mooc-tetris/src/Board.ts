@@ -14,7 +14,6 @@ export class Board implements IBoard {
   readonly #height: number;
   #block: string | null; // The current block, if any, that is falling.
   #blockCurrentRow: number; // The row index of the falling block.
-  #blockFalling: boolean; // Flag to indicate if a block is currently falling.
   #board: string[][]; // 2D array to represent the game board state.
 
   // Initializes a new game board with specified dimensions.
@@ -23,12 +22,8 @@ export class Board implements IBoard {
     this.#height = height;
     this.#block = null;
     this.#blockCurrentRow = 0;
-    this.#blockFalling = false;
     // Fill the board with EMPTY cells.
-    this.#board = new Array(height);
-    for (let row = 0; row < height; row++) {
-      this.#board[row] = new Array(width).fill(EMPTY);
-    }
+    this.#board = new Array(height).fill(undefined).map((_) => new Array(width).fill(EMPTY));
   }
 
   // Returns the current state of the board as a string.
@@ -49,7 +44,6 @@ export class Board implements IBoard {
       throw new Error("already falling");
     }
     this.#block = block;
-    this.#blockFalling = true;
     // Place the block at the starting position.
     this.#board[0][1] = block;
   }
@@ -66,19 +60,22 @@ export class Board implements IBoard {
       return;
     }
     // Stop the block if it will collide in the next move.
-    this.#blockFalling = false;
     this.#block = null;
     this.#blockCurrentRow = 0;
   }
 
   // Returns true if a block is falling; otherwise, false.
   hasFalling(): boolean {
-    return this.#blockFalling;
+    return !!this.#block;
   }
 
   // Private method to check if the falling block will collide.
   #willCollide(): boolean {
     // Check for collision with the bottom of the board or another block.
-    return this.#blockCurrentRow + 1 >= this.#height || this.#board[this.#blockCurrentRow + 1][1] !== EMPTY;
+    return this.#blockCurrentRow + 1 >= this.#height || this.#hitsBlock();
+  }
+
+  #hitsBlock(): boolean {
+    return this.#board[this.#blockCurrentRow + 1][1] !== EMPTY;
   }
 }
