@@ -72,10 +72,14 @@ export class Board implements IBoard {
   // Private method to check if the falling block will collide.
   #willCollide(): boolean {
     // Check for collision with the bottom of the board or another block.
-    return this.#blockCurrentRow + 1 >= this.#height || this.#hitsBlock();
+    return this.#hitsWall() || this.#hitsBlock();
   }
 
   #hitsBlock(): boolean {
     return this.#board[this.#blockCurrentRow + 1][1] !== EMPTY;
+  }
+
+  #hitsWall(): boolean {
+    return this.#blockCurrentRow + 1 >= this.#height;
   }
 }
