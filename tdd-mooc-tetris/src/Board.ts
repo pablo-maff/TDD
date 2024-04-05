@@ -59,14 +59,18 @@ export class Board implements IBoard {
       this.#board[++this.#blockCurrentRow][1] = this.#block;
       return;
     }
-    // Stop the block if it will collide in the next move.
-    this.#block = null;
-    this.#blockCurrentRow = 0;
+
+    this.#stopMovement();
   }
 
   // Returns true if a block is falling; otherwise, false.
   hasFalling(): boolean {
     return !!this.#block;
+  }
+
+  #stopMovement() {
+    this.#block = null;
+    this.#blockCurrentRow = 0;
   }
 
   // Private method to check if the falling block will collide.
