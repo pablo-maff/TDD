@@ -12,16 +12,15 @@ export class Board implements IBoard {
   // Board dimensions and state.
   readonly #width: number;
   readonly #height: number;
-  #block: string | null; // The current block, if any, that is falling.
-  #blockCurrentRow: number; // The row index of the falling block.
+  #block: string | null = null; // The current block, if any, that is falling.
+  #blockCurrentRow: number = 0; // The row index of the falling block.
   #board: string[][]; // 2D array to represent the game board state.
+  #middleCol: number = 0;
 
   // Initializes a new game board with specified dimensions.
   constructor(width: number, height: number) {
     this.#width = width;
     this.#height = height;
-    this.#block = null;
-    this.#blockCurrentRow = 0;
     // Fill the board with EMPTY cells.
     this.#board = new Array(height).fill(undefined).map((_) => new Array(width).fill(EMPTY));
   }
@@ -43,16 +42,18 @@ export class Board implements IBoard {
     if (this.hasFalling()) {
       throw new Error("already falling");
     }
+    this.#middleCol = Math.round(this.#width / 2 - 1);
     this.#block = block;
     // Place the block at the starting position.
-    this.#board[0][1] = block;
+    this.#board[0][this.#middleCol] = block;
   }
 
   // Progresses the game by one tick, moving the falling block down.
   tick(): void {
-    if (!this.#block) {
+    if (!this.hasFalling()) {
       throw new Error("missing block");
     }
+
     if (!this.#willCollide()) {
       // Move the block down one row.
       this.#moveDown();
@@ -77,8 +78,8 @@ export class Board implements IBoard {
       throw new Error("missing block");
     }
 
-    this.#board[this.#blockCurrentRow][1] = EMPTY;
-    this.#board[++this.#blockCurrentRow][1] = this.#block;
+    this.#board[this.#blockCurrentRow][this.#middleCol] = EMPTY;
+    this.#board[++this.#blockCurrentRow][this.#middleCol] = this.#block;
   }
 
   // Private method to check if the falling block will collide.
@@ -88,7 +89,7 @@ export class Board implements IBoard {
   }
 
   #hitsBlock(): boolean {
-    return this.#board[this.#blockCurrentRow + 1][1] !== EMPTY;
+    return this.#board[this.#blockCurrentRow + 1][this.#middleCol] !== EMPTY;
   }
 
   #hitsWall(): boolean {
