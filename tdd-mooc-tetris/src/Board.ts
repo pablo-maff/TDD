@@ -12,8 +12,15 @@ class MovingShape {
   #shape: any;
   #row: number;
   #col: number;
+
   constructor(shape: any, row: number, col: number) {
     this.#shape = shape;
+    this.#row = row;
+    this.#col = col;
+  }
+
+  moveDown() {
+    return new MovingShape(this.#shape, this.#row++, this.#col);
   }
 }
 
@@ -22,6 +29,7 @@ export class Board implements IBoard {
   readonly #width: number;
   readonly #height: number;
   #block: string | null = null; // The current block, if any, that is falling.
+  #block2: MovingShape | null = null; // The current block, if any, that is falling.
   #blockCurrentRow: number = 0; // The row index of the falling block.
   #board: string[][]; // 2D array to represent the game board state.
   #middleCol: number = 0;
@@ -53,6 +61,7 @@ export class Board implements IBoard {
     }
     this.#middleCol = Math.round(this.#width / 2 - 1);
     this.#block = block;
+    this.#block2 = new MovingShape(block, 0, this.#middleCol);
     // Place the block at the starting position.
     this.#board[0][this.#middleCol] = block;
   }
