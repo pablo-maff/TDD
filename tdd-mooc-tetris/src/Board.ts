@@ -55,8 +55,7 @@ export class Board implements IBoard {
     }
     if (!this.#willCollide()) {
       // Move the block down one row.
-      this.#board[this.#blockCurrentRow][1] = EMPTY;
-      this.#board[++this.#blockCurrentRow][1] = this.#block;
+      this.#moveDown();
       return;
     }
 
@@ -71,6 +70,15 @@ export class Board implements IBoard {
   #stopMovement() {
     this.#block = null;
     this.#blockCurrentRow = 0;
+  }
+
+  #moveDown() {
+    if (!this.#block) {
+      throw new Error("missing block");
+    }
+
+    this.#board[this.#blockCurrentRow][1] = EMPTY;
+    this.#board[++this.#blockCurrentRow][1] = this.#block;
   }
 
   // Private method to check if the falling block will collide.
