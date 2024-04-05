@@ -8,6 +8,15 @@ interface IBoard {
 // Represents an empty cell on the board.
 const EMPTY: "." = ".";
 
+class MovingShape {
+  #shape: any;
+  #row: number;
+  #col: number;
+  constructor(shape: any, row: number, col: number) {
+    this.#shape = shape;
+  }
+}
+
 export class Board implements IBoard {
   // Board dimensions and state.
   readonly #width: number;
