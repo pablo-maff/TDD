@@ -72,9 +72,12 @@ export class Board implements IBoard {
       throw new Error("missing block");
     }
 
-    if (!this.#willCollide()) {
+    const moveDownAttempt = this.#block2!.moveDown();
+
+    if (!this.#willCollide() && moveDownAttempt) {
       // Move the block down one row.
       this.#moveDown();
+      this.#block2!.moveDown();
       return;
     }
 
