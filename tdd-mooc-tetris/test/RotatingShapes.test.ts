@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { RotatingShape } from "../src/RotatingShape.js";
 
 describe("Rotating 3x3 shape", () => {
-  const shape: RotatingShape = RotatingShape.fromString(
+  const shape: RotatingShape = new RotatingShape(
     `ABC
      DEF
      GHI`
@@ -35,7 +35,7 @@ describe("Rotating 3x3 shape", () => {
 });
 
 describe("Rotating 5x5 shape", () => {
-  const shape: RotatingShape = RotatingShape.fromString(
+  const shape: RotatingShape = new RotatingShape(
     `ABCDE
      FGHIJ
      KLMNO
