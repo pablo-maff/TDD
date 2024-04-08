@@ -50,9 +50,11 @@ export class RotatingShape implements IRotatingShape {
   width() {
     return this.#shape[0].length;
   }
+
   height() {
     return this.#shape.length;
   }
+
   blockAt(row: number, col: number) {
     return this.#shape[row][col];
   }

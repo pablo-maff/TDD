@@ -66,4 +66,20 @@ export class Tetromino implements ITetromino {
   rotateLeft(): Tetromino {
     return new Tetromino(this.#orientationIndex - 1, this.#orientations);
   }
+
+  #shape() {
+    return this.#orientations[this.#orientationIndex];
+  }
+
+  width() {
+    return this.#shape().width();
+  }
+
+  height() {
+    return this.#shape().height();
+  }
+
+  blockAt(row: number, col: number) {
+    return this.#shape().blockAt(row, col);
+  }
 }
