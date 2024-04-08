@@ -22,6 +22,14 @@ class MovingShape {
   moveDown() {
     return new MovingShape(this.#shape, this.#row++, this.#col);
   }
+
+  height() {
+    return this.#row + this.#shape.height();
+  }
+
+  width() {
+    return this.#col + this.#shape.width();
+  }
 }
 
 export class Board implements IBoard {
@@ -118,13 +126,16 @@ export class Board implements IBoard {
   #hitsWall(): boolean {
     return this.#blockCurrentRow + 1 >= this.#height;
   }
+
   #willCollide2(shape: MovingShape): boolean {
     // Check for collision with the bottom of the board or another block.
     return this.#hitsWall2(shape) || this.#hitsBlock2(shape);
   }
+
   #hitsBlock2(shape: MovingShape): boolean {
     return this.#board[this.#blockCurrentRow + 1][this.#middleCol] !== EMPTY;
   }
+
   #hitsWall2(shape: MovingShape): boolean {
     return this.#blockCurrentRow + 1 >= this.#height;
   }
