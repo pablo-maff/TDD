@@ -8,7 +8,17 @@ interface IBoard {
 // Represents an empty cell on the board.
 const EMPTY: "." = ".";
 
-class MovingShape {
+class Point {
+  row: number;
+  col: number;
+
+  constructor(row: number, col: number) {
+    this.row = row;
+    this.col = col;
+  }
+}
+
+class MovableShape {
   #shape: any;
   #row: number;
   #col: number;
@@ -20,7 +30,7 @@ class MovingShape {
   }
 
   moveDown() {
-    return new MovingShape(this.#shape, this.#row++, this.#col);
+    return new MovableShape(this.#shape, this.#row++, this.#col);
   }
 
   height() {
@@ -30,6 +40,27 @@ class MovingShape {
   width() {
     return this.#col + this.#shape.width();
   }
+
+  nonEmptyBlocks() {
+    const points = [];
+    for (let row = this.#row; row < this.#row + this.#shape.height(); row++) {
+      for (let col = this.#col; col < this.#col + this.#shape.width(); col++) {
+        const block = this.blockAt(row, col);
+        if (block !== EMPTY) {
+          points.push(new Point(row, col));
+        }
+      }
+    }
+    return points;
+  }
+
+  blockAt(row: number, col: number) {
+    if (row >= this.#row && row < this.height() && col >= this.#col && col < this.width()) {
+      return this.#shape.blockAt(row - this.#row, col - this.#col);
+    } else {
+      return EMPTY;
+    }
+  }
 }
 
 export class Board implements IBoard {
@@ -37,7 +68,7 @@ export class Board implements IBoard {
   readonly #width: number;
   readonly #height: number;
   #block: string | null = null; // The current block, if any, that is falling.
-  #block2: MovingShape | null = null; // The current block, if any, that is falling.
+  #block2: MovableShape | null = null; // The current block, if any, that is falling.
   #blockCurrentRow: number = 0; // The row index of the falling block.
   #board: string[][]; // 2D array to represent the game board state.
   #middleCol: number = 0;
@@ -69,7 +100,7 @@ export class Board implements IBoard {
     }
     this.#middleCol = Math.round(this.#width / 2 - 1);
     this.#block = block;
-    this.#block2 = new MovingShape(block, 0, this.#middleCol);
+    this.#block2 = new MovableShape(block, 0, this.#middleCol);
     // Place the block at the starting position.
     this.#board[0][this.#middleCol] = block;
   }
@@ -127,16 +158,44 @@ export class Board implements IBoard {
     return this.#blockCurrentRow + 1 >= this.#height;
   }
 
-  #willCollide2(shape: MovingShape): boolean {
+  #willCollide2(shape: MovableShape): boolean {
     // Check for collision with the bottom of the board or another block.
     return this.#hitsWall2(shape) || this.#hitsBlock2(shape);
   }
 
-  #hitsBlock2(shape: MovingShape): boolean {
-    return this.#board[this.#blockCurrentRow + 1][this.#middleCol] !== EMPTY;
+  #hitsBlock2(shape: MovableShape): boolean {
+    for (const block of shape.nonEmptyBlocks()) {
+      if (this.#board[block.row][block.col] !== EMPTY) {
+        return true;
+      }
+    }
+    return false;
   }
 
-  #hitsWall2(shape: MovingShape): boolean {
-    return this.#blockCurrentRow + 1 >= this.#height;
+  #hitsWall2(shape: MovableShape): boolean {
+    for (const block of shape.nonEmptyBlocks()) {
+      if (block.row >= this.#height) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  width() {
+    return this.#width;
+  }
+
+  height() {
+    return this.#height;
+  }
+
+  blockAt(row: number, col: number) {
+    if (this.#block2) {
+      const block = this.#block2.blockAt(row, col);
+      if (block !== EMPTY) {
+        return block;
+      }
+    }
+    return this.#board[row][col];
   }
 }
