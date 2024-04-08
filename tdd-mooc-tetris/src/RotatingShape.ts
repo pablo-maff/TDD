@@ -46,4 +46,14 @@ export class RotatingShape implements IRotatingShape {
     // Utilizes rotateRight three times to achieve a left rotation.
     return new RotatingShape(this.#shape).rotateRight().rotateRight().rotateRight();
   }
+
+  width() {
+    return this.#shape[0].length;
+  }
+  height() {
+    return this.#shape.length;
+  }
+  blockAt(row: number, col: number) {
+    return this.#shape[row][col];
+  }
 }
