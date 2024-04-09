@@ -23,23 +23,23 @@ export class RotatingShape implements Shape {
     }
   }
 
-  width() {
+  width(): number {
     return this.#shape[0].length;
   }
 
-  height() {
+  height(): number {
     return this.#shape.length;
   }
 
-  blockAt(row: number, col: number) {
+  blockAt(row: number, col: number): string {
     return this.#shape[row][col];
   }
 
-  toString() {
+  toString(): string {
     return shapeToString(this);
   }
 
-  rotateRight() {
+  rotateRight(): RotatingShape {
     const size = this.#shape.length;
     const rotated = newSquareArray(size);
     for (let row = 0; row < size; row++) {
@@ -50,7 +50,7 @@ export class RotatingShape implements Shape {
     return new RotatingShape(rotated);
   }
 
-  rotateLeft() {
+  rotateLeft(): RotatingShape {
     return this.rotateRight().rotateRight().rotateRight();
   }
 }

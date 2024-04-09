@@ -15,8 +15,8 @@ class Point {
 
 class MovableShape implements Shape {
   #shape: Shape;
-  #row: number;
-  #col: number;
+  #row: number; // * The row of the topmost row of the shape
+  #col: number; // * The column of the leftmost column of the shape
 
   constructor(shape: Shape, row: number, col: number) {
     this.#shape = shape;
@@ -24,36 +24,44 @@ class MovableShape implements Shape {
     this.#col = col;
   }
 
-  moveDown() {
+  moveDown(): MovableShape {
     return new MovableShape(this.#shape, this.#row + 1, this.#col);
   }
 
-  nonEmptyBlocks() {
+  // * Returns the block starting coordinates of the shape relative to the board
+  nonEmptyBlocks(): Point[] {
     const points = [];
-    for (let row = this.#row; row < this.#row + this.#shape.height(); row++) {
-      for (let col = this.#col; col < this.#col + this.#shape.width(); col++) {
+    for (let row = this.#row; row < this.height(); row++) {
+      for (let col = this.#col; col < this.width(); col++) {
         const block = this.blockAt(row, col);
         if (block !== EMPTY) {
           points.push(new Point(row, col));
         }
       }
     }
+
     return points;
   }
 
-  blockAt(row: number, col: number) {
-    if (row >= this.#row && row < this.height() && col >= this.#col && col < this.width()) {
-      return this.#shape.blockAt(row - this.#row, col - this.#col);
-    } else {
+  // * Checks if the block is within boundaries
+  blockAt(row: number, col: number): string {
+    const blockInHeightBoundaries = row >= this.#row && row < this.height();
+    const blockInWidthBoundaries = col >= this.#col && col < this.width();
+
+    if (!blockInHeightBoundaries || !blockInWidthBoundaries) {
       return EMPTY;
     }
+
+    return this.#shape.blockAt(row - this.#row, col - this.#col);
   }
 
-  height() {
+  // * Returns the bottommost row of the shape
+  height(): number {
     return this.#row + this.#shape.height();
   }
 
-  width() {
+  // * Returns the rightmost column of the shape
+  width(): number {
     return this.#col + this.#shape.width();
   }
 }
@@ -73,22 +81,27 @@ export class Board implements Shape {
     }
   }
 
-  drop(piece: Shape | string) {
+  drop(piece: Shape | string): void {
     if (typeof piece === "string") {
-      // enables clearing level 1 without premature introducing a Block class
       piece = new Block(piece);
     }
+
     if (this.#falling) {
       throw new Error("another piece is already falling");
     }
-    this.#falling = new MovableShape(piece, 0, Math.floor((this.#width - piece.width()) / 2));
+
+    const middleCol = Math.floor((this.#width - piece.width()) / 2);
+
+    this.#falling = new MovableShape(piece, 0, middleCol);
   }
 
-  tick() {
+  tick(): void {
     if (!this.hasFalling()) {
       return;
     }
+
     const attempt = this.#falling!.moveDown();
+
     if (this.#hitsFloor(attempt) || this.#hitsImmobile(attempt)) {
       this.#stopFalling();
     } else {
@@ -96,7 +109,7 @@ export class Board implements Shape {
     }
   }
 
-  #hitsFloor(falling: MovableShape) {
+  #hitsFloor(falling: MovableShape): boolean {
     for (const block of falling.nonEmptyBlocks()) {
       if (block.row >= this.#height) {
         return true;
@@ -105,7 +118,7 @@ export class Board implements Shape {
     return false;
   }
 
-  #hitsImmobile(falling: MovableShape) {
+  #hitsImmobile(falling: MovableShape): boolean {
     for (const block of falling.nonEmptyBlocks()) {
       if (this.#immobile[block.row][block.col] !== EMPTY) {
         return true;
@@ -114,38 +127,44 @@ export class Board implements Shape {
     return false;
   }
 
-  #stopFalling() {
+  #stopFalling(): void {
     for (let row = 0; row < this.height(); row++) {
       for (let col = 0; col < this.width(); col++) {
-        this.#immobile[row][col] = this.blockAt(row, col) as string;
+        this.#immobile[row][col] = this.blockAt(row, col);
       }
     }
     this.#falling = null;
   }
 
-  hasFalling() {
+  hasFalling(): boolean {
     return this.#falling !== null;
   }
 
-  width() {
+  width(): number {
     return this.#width;
   }
 
-  height() {
+  height(): number {
     return this.#height;
   }
 
-  blockAt(row: number, col: number) {
-    if (this.#falling) {
-      const block = this.#falling.blockAt(row, col);
-      if (block !== EMPTY) {
-        return block;
-      }
+  blockAt(row: number, col: number): string {
+    const emptyBlock = this.#immobile[row][col];
+
+    if (!this.#falling) {
+      return emptyBlock;
     }
-    return this.#immobile[row][col];
+
+    const block = this.#falling.blockAt(row, col);
+
+    if (block !== EMPTY) {
+      return block;
+    }
+
+    return emptyBlock;
   }
 
-  toString() {
+  toString(): string {
     return shapeToString(this);
   }
 }

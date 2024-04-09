@@ -3,10 +3,10 @@ export interface Shape {
 
   height(): number;
 
-  blockAt(row: number, col: number): string | undefined;
+  blockAt(row: number, col: number): string;
 }
 
-export function shapeToString(shape: Shape) {
+export function shapeToString(shape: Shape): string {
   let s = "";
   for (let row = 0; row < shape.height(); row++) {
     for (let col = 0; col < shape.width(); col++) {

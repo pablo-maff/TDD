@@ -9,6 +9,7 @@ export class Tetromino implements Shape {
      TTT
      ...`
   );
+
   static I_SHAPE = new Tetromino(
     0,
     2,
@@ -18,6 +19,7 @@ export class Tetromino implements Shape {
      .....
      .....`
   );
+
   static O_SHAPE = new Tetromino(
     0,
     1,
@@ -29,9 +31,12 @@ export class Tetromino implements Shape {
   #currentOrientation: number;
   #orientations: RotatingShape[];
 
+  constructor(currentOrientation: number, orientations: RotatingShape[]);
+  constructor(currentOrientation: number, orientations: number, initialShape: string);
   constructor(currentOrientation: number, orientations: number | RotatingShape[], initialShape?: string) {
-    if (typeof initialShape === "string") {
-      orientations = orientations as number;
+    if (typeof orientations === "number") {
+      if (!initialShape) throw new Error("missing initial shape");
+
       this.#currentOrientation = currentOrientation;
       const shape = new RotatingShape(initialShape);
       this.#orientations = [
@@ -39,39 +44,41 @@ export class Tetromino implements Shape {
         shape.rotateRight(),
         shape.rotateRight().rotateRight(),
         shape.rotateRight().rotateRight().rotateRight(),
-      ].slice(0, orientations as number);
-    } else {
-      orientations = orientations as RotatingShape[];
-      this.#currentOrientation = (currentOrientation + orientations.length) % orientations.length;
-      this.#orientations = orientations;
+      ].slice(0, orientations);
+
+      return;
     }
+
+    // * Runs when orientations is RotatingShape[]
+    this.#currentOrientation = (currentOrientation + orientations.length) % orientations.length;
+    this.#orientations = orientations;
   }
 
-  rotateRight() {
+  rotateRight(): Tetromino {
     return new Tetromino(this.#currentOrientation + 1, this.#orientations);
   }
 
-  rotateLeft() {
+  rotateLeft(): Tetromino {
     return new Tetromino(this.#currentOrientation - 1, this.#orientations);
   }
 
-  #shape() {
+  #shape(): RotatingShape {
     return this.#orientations[this.#currentOrientation];
   }
 
-  width() {
+  width(): number {
     return this.#shape().width();
   }
 
-  height() {
+  height(): number {
     return this.#shape().height();
   }
 
-  blockAt(row: number, col: number) {
+  blockAt(row: number, col: number): string {
     return this.#shape().blockAt(row, col);
   }
 
-  toString() {
+  toString(): string {
     return this.#shape().toString();
   }
 }

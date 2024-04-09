@@ -7,21 +7,23 @@ export class Block implements Shape {
     this.#color = color;
   }
 
-  width() {
+  width(): number {
     return 1;
   }
 
-  height() {
+  height(): number {
     return 1;
   }
 
-  blockAt(row: number, col: number) {
+  blockAt(row: number, col: number): string {
     if (row === 0 && col === 0) {
       return this.#color;
     }
+
+    return "";
   }
 
-  toString() {
+  toString(): string {
     return shapeToString(this);
   }
 }
