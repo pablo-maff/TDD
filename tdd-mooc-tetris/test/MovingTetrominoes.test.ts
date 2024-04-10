@@ -2,7 +2,7 @@ import { beforeEach, describe, test } from "vitest";
 import { expect } from "chai";
 import { Tetromino } from "../src/Tetromino.js";
 import { Board } from "../src/Board.js";
-import { moveLeft, moveRight } from "./utils.js";
+import { fallToBottom, moveLeft, moveRight } from "./utils.js";
 
 describe("Moving tetrominoes", () => {
   let board: Board;
@@ -81,24 +81,21 @@ describe("Moving tetrominoes", () => {
       );
     });
 
-    // test("cannot be moved down beyond the board and stops falling", () => {
-    //   board.drop(Tetromino.T_SHAPE);
-    //   fallToBottom(board)
+    test("cannot be moved down beyond the board and stops falling", () => {
+      board.drop(Tetromino.T_SHAPE);
+      fallToBottom(board);
 
-    //   expect(board.toString()).to.equalShape(
-    //     `..........
-    //      ..........
-    //      ..........
-    //      ..........
-    //      ...TTT....
-    //      ....T.....`
-    //   );
+      expect(board.toString()).to.equalShape(
+        `..........
+         ..........
+         ..........
+         ..........
+         ....T.....
+         ...TTT....`
+      );
 
-    //   expect(
-    //     board.hasFalling(),
-    //     "the player should not be able to move the block"
-    //   ).to.be.false;
-    // })
+      expect(board.hasFalling(), "the player should not be able to move the block").to.be.false;
+    });
 
     // test("still moves when reaches the bottom", () => {
     //   board.drop(Tetromino.T_SHAPE);
