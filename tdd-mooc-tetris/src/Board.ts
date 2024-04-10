@@ -131,12 +131,20 @@ export class Board implements Shape {
   }
 
   moveBlockRight(): void {
-    this.#falling = this.#falling?.moveRight() as MovableShape;
+    if (!this.hasFalling()) {
+      return;
+    }
+    const attempt = this.#falling!.moveRight();
+    if (this.#hitsWall(attempt) || this.#hitsImmobile(attempt)) {
+      return;
+    } else {
+      this.#falling = attempt;
+    }
   }
 
   #hitsWall(falling: MovableShape): boolean {
     for (const block of falling.nonEmptyBlocks()) {
-      if (this.#width <= block.col) {
+      if (this.#width <= block.col || block.col >= this.#width) {
         return true;
       }
     }

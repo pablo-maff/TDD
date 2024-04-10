@@ -2,7 +2,7 @@ import { beforeEach, describe, test } from "vitest";
 import { expect } from "chai";
 import { Tetromino } from "../src/Tetromino.js";
 import { Board } from "../src/Board.js";
-import { moveLeft } from "./utils.js";
+import { moveLeft, moveRight } from "./utils.js";
 
 describe("Moving tetrominoes", () => {
   let board: Board;
@@ -53,7 +53,7 @@ describe("Moving tetrominoes", () => {
       );
     });
 
-    test("cannot be moved left if it hits wall and is still falling", () => {
+    test("cannot be moved left if it hits wall", () => {
       board.drop(Tetromino.T_SHAPE);
       moveLeft(board, 10);
 
@@ -65,28 +65,21 @@ describe("Moving tetrominoes", () => {
          ..........
          ..........`
       );
-
-      expect(board.hasFalling(), "the player should still be able to move the block").to.be.true;
     });
 
-    // test("cannot be moved right beyond the board and is still falling", () => {
-    //   board.drop(Tetromino.T_SHAPE);
-    //   moveRight(board, 10)
+    test("cannot be moved right if it hits wall", () => {
+      board.drop(Tetromino.T_SHAPE);
+      moveRight(board, 10);
 
-    //   expect(board.toString()).to.equalShape(
-    //     `.......TTT
-    //      ........T.
-    //      ..........
-    //      ..........
-    //      ..........
-    //      ..........`
-    //   );
-
-    //   expect(
-    //     board.hasFalling(),
-    //     "the player should still be able to move the block"
-    //   ).to.be.true;
-    // })
+      expect(board.toString()).to.equalShape(
+        `........T.
+         .......TTT
+         ..........
+         ..........
+         ..........
+         ..........`
+      );
+    });
 
     // test("cannot be moved down beyond the board and stops falling", () => {
     //   board.drop(Tetromino.T_SHAPE);

@@ -8,7 +8,7 @@ export function moveLeft(board: Board, positions: number) {
 
 export function moveRight(board: Board, positions: number) {
   for (let i = 0; i < positions; i++) {
-    // board.moveBlockRight();
+    board.moveBlockRight();
   }
 }
 
