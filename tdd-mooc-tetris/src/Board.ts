@@ -110,63 +110,51 @@ export class Board implements Shape {
 
     const attempt = this.#falling!.moveDown();
 
-    if (this.#hitsFloor(attempt) || this.#hitsImmobile(attempt)) {
-      this.#stopFalling();
-    } else {
+    if (!this.#hitsFloor(attempt) && !this.#hitsImmobile(attempt)) {
       this.#falling = attempt;
+      return;
     }
+
+    this.#stopFalling();
   }
 
-  moveBlockLeft(): void {
+  moveLeft(): void {
     if (!this.hasFalling()) {
       return;
     }
 
-    const attempt = this.#falling!.moveLeft();
-    if (this.#hitsWall(attempt) || this.#hitsImmobile(attempt)) {
-      return;
-    } else {
-      this.#falling = attempt;
-    }
+    this.#moveHorizontally(this.#falling!.moveLeft());
   }
 
-  moveBlockRight(): void {
+  moveRight(): void {
     if (!this.hasFalling()) {
       return;
     }
-    const attempt = this.#falling!.moveRight();
-    if (this.#hitsWall(attempt) || this.#hitsImmobile(attempt)) {
-      return;
-    } else {
+
+    this.#moveHorizontally(this.#falling!.moveRight());
+  }
+
+  #moveHorizontally(attempt: MovableShape) {
+    if (!this.#hitsWall(attempt) && !this.#hitsImmobile(attempt)) {
       this.#falling = attempt;
     }
   }
 
   #hitsWall(falling: MovableShape): boolean {
-    for (const block of falling.nonEmptyBlocks()) {
-      if (this.#width <= block.col || block.col >= this.#width) {
-        return true;
-      }
-    }
-    return false;
+    return falling.nonEmptyBlocks().some((block) => {
+      const hitsLeftWall = this.#width <= block.col;
+      const hitsRightWall = block.col >= this.#width;
+
+      return hitsLeftWall || hitsRightWall;
+    });
   }
 
   #hitsFloor(falling: MovableShape): boolean {
-    for (const block of falling.nonEmptyBlocks()) {
-      if (block.row >= this.#height) {
-        return true;
-      }
-    }
-    return false;
+    return falling.nonEmptyBlocks().some((block) => block.row >= this.#height);
   }
 
   #hitsImmobile(falling: MovableShape): boolean {
-    for (const block of falling.nonEmptyBlocks()) {
-      if (this.#immobile[block.row][block.col] !== EMPTY) {
-        return true;
-      }
-    }
-    return false;
+    return falling.nonEmptyBlocks().some((block) => this.#immobile[block.row][block.col] !== EMPTY);
   }
 
   #stopFalling(): void {

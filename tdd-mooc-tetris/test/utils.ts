@@ -2,13 +2,13 @@ import { Board } from "../src/Board";
 
 export function moveLeft(board: Board, positions: number) {
   for (let i = 0; i < positions; i++) {
-    board.moveBlockLeft();
+    board.moveLeft();
   }
 }
 
 export function moveRight(board: Board, positions: number) {
   for (let i = 0; i < positions; i++) {
-    board.moveBlockRight();
+    board.moveRight();
   }
 }
 

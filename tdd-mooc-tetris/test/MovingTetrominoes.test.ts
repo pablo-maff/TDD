@@ -12,7 +12,7 @@ describe("Moving tetrominoes", () => {
 
   test("can be moved left", () => {
     board.drop(Tetromino.T_SHAPE);
-    board.moveBlockLeft();
+    board.moveLeft();
 
     expect(board.toString()).to.equalShape(
       `...T......
@@ -26,7 +26,7 @@ describe("Moving tetrominoes", () => {
 
   test("can be moved right", () => {
     board.drop(Tetromino.T_SHAPE);
-    board.moveBlockRight();
+    board.moveRight();
 
     expect(board.toString()).to.equalShape(
       `.....T....
