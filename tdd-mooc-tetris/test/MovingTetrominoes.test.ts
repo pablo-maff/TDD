@@ -97,27 +97,24 @@ describe("Moving tetrominoes", () => {
       expect(board.hasFalling(), "the player should not be able to move the block").to.be.false;
     });
 
-    // test("still moves when reaches the bottom", () => {
-    //   board.drop(Tetromino.T_SHAPE);
-    //   board.tick()
-    //   board.tick()
-    //   board.tick()
-    //   board.tick()
+    test("still moves when reaches the bottom", () => {
+      board.drop(Tetromino.T_SHAPE);
+      board.tick();
+      board.tick();
+      board.tick();
+      board.tick();
 
-    //   expect(board.toString()).to.equalShape(
-    //     `..........
-    //      ..........
-    //      ..........
-    //      ..........
-    //      ...TTT....
-    //      ....T.....`
-    //   );
+      expect(board.toString()).to.equalShape(
+        `..........
+         ..........
+         ..........
+         ..........
+         ....T.....
+         ...TTT....`
+      );
 
-    //   expect(
-    //     board.hasFalling(),
-    //     "the player should still be able to move the block"
-    //   ).to.be.true;
-    // })
+      expect(board.hasFalling(), "the player should still be able to move the block").to.be.true;
+    });
 
     // test("cannot be moved left through other blocks and block stops on top of the other block", () => {
     //   board.drop(Tetromino.T_SHAPE);
