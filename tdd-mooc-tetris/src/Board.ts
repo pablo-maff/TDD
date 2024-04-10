@@ -32,6 +32,10 @@ class MovableShape implements Shape {
     return new MovableShape(this.#shape, this.#row, this.#col - 1);
   }
 
+  moveRight(): MovableShape {
+    return new MovableShape(this.#shape, this.#row, this.#col + 1);
+  }
+
   // * Returns the block starting coordinates of the shape relative to the board
   nonEmptyBlocks(): Point[] {
     const points = [];
@@ -113,8 +117,30 @@ export class Board implements Shape {
     }
   }
 
-  moveBlockLeft() {
-    this.#falling = this.#falling?.moveLeft() as MovableShape;
+  moveBlockLeft(): void {
+    if (!this.hasFalling()) {
+      return;
+    }
+
+    const attempt = this.#falling!.moveLeft();
+    if (this.#hitsWall(attempt) || this.#hitsImmobile(attempt)) {
+      return;
+    } else {
+      this.#falling = attempt;
+    }
+  }
+
+  moveBlockRight(): void {
+    this.#falling = this.#falling?.moveRight() as MovableShape;
+  }
+
+  #hitsWall(falling: MovableShape): boolean {
+    for (const block of falling.nonEmptyBlocks()) {
+      if (this.#width <= block.col) {
+        return true;
+      }
+    }
+    return false;
   }
 
   #hitsFloor(falling: MovableShape): boolean {
