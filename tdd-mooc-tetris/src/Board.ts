@@ -28,6 +28,10 @@ class MovableShape implements Shape {
     return new MovableShape(this.#shape, this.#row + 1, this.#col);
   }
 
+  moveLeft(): MovableShape {
+    return new MovableShape(this.#shape, this.#row, this.#col - 1);
+  }
+
   // * Returns the block starting coordinates of the shape relative to the board
   nonEmptyBlocks(): Point[] {
     const points = [];
@@ -107,6 +111,10 @@ export class Board implements Shape {
     } else {
       this.#falling = attempt;
     }
+  }
+
+  moveBlockLeft() {
+    this.#falling = this.#falling?.moveLeft() as MovableShape;
   }
 
   #hitsFloor(falling: MovableShape): boolean {

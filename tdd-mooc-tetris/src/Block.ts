@@ -1,5 +1,5 @@
 import { Shape, shapeToString } from "./shapes";
-
+// * Test double class
 export class Block implements Shape {
   #color;
 
