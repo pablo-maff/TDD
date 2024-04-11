@@ -67,4 +67,18 @@ describe("Rotating Falling tetrominoes", () => {
        ..........`
     );
   });
+
+  test("cannot be rotated if it has stopped falling", () => {
+    board.drop(Tetromino.T_SHAPE);
+    fallToBottom(board);
+
+    expect(board.toString()).to.equalShape(
+      `..........
+       ..........
+       ..........
+       ..........
+       ....T.....
+       ...TTT....`
+    );
+  });
 });
