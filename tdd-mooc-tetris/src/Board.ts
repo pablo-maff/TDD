@@ -40,6 +40,10 @@ class MovableShape implements Shape {
     return new MovableShape(this.#shape.rotateRight(), this.#row, this.#col);
   }
 
+  rotateLeft(): MovableShape {
+    return new MovableShape(this.#shape.rotateLeft(), this.#row, this.#col);
+  }
+
   // * Returns the block starting coordinates of the shape relative to the board
   nonEmptyBlocks(): Point[] {
     const points = [];
@@ -142,10 +146,18 @@ export class Board implements Shape {
     if (!this.hasFalling()) {
       return this;
     }
-    console.log("board BEFORE\n", this.toString());
 
     this.#falling = this.#falling!.rotateRight();
-    console.log("board AFTER\n", this.toString());
+
+    return this;
+  }
+
+  rotateLeft(): Shape {
+    if (!this.hasFalling()) {
+      return this;
+    }
+
+    this.#falling = this.#falling!.rotateRight();
 
     return this;
   }

@@ -6,6 +6,8 @@ export interface Shape {
   blockAt(row: number, col: number): string;
 
   rotateRight(): Shape;
+
+  rotateLeft(): Shape;
 }
 
 export function shapeToString(shape: Shape): string {
