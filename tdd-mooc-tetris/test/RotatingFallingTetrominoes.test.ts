@@ -105,6 +105,7 @@ describe("Rotating Falling tetrominoes", () => {
      ....TT....`
     );
   });
+
   test("cannot be rotated right when there is no room to rotate", () => {
     board.drop(Tetromino.T_SHAPE);
     board.moveRight();
@@ -124,6 +125,26 @@ describe("Rotating Falling tetrominoes", () => {
      ....TT....
      ...TTTT...
      ....TT....`
+    );
+  });
+
+  test("can do a wall kick rotating right if there is room to rotate on the left side of the wall", () => {
+    board.drop(Tetromino.T_SHAPE);
+    board.tick();
+    board.rotateRight();
+    board.moveLeft();
+    board.moveLeft();
+    board.moveLeft();
+    board.moveLeft();
+    board.rotateRight();
+
+    expect(board.toString()).to.equalShape(
+      `..........
+     ..........
+     TTT.......
+     .T........
+     ..........
+     ..........`
     );
   });
 });

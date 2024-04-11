@@ -149,6 +149,14 @@ export class Board implements Shape {
 
     const attempt = this.#falling!.rotateRight();
 
+    if (this.#hitsWall(attempt)) {
+      const attempt2 = this.#falling!.moveRight().rotateRight();
+      if (!this.#hitsImmobile(attempt2)) {
+        this.#falling = attempt2;
+      }
+      return this;
+    }
+
     if (!this.#hitsImmobile(attempt)) {
       this.#falling = attempt;
     }
@@ -178,8 +186,8 @@ export class Board implements Shape {
 
   #hitsWall(falling: MovableShape): boolean {
     return falling.nonEmptyBlocks().some((block) => {
-      const hitsLeftWall = this.#width <= block.col;
-      const hitsRightWall = block.col >= this.#width;
+      const hitsLeftWall = block.col < 0;
+      const hitsRightWall = block.col >= this.width();
 
       return hitsLeftWall || hitsRightWall;
     });
