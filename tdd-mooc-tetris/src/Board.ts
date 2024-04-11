@@ -147,7 +147,11 @@ export class Board implements Shape {
       return this;
     }
 
-    this.#falling = this.#falling!.rotateRight();
+    const attempt = this.#falling!.rotateRight();
+
+    if (!this.#hitsImmobile(attempt)) {
+      this.#falling = attempt;
+    }
 
     return this;
   }

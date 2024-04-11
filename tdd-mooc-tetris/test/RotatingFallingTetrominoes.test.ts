@@ -105,4 +105,25 @@ describe("Rotating Falling tetrominoes", () => {
      ....TT....`
     );
   });
+  test("cannot be rotated right when there is no room to rotate", () => {
+    board.drop(Tetromino.T_SHAPE);
+    board.moveRight();
+    board.rotateRight();
+    fallToBottom(board);
+    board.drop(Tetromino.T_SHAPE);
+    board.rotateLeft();
+    board.tick();
+    board.tick();
+    board.tick();
+    board.rotateRight();
+
+    expect(board.toString()).to.equalShape(
+      `..........
+     ..........
+     ..........
+     ....TT....
+     ...TTTT...
+     ....TT....`
+    );
+  });
 });
