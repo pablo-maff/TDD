@@ -71,12 +71,10 @@ class MovableShape implements Shape {
     return this.#shape.blockAt(row - this.#row, col - this.#col);
   }
 
-  // * Returns the bottommost row of the shape
   height(): number {
     return this.#row + this.#shape.height();
   }
 
-  // * Returns the rightmost column of the shape
   width(): number {
     return this.#col + this.#shape.width();
   }
@@ -87,6 +85,7 @@ export class Board implements Shape {
   #height: number;
   #falling: MovableShape | null = null;
   #immobile: string[][];
+  #middleCol: number = 0;
 
   constructor(width: number, height: number) {
     this.#width = width;
@@ -106,9 +105,9 @@ export class Board implements Shape {
       throw new Error("another piece is already falling");
     }
 
-    const middleCol = Math.floor((this.#width - piece.width()) / 2);
+    this.#middleCol = Math.floor((this.#width - piece.width()) / 2);
 
-    this.#falling = new MovableShape(piece, 0, middleCol);
+    this.#falling = new MovableShape(piece, 0, this.#middleCol);
   }
 
   tick(): void {
@@ -150,7 +149,10 @@ export class Board implements Shape {
     const attempt = this.#falling!.rotateRight();
 
     if (this.#hitsWall(attempt) || this.#hitsImmobile(attempt)) {
-      const attempt2 = this.#falling!.moveRight().rotateRight();
+      const blockIsOnRightSideOfBoard = this.#falling!.width() > this.#middleCol;
+      const attempt2 = blockIsOnRightSideOfBoard
+        ? this.#falling!.moveLeft().rotateRight()
+        : this.#falling!.moveRight().rotateRight();
       if (!this.#hitsImmobile(attempt2)) {
         this.#falling = attempt2;
       }
