@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { Board } from "../src/Board.js";
 import { Tetromino } from "../src/Tetromino.js";
-import { fallToBottom } from "./utils.js";
+import { fallToBottom, moveRight } from "./utils.js";
 import { beforeEach, describe, test } from "vitest";
 
 describe("Rotating Falling tetrominoes", () => {
@@ -79,6 +79,30 @@ describe("Rotating Falling tetrominoes", () => {
        ..........
        ....T.....
        ...TTT....`
+    );
+
+    expect(board.hasFalling(), "the player should not be able to move the block").to.be.false;
+  });
+
+  test("cannot be rotated left when there is no room to rotate", () => {
+    board.drop(Tetromino.T_SHAPE);
+    board.rotateLeft();
+    fallToBottom(board);
+    board.drop(Tetromino.T_SHAPE);
+    board.moveRight();
+    board.rotateRight();
+    board.tick();
+    board.tick();
+    board.tick();
+    board.rotateLeft();
+
+    expect(board.toString()).to.equalShape(
+      `..........
+     ..........
+     ..........
+     ....TT....
+     ...TTTT...
+     ....TT....`
     );
   });
 });
