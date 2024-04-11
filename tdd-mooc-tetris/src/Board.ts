@@ -157,7 +157,7 @@ export class Board implements Shape {
       return this;
     }
 
-    this.#falling = this.#falling!.rotateRight();
+    this.#falling = this.#falling!.rotateLeft();
 
     return this;
   }
