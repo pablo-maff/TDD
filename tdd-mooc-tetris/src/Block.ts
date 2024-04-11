@@ -23,6 +23,10 @@ export class Block implements Shape {
     return "";
   }
 
+  rotateRight(): Shape {
+    return this;
+  }
+
   toString(): string {
     return shapeToString(this);
   }

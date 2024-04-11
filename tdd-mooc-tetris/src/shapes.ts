@@ -4,6 +4,8 @@ export interface Shape {
   height(): number;
 
   blockAt(row: number, col: number): string;
+
+  rotateRight(): Shape;
 }
 
 export function shapeToString(shape: Shape): string {

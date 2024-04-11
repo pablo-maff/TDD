@@ -36,6 +36,10 @@ class MovableShape implements Shape {
     return new MovableShape(this.#shape, this.#row, this.#col + 1);
   }
 
+  rotateRight(): MovableShape {
+    return new MovableShape(this.#shape.rotateRight(), this.#row, this.#col);
+  }
+
   // * Returns the block starting coordinates of the shape relative to the board
   nonEmptyBlocks(): Point[] {
     const points = [];
@@ -132,6 +136,16 @@ export class Board implements Shape {
     }
 
     this.#moveHorizontally(this.#falling!.moveRight());
+  }
+
+  rotateRight(): Shape {
+    if (!this.hasFalling()) {
+      return this;
+    }
+
+    this.#falling = this.#falling!.rotateRight();
+
+    return this;
   }
 
   #moveHorizontally(attempt: MovableShape) {
