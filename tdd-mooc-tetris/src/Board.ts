@@ -142,8 +142,10 @@ export class Board implements Shape {
     if (!this.hasFalling()) {
       return this;
     }
+    console.log("board BEFORE\n", this.toString());
 
     this.#falling = this.#falling!.rotateRight();
+    console.log("board AFTER\n", this.toString());
 
     return this;
   }
