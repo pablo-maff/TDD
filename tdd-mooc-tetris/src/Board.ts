@@ -171,6 +171,14 @@ export class Board implements Shape {
 
     const attempt = this.#falling!.rotateLeft();
 
+    if (this.#hitsWall(attempt)) {
+      const attempt2 = this.#falling!.moveLeft().rotateLeft();
+      if (!this.#hitsImmobile(attempt2)) {
+        this.#falling = attempt2;
+      }
+      return this;
+    }
+
     if (!this.#hitsImmobile(attempt)) {
       this.#falling = attempt;
     }
