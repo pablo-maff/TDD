@@ -165,11 +165,7 @@ export class Board implements Shape {
     const hitsImmobile = this.#hitsImmobile2(attempt);
 
     if (Boolean(hitsImmobile.length)) {
-      const blockIsOnRightSideOfBoard = hitsImmobile[0].col > this.width() / 2 - 1;
-
-      const attempt2 = blockIsOnRightSideOfBoard
-        ? this.#falling!.moveRight().rotateRight()
-        : this.#falling!.moveLeft().rotateRight();
+      const attempt2 = this.#wallKickAgainstShape(hitsImmobile[0].col + 1).rotateRight();
 
       if (!this.#hitsImmobile(attempt2)) {
         this.#falling = attempt2;
@@ -227,6 +223,11 @@ export class Board implements Shape {
   #wallKickAgainstWall(): MovableShape {
     const blockIsOnRightSideOfBoard = this.#falling!.width() > this.width() / 2;
     return blockIsOnRightSideOfBoard ? this.#falling!.moveLeft() : this.#falling!.moveRight();
+  }
+
+  #wallKickAgainstShape(collisionColumn: number): MovableShape {
+    const blockIsOnRightSideOfBoard = collisionColumn > this.width() / 2;
+    return blockIsOnRightSideOfBoard ? this.#falling!.moveRight() : this.#falling!.moveLeft();
   }
 
   #moveHorizontally(attempt: MovableShape) {
