@@ -210,13 +210,71 @@ describe("Rotating Falling tetrominoes", () => {
     );
   });
 
+  test("can wall kick rotating left if against another block", () => {
+    board.drop(Tetromino.I_SHAPE);
+    board.tick();
+    board.rotateRight();
+    board.moveRight();
+    board.moveRight();
+    board.tick();
+    board.tick();
+    board.drop(Tetromino.T_SHAPE);
+    board.moveRight();
+    board.moveRight();
+    board.moveRight();
+    board.rotateRight();
+    board.tick();
+    board.tick();
+    board.rotateLeft();
+
+    expect(board.toString()).to.equalShape(
+      `..........
+     ..........
+     ......I.T.
+     ......ITTT
+     ......I...
+     ......I...`
+    );
+  });
+
   test("can wall kick rotating right if against another block", () => {
     board.drop(Tetromino.I_SHAPE);
     board.tick();
     board.rotateRight();
+    board.moveRight();
+    board.moveRight();
+    board.moveRight();
+    board.moveRight();
     board.tick();
     board.tick();
     board.drop(Tetromino.T_SHAPE);
+    board.moveRight();
+    board.moveRight();
+    board.moveRight();
+    board.rotateLeft();
+    board.tick();
+    board.tick();
+    board.rotateRight();
+
+    expect(board.toString()).to.equalShape(
+      `..........
+     ..........
+     ......T.I.
+     .....TTTI.
+     ........I.
+     ........I.`
+    );
+  });
+
+  test("can wall kick rotating right if against another block", () => {
+    board.drop(Tetromino.I_SHAPE);
+    board.tick();
+    board.rotateRight();
+    board.moveLeft();
+    board.tick();
+    board.tick();
+    board.drop(Tetromino.T_SHAPE);
+    board.moveLeft();
     board.moveLeft();
     board.rotateLeft();
     board.tick();
@@ -226,10 +284,10 @@ describe("Rotating Falling tetrominoes", () => {
     expect(board.toString()).to.equalShape(
       `..........
      ..........
-     ..T.I.....
-     .TTTI.....
-     ....I.....
-     ....I.....`
+     .T.I......
+     TTTI......
+     ...I......
+     ...I......`
     );
   });
 });
