@@ -162,10 +162,10 @@ export class Board implements Shape {
       return this;
     }
 
-    const hitsImmobile = this.#hitsImmobile2(attempt);
+    const hitsImmobile = this.#hitsImmobile(attempt);
 
-    if (Boolean(hitsImmobile.length)) {
-      const attempt2 = this.#wallKickAgainstShape(hitsImmobile[0].col + 1, attempt.width()).rotateRight();
+    if (!!hitsImmobile) {
+      const attempt2 = this.#wallKickAgainstShape(hitsImmobile.col + 1, attempt.width()).rotateRight();
 
       if (!this.#hitsImmobile(attempt2)) {
         this.#falling = attempt2;
@@ -198,10 +198,10 @@ export class Board implements Shape {
       return this;
     }
 
-    const hitsImmobile = this.#hitsImmobile2(attempt);
+    const hitsImmobile = this.#hitsImmobile(attempt);
 
-    if (Boolean(hitsImmobile.length)) {
-      const attempt2 = this.#wallKickAgainstShape(hitsImmobile[0].col + 1, attempt.width()).rotateLeft();
+    if (!!hitsImmobile) {
+      const attempt2 = this.#wallKickAgainstShape(hitsImmobile.col + 1, attempt.width()).rotateLeft();
 
       if (!this.#hitsImmobile(attempt2)) {
         this.#falling = attempt2;
@@ -252,12 +252,8 @@ export class Board implements Shape {
     return falling.nonEmptyBlocks().some((block) => block.row >= this.#height);
   }
 
-  #hitsImmobile(falling: MovableShape): boolean {
-    return falling.nonEmptyBlocks().some((block) => this.#immobile[block.row][block.col] !== EMPTY);
-  }
-
-  #hitsImmobile2(falling: MovableShape): Point[] {
-    return falling.nonEmptyBlocks().filter((block) => this.#immobile[block.row][block.col] !== EMPTY);
+  #hitsImmobile(falling: MovableShape): Point | void {
+    return falling.nonEmptyBlocks().find((block) => this.#immobile[block.row][block.col] !== EMPTY);
   }
 
   #stopFalling(): void {
