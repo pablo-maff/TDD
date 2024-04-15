@@ -78,6 +78,10 @@ class MovableShape implements Shape {
   width(): number {
     return this.#col + this.#shape.width();
   }
+
+  toString(): string {
+    return this.#shape.toString();
+  }
 }
 
 export class Board implements Shape {
@@ -85,7 +89,6 @@ export class Board implements Shape {
   #height: number;
   #falling: MovableShape | null = null;
   #immobile: string[][];
-  #middleCol: number = 0;
 
   constructor(width: number, height: number) {
     this.#width = width;
@@ -105,9 +108,9 @@ export class Board implements Shape {
       throw new Error("another piece is already falling");
     }
 
-    this.#middleCol = Math.floor((this.#width - piece.width()) / 2);
+    const middleCol = Math.floor((this.#width - piece.width()) / 2);
 
-    this.#falling = new MovableShape(piece, 0, this.#middleCol);
+    this.#falling = new MovableShape(piece, 0, middleCol);
   }
 
   tick(): void {
@@ -148,14 +151,33 @@ export class Board implements Shape {
 
     const attempt = this.#falling!.rotateRight();
 
-    if (this.#hitsWall(attempt) || this.#hitsImmobile(attempt)) {
-      const blockIsOnRightSideOfBoard = this.#falling!.width() > this.#middleCol;
+    if (this.#hitsWall(attempt)) {
+      // * This should be fine for wall kick when hitting wall
+      const blockIsOnRightSideOfBoard = this.#falling!.width() > this.width() / 2;
       const attempt2 = blockIsOnRightSideOfBoard
         ? this.#falling!.moveLeft().rotateRight()
         : this.#falling!.moveRight().rotateRight();
+
       if (!this.#hitsImmobile(attempt2)) {
         this.#falling = attempt2;
       }
+
+      return this;
+    }
+
+    const hitsImmobile = this.#hitsImmobile2(attempt);
+
+    if (Boolean(hitsImmobile.length)) {
+      const blockIsOnRightSideOfBoard = hitsImmobile[0].col > this.width() / 2 - 1;
+
+      const attempt2 = blockIsOnRightSideOfBoard
+        ? this.#falling!.moveRight().rotateRight()
+        : this.#falling!.moveLeft().rotateRight();
+
+      if (!this.#hitsImmobile(attempt2)) {
+        this.#falling = attempt2;
+      }
+
       return this;
     }
 
@@ -173,11 +195,32 @@ export class Board implements Shape {
 
     const attempt = this.#falling!.rotateLeft();
 
-    if (this.#hitsWall(attempt) || this.#hitsImmobile(attempt)) {
-      const attempt2 = this.#falling!.moveLeft().rotateLeft();
+    if (this.#hitsWall(attempt)) {
+      // * This should be fine for wall kick when hitting wall
+      const blockIsOnRightSideOfBoard = this.#falling!.width() > this.width() / 2;
+      const attempt2 = blockIsOnRightSideOfBoard
+        ? this.#falling!.moveLeft().rotateLeft()
+        : this.#falling!.moveRight().rotateLeft();
+
       if (!this.#hitsImmobile(attempt2)) {
         this.#falling = attempt2;
       }
+
+      return this;
+    }
+
+    const hitsImmobile = this.#hitsImmobile2(attempt);
+
+    if (Boolean(hitsImmobile.length)) {
+      const blockIsOnRightSideOfBoard = hitsImmobile[0].col >= this.width() / 2 - 1;
+      const attempt2 = blockIsOnRightSideOfBoard
+        ? this.#falling!.moveRight().rotateLeft()
+        : this.#falling!.moveLeft().rotateLeft();
+
+      if (!this.#hitsImmobile(attempt2)) {
+        this.#falling = attempt2;
+      }
+
       return this;
     }
 
@@ -209,6 +252,10 @@ export class Board implements Shape {
 
   #hitsImmobile(falling: MovableShape): boolean {
     return falling.nonEmptyBlocks().some((block) => this.#immobile[block.row][block.col] !== EMPTY);
+  }
+
+  #hitsImmobile2(falling: MovableShape): Point[] {
+    return falling.nonEmptyBlocks().filter((block) => this.#immobile[block.row][block.col] !== EMPTY);
   }
 
   #stopFalling(): void {
