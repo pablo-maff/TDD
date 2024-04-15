@@ -153,10 +153,7 @@ export class Board implements Shape {
 
     if (this.#hitsWall(attempt)) {
       // * This should be fine for wall kick when hitting wall
-      const blockIsOnRightSideOfBoard = this.#falling!.width() > this.width() / 2;
-      const attempt2 = blockIsOnRightSideOfBoard
-        ? this.#falling!.moveLeft().rotateRight()
-        : this.#falling!.moveRight().rotateRight();
+      const attempt2 = this.#wallKickAgainstWall().rotateRight();
 
       if (!this.#hitsImmobile(attempt2)) {
         this.#falling = attempt2;
