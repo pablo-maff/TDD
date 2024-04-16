@@ -1,8 +1,9 @@
 import { expect } from "chai";
 import { Board } from "../src/Board.js";
 import { Tetromino } from "../src/Tetromino.js";
-import { fallToBottom, moveRight } from "./utils.js";
+import { fallToBottom } from "./utils.js";
 import { beforeEach, describe, test } from "vitest";
+import { Tetromino2 } from "../src/Tetromino2.js";
 
 describe("Rotating Falling tetrominoes", () => {
   let board: Board;
@@ -11,12 +12,12 @@ describe("Rotating Falling tetrominoes", () => {
   });
 
   test("can be rotated right", () => {
-    board.drop(Tetromino.T_SHAPE);
+    board.drop(Tetromino2.T_SHAPE);
     board.rotateRight();
 
     expect(board.toString()).to.equalShape(
       `....T.....
-       ....TT....
+       ...TT.....
        ....T.....
        ..........
        ..........
