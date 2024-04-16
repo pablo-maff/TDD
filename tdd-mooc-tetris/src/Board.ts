@@ -90,17 +90,18 @@ export class Board implements Shape {
   #falling: MovableShape | null = null;
   #immobile: string[][];
 
-  constructor(width: number, height: number, loadBoard?: string) {
+  constructor(width: number, height: number, immobile?: string[][]) {
     this.#width = width;
     this.#height = height;
-    if (loadBoard) {
-      this.#immobile = loadBoard
-        .replaceAll(" ", "")
-        .trim()
-        .split("\n")
-        .map((row) => row.split(""));
+
+    // * For loaded boards
+    if (immobile) {
+      this.#immobile = immobile;
+
       return;
     }
+
+    // * For fresh boards
     this.#immobile = new Array(height);
     for (let row = 0; row < height; row++) {
       this.#immobile[row] = new Array(width).fill(EMPTY);
@@ -108,7 +109,16 @@ export class Board implements Shape {
   }
 
   static loadBoard(board: string): Board {
-    return new Board(10, 6, board);
+    const immobile = board
+      .replaceAll(" ", "")
+      .trim()
+      .split("\n")
+      .map((row) => row.split(""));
+
+    const height = immobile.length;
+    const width = immobile[0].length;
+
+    return new Board(width, height, immobile);
   }
 
   drop(piece: Shape | string): void {
