@@ -90,13 +90,25 @@ export class Board implements Shape {
   #falling: MovableShape | null = null;
   #immobile: string[][];
 
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, loadBoard?: string) {
     this.#width = width;
     this.#height = height;
+    if (loadBoard) {
+      this.#immobile = loadBoard
+        .replaceAll(" ", "")
+        .trim()
+        .split("\n")
+        .map((row) => row.split(""));
+      return;
+    }
     this.#immobile = new Array(height);
     for (let row = 0; row < height; row++) {
       this.#immobile[row] = new Array(width).fill(EMPTY);
     }
+  }
+
+  static loadBoard(board: string): Board {
+    return new Board(10, 6, board);
   }
 
   drop(piece: Shape | string): void {
@@ -152,7 +164,6 @@ export class Board implements Shape {
     const attempt = this.#falling!.rotateRight();
 
     if (this.#hitsWall(attempt)) {
-      // * This should be fine for wall kick when hitting wall
       const attempt2 = this.#wallKickAgainstWall().rotateRight();
 
       if (!this.#hitsImmobile(attempt2)) {
