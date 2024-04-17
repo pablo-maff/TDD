@@ -93,7 +93,7 @@ export class Tetromino2 implements Shape {
   }
 
   width(): number {
-    return this.#shape().width();
+    return this.#shape().width() - 1;
   }
 
   height(): number {

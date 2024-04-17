@@ -1,7 +1,5 @@
-import { Shape, shapeToString } from "./shapes";
+import { EmptyBlock, Shape, shapeToString } from "./shapes";
 import { Block } from "./Block";
-
-const EMPTY = ".";
 
 class Point {
   row: number;
@@ -37,11 +35,11 @@ class MovableShape implements Shape {
   }
 
   rotateRight(): MovableShape {
-    return new MovableShape(this.#shape.rotateRight(), this.#row, this.#col);
+    return new MovableShape(this.#shape.rotateRight(), this.#row < 0 ? 0 : this.#row, this.#col);
   }
 
   rotateLeft(): MovableShape {
-    return new MovableShape(this.#shape.rotateLeft(), this.#row, this.#col);
+    return new MovableShape(this.#shape.rotateLeft(), this.#row < 0 ? 0 : this.#row, this.#col);
   }
 
   // * Returns the block starting coordinates of the shape relative to the board
@@ -50,7 +48,7 @@ class MovableShape implements Shape {
     for (let row = this.#row; row < this.height(); row++) {
       for (let col = this.#col; col < this.width(); col++) {
         const block = this.blockAt(row, col);
-        if (block !== EMPTY) {
+        if (block !== EmptyBlock) {
           points.push(new Point(row, col));
         }
       }
@@ -65,7 +63,7 @@ class MovableShape implements Shape {
     const blockInWidthBoundaries = col >= this.#col && col < this.width();
 
     if (!blockInHeightBoundaries || !blockInWidthBoundaries) {
-      return EMPTY;
+      return EmptyBlock;
     }
 
     return this.#shape.blockAt(row - this.#row, col - this.#col);
@@ -104,7 +102,7 @@ export class Board implements Shape {
     // * For fresh boards
     this.#immobile = new Array(height);
     for (let row = 0; row < height; row++) {
-      this.#immobile[row] = new Array(width).fill(EMPTY);
+      this.#immobile[row] = new Array(width).fill(EmptyBlock);
     }
   }
 
@@ -133,6 +131,20 @@ export class Board implements Shape {
     const middleCol = Math.floor((this.#width - piece.width()) / 2);
 
     this.#falling = new MovableShape(piece, 0, middleCol);
+  }
+
+  drop2(piece: Shape | string): void {
+    if (typeof piece === "string") {
+      piece = new Block(piece);
+    }
+
+    if (this.#falling) {
+      throw new Error("another piece is already falling");
+    }
+
+    const middleCol = Math.floor((this.#width - piece.width()) / 2);
+
+    this.#falling = new MovableShape(piece, -1, middleCol);
   }
 
   tick(): void {
@@ -274,7 +286,10 @@ export class Board implements Shape {
   }
 
   #hitsImmobile(falling: MovableShape): Point | void {
-    return falling.nonEmptyBlocks().find((block) => this.#immobile[block.row][block.col] !== EMPTY);
+    return falling.nonEmptyBlocks().find((block) => {
+      const row = block.row < 0 ? 0 : block.row;
+      return this.#immobile[row][block.col] !== EmptyBlock;
+    });
   }
 
   #stopFalling(): void {
@@ -307,7 +322,7 @@ export class Board implements Shape {
 
     const block = this.#falling.blockAt(row, col);
 
-    if (block !== EMPTY) {
+    if (block !== EmptyBlock) {
       return block;
     }
 

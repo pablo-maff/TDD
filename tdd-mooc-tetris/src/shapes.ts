@@ -20,3 +20,5 @@ export function shapeToString(shape: Shape): string {
   }
   return s;
 }
+
+export const EmptyBlock = ".";

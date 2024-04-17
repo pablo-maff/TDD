@@ -1,13 +1,5 @@
 import { Shape, shapeToString } from "./shapes";
 
-function newSquareArray(size: number): any[][] {
-  const array = new Array(size);
-  for (let row = 0; row < size; row++) {
-    array[row] = new Array(size);
-  }
-  return array;
-}
-
 export class RotatingShape2 implements Shape {
   #shape: string[][];
 
@@ -35,7 +27,6 @@ export class RotatingShape2 implements Shape {
     return shapeToString(this);
   }
 
-  // ! Deprecated
   rotateRight(): RotatingShape2 {
     return this;
   }
