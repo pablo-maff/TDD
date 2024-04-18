@@ -179,58 +179,19 @@ export class Board implements Shape {
   }
 
   rotateRight(): Shape {
-    if (!this.hasFalling()) {
-      return this;
-    }
-
-    const attempt = this.#falling!.rotateRight();
-
-    if (this.#hitsWall(attempt)) {
-      const wallKick = this.#wallKick(attempt);
-
-      if (!this.#hitsImmobile(wallKick)) {
-        this.#falling = wallKick;
-      } else {
-        const doubleWallKick = this.#wallKick(wallKick);
-        if (!this.#hitsImmobile(doubleWallKick)) {
-          this.#falling = doubleWallKick;
-        }
-      }
-
-      return this;
-    }
-
-    const hitsImmobile = this.#hitsImmobile(attempt);
-
-    if (!!hitsImmobile) {
-      const wallKickShape = this.#wallKickShape(hitsImmobile.col + 1, attempt.width(), attempt);
-
-      const wallKickHitsImmobile = this.#hitsImmobile(wallKickShape);
-      if (!wallKickHitsImmobile) {
-        this.#falling = wallKickShape;
-      } else {
-        const doubleWallKickShape = this.#wallKickShape(hitsImmobile.col + 1, attempt.width(), wallKickShape);
-        if (!this.#hitsImmobile(doubleWallKickShape)) {
-          this.#falling = doubleWallKickShape;
-        }
-      }
-
-      return this;
-    }
-
-    if (!this.#hitsImmobile(attempt)) {
-      this.#falling = attempt;
-    }
-
-    return this;
+    return this.#rotate("right");
   }
 
   rotateLeft(): Shape {
+    return this.#rotate("left");
+  }
+
+  #rotate(direction: "left" | "right"): Shape {
     if (!this.hasFalling()) {
       return this;
     }
 
-    const attempt = this.#falling!.rotateLeft();
+    const attempt = direction === "left" ? this.#falling!.rotateLeft() : this.#falling!.rotateRight();
 
     if (this.#hitsWall(attempt)) {
       const wallKick = this.#wallKick(attempt);
