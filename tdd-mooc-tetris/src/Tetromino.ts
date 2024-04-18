@@ -1,8 +1,8 @@
 import { RotatingShape2 } from "./RotatingShape2";
 import { Shape } from "./shapes";
 
-export class Tetromino2 implements Shape {
-  static T_SHAPE = new Tetromino2(0, [
+export class Tetromino implements Shape {
+  static T_SHAPE = new Tetromino(0, [
     new RotatingShape2(
       3,
       `....
@@ -33,7 +33,7 @@ export class Tetromino2 implements Shape {
     ),
   ]);
 
-  static I_SHAPE = new Tetromino2(0, [
+  static I_SHAPE = new Tetromino(0, [
     new RotatingShape2(
       4,
       `....
@@ -50,7 +50,7 @@ export class Tetromino2 implements Shape {
     ),
   ]);
 
-  static O_SHAPE = new Tetromino2(0, [
+  static O_SHAPE = new Tetromino(0, [
     new RotatingShape2(
       3,
       `....
@@ -68,12 +68,12 @@ export class Tetromino2 implements Shape {
     this.#orientations = orientations;
   }
 
-  rotateRight(): Tetromino2 {
-    return new Tetromino2(this.#currentOrientation + 1, this.#orientations);
+  rotateRight(): Tetromino {
+    return new Tetromino(this.#currentOrientation + 1, this.#orientations);
   }
 
-  rotateLeft(): Tetromino2 {
-    return new Tetromino2(this.#currentOrientation - 1, this.#orientations);
+  rotateLeft(): Tetromino {
+    return new Tetromino(this.#currentOrientation - 1, this.#orientations);
   }
 
   #shape(): RotatingShape2 {
