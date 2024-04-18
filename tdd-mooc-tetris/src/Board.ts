@@ -186,10 +186,13 @@ export class Board implements Shape {
     const attempt = this.#falling!.rotateRight();
 
     if (this.#hitsWall(attempt)) {
-      const attempt2 = this.#wallKickAgainstWall().rotateRight();
+      const wallKick = this.#wallKick(attempt);
 
-      if (!this.#hitsImmobile(attempt2)) {
-        this.#falling = attempt2;
+      if (!this.#hitsImmobile(wallKick)) {
+        this.#falling = wallKick;
+      } else {
+        const doubleWallKick = this.#wallKick(wallKick);
+        this.#falling = doubleWallKick;
       }
 
       return this;
@@ -254,6 +257,12 @@ export class Board implements Shape {
     const blockIsOnRightSideOfBoard = this.#falling!.width() > this.width() / 2;
 
     return blockIsOnRightSideOfBoard ? this.#falling!.moveLeft() : this.#falling!.moveRight();
+  }
+
+  #wallKick(shape: MovableShape): MovableShape {
+    const blockIsOnRightSideOfBoard = shape.width() > this.width() / 2;
+
+    return blockIsOnRightSideOfBoard ? shape.moveLeft() : shape.moveRight();
   }
 
   #wallKickAgainstShape(collisionColumn: number, attemptWidth: number): MovableShape {
