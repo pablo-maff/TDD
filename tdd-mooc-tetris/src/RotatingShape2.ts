@@ -2,8 +2,10 @@ import { Shape, shapeToString } from "./shapes";
 
 export class RotatingShape2 implements Shape {
   #shape: string[][];
+  #width: number;
 
-  constructor(shape: string) {
+  constructor(width: number, shape: string) {
+    this.#width = width;
     this.#shape = shape
       .replaceAll(" ", "")
       .trim()
@@ -12,7 +14,7 @@ export class RotatingShape2 implements Shape {
   }
 
   width(): number {
-    return this.#shape[0].length;
+    return this.#width;
   }
 
   height(): number {
