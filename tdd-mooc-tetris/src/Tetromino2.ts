@@ -33,13 +33,6 @@ export class Tetromino2 implements Shape {
     ),
   ]);
 
-  // static #O_SHAPE = [
-  //   `....
-  //    .OO.
-  //    .OO.
-  //    ....`
-  // ]
-
   static I_SHAPE = new Tetromino2(0, [
     new RotatingShape2(
       4,
@@ -57,13 +50,15 @@ export class Tetromino2 implements Shape {
     ),
   ]);
 
-  // static O_SHAPE = new Tetromino(
-  //   0,
-  //   1,
-  //   `.OO
-  //    .OO
-  //    ...`
-  // );
+  static O_SHAPE = new Tetromino2(0, [
+    new RotatingShape2(
+      3,
+      `....
+       .OO.
+       .OO.
+       ....`
+    ),
+  ]);
 
   #currentOrientation: number;
   #orientations: RotatingShape2[];
