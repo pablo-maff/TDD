@@ -225,10 +225,13 @@ export class Board implements Shape {
     const attempt = this.#falling!.rotateLeft();
 
     if (this.#hitsWall(attempt)) {
-      const attempt2 = this.#wallKickAgainstWall().rotateLeft();
+      const wallKick = this.#wallKick(attempt);
 
-      if (!this.#hitsImmobile(attempt2)) {
-        this.#falling = attempt2;
+      if (!this.#hitsImmobile(wallKick)) {
+        this.#falling = wallKick;
+      } else {
+        const doubleWallKick = this.#wallKick(wallKick);
+        this.#falling = doubleWallKick;
       }
 
       return this;

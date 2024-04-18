@@ -413,23 +413,21 @@ describe("Rotating Falling tetrominoes", () => {
       );
     });
 
-    // test("can wall kick rotating right on the left side of the wall", () => {
-    //   board.drop2(Tetromino2.T_SHAPE);
-    //   board.tick();
-    //   board.tick();
-    //   board.rotateLeft();
-    //   moveLeft(board, 10);
-    //   board.rotateRight();
+    test("can wall kick rotating left on the left side of the wall", () => {
+      board.drop2(Tetromino2.I_SHAPE);
+      board.rotateLeft();
+      moveLeft(board, 10);
+      board.rotateLeft();
 
-    //   expect(board.toString()).to.equalShape(
-    //     `..........
-    //    ..........
-    //    TTT.......
-    //    .T........
-    //    ..........
-    //    ..........`
-    //   );
-    // });
+      expect(board.toString()).to.equalShape(
+        `..........
+         IIII......
+         ..........
+         ..........
+         ..........
+         ..........`
+      );
+    });
 
     test("can wall kick rotating right on the left side of the wall", () => {
       board.drop2(Tetromino2.I_SHAPE);
