@@ -85,7 +85,7 @@ class MovableShape implements Shape {
 export class Board implements Shape {
   #width: number;
   #height: number;
-  #falling: MovableShape | null = null;
+  #falling: Shape | null = null;
   #immobile: string[][];
 
   constructor(width: number, height: number, immobile?: string[][]) {
@@ -152,7 +152,7 @@ export class Board implements Shape {
       return;
     }
 
-    const attempt = this.#falling!.moveDown();
+    const attempt = (this.#falling as MovableShape).moveDown();
 
     if (!this.#hitsFloor(attempt) && !this.#hitsImmobile(attempt)) {
       this.#falling = attempt;
@@ -167,7 +167,7 @@ export class Board implements Shape {
       return;
     }
 
-    this.#moveHorizontally(this.#falling!.moveLeft());
+    this.#moveHorizontally((this.#falling as MovableShape).moveLeft());
   }
 
   moveRight(): void {
@@ -175,7 +175,7 @@ export class Board implements Shape {
       return;
     }
 
-    this.#moveHorizontally(this.#falling!.moveRight());
+    this.#moveHorizontally((this.#falling as MovableShape).moveRight());
   }
 
   rotateRight(): Shape {
@@ -193,80 +193,92 @@ export class Board implements Shape {
 
     const attempt = direction === "left" ? this.#falling!.rotateLeft() : this.#falling!.rotateRight();
 
-    if (this.#hitsWall(attempt)) {
-      const wallKick = this.#wallKick(attempt);
-
-      if (!this.#hitsImmobile(wallKick)) {
-        this.#falling = wallKick;
-      } else {
-        const doubleWallKick = this.#wallKick(wallKick);
-        if (!this.#hitsImmobile(doubleWallKick)) {
-          this.#falling = doubleWallKick;
-        }
-      }
-
-      return this;
-    }
-
-    const hitsImmobile = this.#hitsImmobile(attempt);
-
-    if (!!hitsImmobile) {
-      const wallKickShape = this.#wallKickShape(hitsImmobile.col + 1, attempt.width(), attempt);
-
-      const wallKickHitsImmobile = this.#hitsImmobile(wallKickShape);
-      if (!wallKickHitsImmobile) {
-        this.#falling = wallKickShape;
-      } else {
-        const doubleWallKickShape = this.#wallKickShape(hitsImmobile.col + 1, attempt.width(), wallKickShape);
-        if (!this.#hitsImmobile(doubleWallKickShape)) {
-          this.#falling = doubleWallKickShape;
-        }
-      }
-
-      return this;
-    }
-
-    if (!this.#hitsImmobile(attempt)) {
+    if (!this.#hitsWall(attempt) && !this.#hitsImmobile(attempt)) {
       this.#falling = attempt;
+
+      return this;
+    }
+
+    if (this.#hitsWall(attempt)) {
+      return this.#handleWallCollision(attempt);
+    }
+
+    // * If we reach this point is because it is hitting a block
+    return this.#handleBlockCollision(attempt);
+  }
+
+  #handleWallCollision(attempt: Shape): Shape {
+    const wallKick = this.#wallKick(attempt);
+
+    if (!this.#hitsImmobile(wallKick)) {
+      this.#falling = wallKick;
+
+      return this;
+    }
+
+    const doubleWallKick = this.#wallKick(wallKick);
+
+    if (!this.#hitsImmobile(doubleWallKick)) {
+      this.#falling = doubleWallKick;
+
+      return this;
     }
 
     return this;
   }
 
-  #wallKick(shape: MovableShape): MovableShape {
+  #handleBlockCollision(attempt: Shape): Shape {
+    const collisionCoordinates = this.#hitsImmobile(attempt);
+
+    if (!collisionCoordinates) {
+      return this;
+    }
+
+    const wallKickShape = this.#wallKickShape(attempt);
+
+    if (!this.#hitsImmobile(wallKickShape)) {
+      this.#falling = wallKickShape;
+
+      return this;
+    }
+
+    const doubleWallKickShape = this.#wallKickShape(wallKickShape);
+
+    if (!this.#hitsImmobile(doubleWallKickShape)) {
+      this.#falling = doubleWallKickShape;
+
+      return this;
+    }
+
+    return this;
+  }
+
+  #wallKick(shape: Shape): Shape {
     const blockIsOnRightSideOfBoard = shape.width() > this.width() / 2;
 
-    return blockIsOnRightSideOfBoard ? shape.moveLeft() : shape.moveRight();
+    return blockIsOnRightSideOfBoard ? (shape as MovableShape).moveLeft() : (shape as MovableShape).moveRight();
   }
 
-  #wallKickAgainstShape(collisionColumn: number, attemptWidth: number): MovableShape {
-    if (!collisionColumn || !attemptWidth) {
-      throw new Error("missing arguments");
+  #wallKickShape(shape: Shape): Shape {
+    const collisionCoordinates = this.#hitsImmobile(shape);
+
+    if (!collisionCoordinates) {
+      return this;
     }
 
-    const collisionOnRightSideOfShape = attemptWidth <= collisionColumn;
+    const collisionOnRightSideOfShape = shape.width() <= collisionCoordinates.col + 1;
 
-    return collisionOnRightSideOfShape ? this.#falling!.moveLeft() : this.#falling!.moveRight();
+    return collisionOnRightSideOfShape ? (shape as MovableShape).moveLeft() : (shape as MovableShape).moveRight();
   }
 
-  #wallKickShape(collisionColumn: number, attemptWidth: number, shape: MovableShape): MovableShape {
-    if (!collisionColumn || !attemptWidth) {
-      throw new Error("missing arguments");
-    }
-
-    const collisionOnRightSideOfShape = attemptWidth <= collisionColumn;
-
-    return collisionOnRightSideOfShape ? shape.moveLeft() : shape.moveRight();
-  }
-
-  #moveHorizontally(attempt: MovableShape) {
+  #moveHorizontally(attempt: Shape) {
     if (!this.#hitsWall(attempt) && !this.#hitsImmobile(attempt)) {
       this.#falling = attempt;
     }
   }
 
-  #hitsWall(falling: MovableShape): boolean {
-    return falling.nonEmptyBlocks().some((block) => {
+  #hitsWall(falling: Shape): boolean {
+    return (falling as MovableShape).nonEmptyBlocks().some((block) => {
       const hitsLeftWall = block.col < 0;
       const hitsRightWall = block.col >= this.width();
 
@@ -274,12 +286,12 @@ export class Board implements Shape {
     });
   }
 
-  #hitsFloor(falling: MovableShape): boolean {
-    return falling.nonEmptyBlocks().some((block) => block.row >= this.#height);
+  #hitsFloor(falling: Shape): boolean {
+    return (falling as MovableShape).nonEmptyBlocks().some((block) => block.row >= this.#height);
   }
 
-  #hitsImmobile(falling: MovableShape): Point | void {
-    return falling.nonEmptyBlocks().find((block) => {
+  #hitsImmobile(falling: Shape): Point | void {
+    return (falling as MovableShape).nonEmptyBlocks().find((block) => {
       const row = block.row < 0 ? 0 : block.row;
       return this.#immobile[row][block.col] !== EmptyBlock;
     });
