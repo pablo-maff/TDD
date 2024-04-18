@@ -192,7 +192,9 @@ export class Board implements Shape {
         this.#falling = wallKick;
       } else {
         const doubleWallKick = this.#wallKick(wallKick);
-        this.#falling = doubleWallKick;
+        if (!this.#hitsImmobile(doubleWallKick)) {
+          this.#falling = doubleWallKick;
+        }
       }
 
       return this;
@@ -201,10 +203,16 @@ export class Board implements Shape {
     const hitsImmobile = this.#hitsImmobile(attempt);
 
     if (!!hitsImmobile) {
-      const attempt2 = this.#wallKickAgainstShape(hitsImmobile.col + 1, attempt.width()).rotateRight();
+      const wallKickShape = this.#wallKickShape(hitsImmobile.col + 1, attempt.width(), attempt);
 
-      if (!this.#hitsImmobile(attempt2)) {
-        this.#falling = attempt2;
+      const wallKickHitsImmobile = this.#hitsImmobile(wallKickShape);
+      if (!wallKickHitsImmobile) {
+        this.#falling = wallKickShape;
+      } else {
+        const doubleWallKickShape = this.#wallKickShape(hitsImmobile.col + 1, attempt.width(), wallKickShape);
+        if (!this.#hitsImmobile(doubleWallKickShape)) {
+          this.#falling = doubleWallKickShape;
+        }
       }
 
       return this;
