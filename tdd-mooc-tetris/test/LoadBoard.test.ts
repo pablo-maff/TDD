@@ -50,7 +50,7 @@ describe("A board represented as a string", () => {
        ....T.....`
     );
 
-    board.drop(new Block("X"));
+    board.drop("X");
 
     expect(board.toString()).to.equalShape(
       `....X.....

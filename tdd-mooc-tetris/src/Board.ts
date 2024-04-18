@@ -126,8 +126,11 @@ export class Board implements Shape {
   }
 
   drop(piece: Shape | string): void {
+    let initialRow = -1;
+
     if (typeof piece === "string") {
       piece = new Block(piece);
+      initialRow = 0;
     }
 
     if (this.#falling) {
@@ -136,21 +139,7 @@ export class Board implements Shape {
 
     const middleCol = Math.floor((this.#width - piece.width()) / 2);
 
-    this.#falling = new MovableShape(piece, 0, middleCol);
-  }
-
-  drop2(piece: Shape | string): void {
-    if (typeof piece === "string") {
-      piece = new Block(piece);
-    }
-
-    if (this.#falling) {
-      throw new Error("another piece is already falling");
-    }
-
-    const middleCol = Math.floor((this.#width - piece.width()) / 2);
-
-    this.#falling = new MovableShape(piece, -1, middleCol);
+    this.#falling = new MovableShape(piece, initialRow, middleCol);
   }
 
   tick(): void {
