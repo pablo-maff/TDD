@@ -231,7 +231,9 @@ export class Board implements Shape {
         this.#falling = wallKick;
       } else {
         const doubleWallKick = this.#wallKick(wallKick);
-        this.#falling = doubleWallKick;
+        if (!this.#hitsImmobile(doubleWallKick)) {
+          this.#falling = doubleWallKick;
+        }
       }
 
       return this;
@@ -240,10 +242,16 @@ export class Board implements Shape {
     const hitsImmobile = this.#hitsImmobile(attempt);
 
     if (!!hitsImmobile) {
-      const attempt2 = this.#wallKickAgainstShape(hitsImmobile.col + 1, attempt.width()).rotateLeft();
+      const wallKickShape = this.#wallKickShape(hitsImmobile.col + 1, attempt.width(), attempt);
 
-      if (!this.#hitsImmobile(attempt2)) {
-        this.#falling = attempt2;
+      const wallKickHitsImmobile = this.#hitsImmobile(wallKickShape);
+      if (!wallKickHitsImmobile) {
+        this.#falling = wallKickShape;
+      } else {
+        const doubleWallKickShape = this.#wallKickShape(hitsImmobile.col + 1, attempt.width(), wallKickShape);
+        if (!this.#hitsImmobile(doubleWallKickShape)) {
+          this.#falling = doubleWallKickShape;
+        }
       }
 
       return this;
@@ -254,12 +262,6 @@ export class Board implements Shape {
     }
 
     return this;
-  }
-
-  #wallKickAgainstWall(): MovableShape {
-    const blockIsOnRightSideOfBoard = this.#falling!.width() > this.width() / 2;
-
-    return blockIsOnRightSideOfBoard ? this.#falling!.moveLeft() : this.#falling!.moveRight();
   }
 
   #wallKick(shape: MovableShape): MovableShape {
@@ -276,6 +278,16 @@ export class Board implements Shape {
     const collisionOnRightSideOfShape = attemptWidth <= collisionColumn;
 
     return collisionOnRightSideOfShape ? this.#falling!.moveLeft() : this.#falling!.moveRight();
+  }
+
+  #wallKickShape(collisionColumn: number, attemptWidth: number, shape: MovableShape): MovableShape {
+    if (!collisionColumn || !attemptWidth) {
+      throw new Error("missing arguments");
+    }
+
+    const collisionOnRightSideOfShape = attemptWidth <= collisionColumn;
+
+    return collisionOnRightSideOfShape ? shape.moveLeft() : shape.moveRight();
   }
 
   #moveHorizontally(attempt: MovableShape) {
