@@ -77,6 +77,10 @@ export class Tetromino implements Shape {
     return this.#shape().width();
   }
 
+  internalWidth(): number {
+    return this.#shape().internalWidth();
+  }
+
   height(): number {
     return this.#shape().height();
   }

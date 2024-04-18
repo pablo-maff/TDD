@@ -1,5 +1,7 @@
 import { EmptyBlock, Shape, shapeToString } from "./shapes";
 import { Block } from "./Block";
+import { RotatingShape2 } from "./RotatingShape2";
+import { Tetromino } from "./Tetromino";
 
 class Point {
   row: number;
@@ -75,6 +77,10 @@ class MovableShape implements Shape {
 
   width(): number {
     return this.#col + this.#shape.width();
+  }
+
+  internalWidth(): number {
+    return this.#col + (this.#shape as RotatingShape2).internalWidth();
   }
 
   toString(): string {
@@ -266,7 +272,7 @@ export class Board implements Shape {
       return this;
     }
 
-    const collisionOnRightSideOfShape = shape.width() <= collisionCoordinates.col + 1;
+    const collisionOnRightSideOfShape = (shape as Tetromino).internalWidth() <= collisionCoordinates.col + 1;
 
     return collisionOnRightSideOfShape ? (shape as MovableShape).moveLeft() : (shape as MovableShape).moveRight();
   }

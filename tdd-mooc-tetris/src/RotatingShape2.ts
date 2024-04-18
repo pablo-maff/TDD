@@ -11,7 +11,7 @@ export class RotatingShape2 implements Shape {
       .map((row) => row.split(""));
   }
 
-  width(): number {
+  internalWidth(): number {
     const width = this.#shape.reduce((width, row, i) => {
       const color = row.find((block) => block !== EmptyBlock);
 
@@ -29,6 +29,10 @@ export class RotatingShape2 implements Shape {
     }, 0);
 
     return width;
+  }
+
+  width(): number {
+    return this.#shape[0].length;
   }
 
   height(): number {
