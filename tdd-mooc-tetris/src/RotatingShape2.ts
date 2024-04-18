@@ -1,11 +1,9 @@
-import { Shape, shapeToString } from "./shapes";
+import { EmptyBlock, Shape, shapeToString } from "./shapes";
 
 export class RotatingShape2 implements Shape {
   #shape: string[][];
-  #width: number;
 
-  constructor(width: number, shape: string) {
-    this.#width = width;
+  constructor(shape: string) {
     this.#shape = shape
       .replaceAll(" ", "")
       .trim()
@@ -14,7 +12,23 @@ export class RotatingShape2 implements Shape {
   }
 
   width(): number {
-    return this.#width;
+    const width = this.#shape.reduce((width, row, i) => {
+      const color = row.find((block) => block !== EmptyBlock);
+
+      if (!color) {
+        return width;
+      }
+
+      const rowWidth = row.lastIndexOf(color) + 1;
+
+      if (rowWidth > width) {
+        return rowWidth;
+      }
+
+      return width;
+    }, 0);
+
+    return width;
   }
 
   height(): number {

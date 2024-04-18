@@ -4,28 +4,24 @@ import { Shape } from "./shapes";
 export class Tetromino implements Shape {
   static T_SHAPE = new Tetromino(0, [
     new RotatingShape2(
-      3,
       `....
        TTT.
        .T..
        ....`
     ),
     new RotatingShape2(
-      2,
       `.T..
        TT..
        .T..
        ....`
     ),
     new RotatingShape2(
-      3,
       `....
        .T..
        TTT.
        ....`
     ),
     new RotatingShape2(
-      3,
       `.T..
        .TT.
        .T..
@@ -35,14 +31,12 @@ export class Tetromino implements Shape {
 
   static I_SHAPE = new Tetromino(0, [
     new RotatingShape2(
-      4,
       `....
        IIII
        ....
        ....`
     ),
     new RotatingShape2(
-      3,
       `..I.
        ..I.
        ..I.
@@ -52,7 +46,6 @@ export class Tetromino implements Shape {
 
   static O_SHAPE = new Tetromino(0, [
     new RotatingShape2(
-      3,
       `....
        .OO.
        .OO.
