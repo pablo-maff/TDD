@@ -1,6 +1,5 @@
 import { EmptyBlock, Shape, shapeToString } from "./shapes";
 import { Block } from "./Block";
-import { RotatingShape2 } from "./RotatingShape2";
 import { Tetromino } from "./Tetromino";
 
 class Point {
@@ -80,7 +79,7 @@ class MovableShape implements Shape {
   }
 
   internalWidth(): number {
-    return this.#col + (this.#shape as RotatingShape2).internalWidth();
+    return this.#col + (this.#shape as Tetromino).internalWidth();
   }
 
   toString(): string {

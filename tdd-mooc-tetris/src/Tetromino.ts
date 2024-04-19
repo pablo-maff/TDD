@@ -1,5 +1,4 @@
-import { RotatingShape2 } from "./RotatingShape2";
-import { EmptyBlock, Shape, shapeToString } from "./shapes";
+import { EmptyBlock, Shape } from "./shapes";
 
 export class Tetromino implements Shape {
   static T_SHAPE = new Tetromino(0, [
