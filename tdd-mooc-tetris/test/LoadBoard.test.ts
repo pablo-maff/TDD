@@ -1,7 +1,6 @@
 import { expect } from "chai";
 import { Board } from "../src/Board.js";
 import { describe, test } from "vitest";
-import { Block } from "../src/Block.js";
 
 describe("A board represented as a string", () => {
   test("can be loaded with a 10x6 size", () => {
