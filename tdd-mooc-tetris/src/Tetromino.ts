@@ -1,64 +1,56 @@
 import { RotatingShape2 } from "./RotatingShape2";
-import { Shape } from "./shapes";
+import { EmptyBlock, Shape, shapeToString } from "./shapes";
 
 export class Tetromino implements Shape {
   static T_SHAPE = new Tetromino(0, [
-    new RotatingShape2(
-      `....
+    `....
        TTT.
        .T..
-       ....`
-    ),
-    new RotatingShape2(
-      `.T..
+       ....`,
+    `.T..
        TT..
        .T..
-       ....`
-    ),
-    new RotatingShape2(
-      `....
+       ....`,
+    `....
        .T..
        TTT.
-       ....`
-    ),
-    new RotatingShape2(
-      `.T..
+       ....`,
+    `.T..
        .TT.
        .T..
-       ....`
-    ),
+       ....`,
   ]);
 
   static I_SHAPE = new Tetromino(0, [
-    new RotatingShape2(
-      `....
+    `....
        IIII
        ....
-       ....`
-    ),
-    new RotatingShape2(
-      `..I.
+       ....`,
+    `..I.
        ..I.
        ..I.
-       ..I.`
-    ),
+       ..I.`,
   ]);
 
   static O_SHAPE = new Tetromino(0, [
-    new RotatingShape2(
-      `....
+    `....
        .OO.
        .OO.
-       ....`
-    ),
+       ....`,
   ]);
 
   #currentOrientation: number;
-  #orientations: RotatingShape2[];
+  #orientations: string[];
+  #shape2: string[][];
 
-  constructor(currentOrientation: number, orientations: RotatingShape2[]) {
+  constructor(currentOrientation: number, orientations: string[]) {
     this.#currentOrientation = (currentOrientation + orientations.length) % orientations.length;
     this.#orientations = orientations;
+    this.#shape2 = this.#orientations[this.#currentOrientation]
+      .replaceAll(" ", "")
+      .trim()
+      .split("\n")
+      .map((row) => row.split(""));
   }
 
   rotateRight(): Tetromino {
@@ -69,27 +61,46 @@ export class Tetromino implements Shape {
     return new Tetromino(this.#currentOrientation - 1, this.#orientations);
   }
 
-  #shape(): RotatingShape2 {
-    return this.#orientations[this.#currentOrientation];
-  }
-
   width(): number {
-    return this.#shape().width();
+    return this.#shape2[0].length;
   }
 
   internalWidth(): number {
-    return this.#shape().internalWidth();
+    const width = this.#shape2.reduce((width, row, i) => {
+      const color = row.find((block) => block !== EmptyBlock);
+
+      if (!color) {
+        return width;
+      }
+
+      const rowWidth = row.lastIndexOf(color) + 1;
+
+      if (rowWidth > width) {
+        return rowWidth;
+      }
+
+      return width;
+    }, 0);
+
+    return width;
   }
 
   height(): number {
-    return this.#shape().height();
+    return this.#shape2.length;
   }
 
   blockAt(row: number, col: number): string {
-    return this.#shape().blockAt(row, col);
+    return this.#shape2[row][col];
   }
 
   toString(): string {
-    return this.#shape().toString();
+    let s = "";
+    for (let row = 0; row < this.height(); row++) {
+      for (let col = 0; col < this.width(); col++) {
+        s += this.blockAt(row, col);
+      }
+      s += "\n";
+    }
+    return s;
   }
 }
