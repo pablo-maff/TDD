@@ -11,12 +11,12 @@ export class Tetromino implements Shape {
 
   #currentOrientation: number;
   #orientations: string[];
-  #shape2: string[][];
+  #shape: string[][];
 
   constructor(currentOrientation: number, orientations: string[]) {
     this.#currentOrientation = (currentOrientation + orientations.length) % orientations.length;
     this.#orientations = orientations;
-    this.#shape2 = this.#orientations[this.#currentOrientation]
+    this.#shape = this.#orientations[this.#currentOrientation]
       .replaceAll(" ", "")
       .trim()
       .split("\n")
@@ -32,15 +32,15 @@ export class Tetromino implements Shape {
   }
 
   width(): number {
-    return this.#shape2[0].length;
+    return this.#shape[0].length;
   }
 
   height(): number {
-    return this.#shape2.length;
+    return this.#shape.length;
   }
 
   blockAt(row: number, col: number): string {
-    return this.#shape2[row][col];
+    return this.#shape[row][col];
   }
 
   toString(): string {

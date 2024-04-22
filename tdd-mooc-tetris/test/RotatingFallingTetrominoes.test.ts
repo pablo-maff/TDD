@@ -10,7 +10,7 @@ describe("Rotating Falling tetrominoes", () => {
     board = new Board(10, 6);
   });
 
-  test.skip("can not rotate if center column collides", () => {
+  test("can not rotate if center column collides", () => {
     const board = Board.loadBoard(
       `..........
       ..........
@@ -24,8 +24,6 @@ describe("Rotating Falling tetrominoes", () => {
     board.tick();
     board.tick();
     board.rotateRight();
-
-    console.log("board.toString()", board.toString());
 
     expect(board.toString()).to.equalShape(
       `..........
