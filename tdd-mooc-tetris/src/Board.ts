@@ -1,6 +1,5 @@
 import { EmptyBlock, Shape, shapeToString } from "./shapes";
 import { Block } from "./Block";
-import { Tetromino } from "./Tetromino";
 
 class Point {
   row: number;
@@ -21,6 +20,10 @@ class MovableShape implements Shape {
     this.#shape = shape;
     this.#row = row;
     this.#col = col;
+  }
+
+  floorKick(): MovableShape {
+    return new MovableShape(this.#shape, this.#row - 1, this.#col);
   }
 
   moveDown(): MovableShape {
@@ -191,10 +194,14 @@ export class Board implements Shape {
 
     const attempt = direction === "left" ? this.#falling!.rotateLeft() : this.#falling!.rotateRight();
 
-    if (!this.#hitsWall(attempt) && !this.#hitsImmobile(attempt)) {
+    if (!this.#hitsFloor(attempt) && !this.#hitsWall(attempt) && !this.#hitsImmobile(attempt)) {
       this.#falling = attempt;
 
       return this;
+    }
+
+    if (this.#hitsFloor(attempt)) {
+      return this.#handleFloorCollision(attempt);
     }
 
     if (this.#hitsWall(attempt)) {
@@ -218,6 +225,18 @@ export class Board implements Shape {
 
     if (!this.#hitsImmobile(doubleWallKick)) {
       this.#falling = doubleWallKick;
+
+      return this;
+    }
+
+    return this;
+  }
+
+  #handleFloorCollision(attempt: MovableShape): Shape {
+    const floorKick = this.#floorKick(attempt);
+
+    if (!this.#hitsImmobile(floorKick)) {
+      this.#falling = floorKick;
 
       return this;
     }
@@ -263,6 +282,10 @@ export class Board implements Shape {
     const collisionOnRightSideOfShape = shape.internalWidth() <= collisionCoordinates!.col + 1;
 
     return collisionOnRightSideOfShape ? shape.moveLeft() : shape.moveRight();
+  }
+
+  #floorKick(shape: MovableShape): MovableShape {
+    return shape.floorKick().floorKick();
   }
 
   #moveHorizontally(attempt: MovableShape) {

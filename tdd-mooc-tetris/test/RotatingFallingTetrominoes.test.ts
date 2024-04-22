@@ -582,5 +582,24 @@ describe("Rotating Falling tetrominoes", () => {
          ....I.....`
       );
     });
+
+    test("can floor kick on the floor row", () => {
+      board.drop(Tetromino.I_SHAPE);
+      board.tick();
+      board.tick();
+      board.tick();
+      board.tick();
+      board.tick();
+      board.rotateRight();
+
+      expect(board.toString()).to.equalShape(
+        `..........
+         ..........
+         .....I....
+         .....I....
+         .....I....
+         .....I....`
+      );
+    });
   });
 });
