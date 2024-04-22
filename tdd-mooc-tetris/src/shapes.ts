@@ -1,8 +1,6 @@
 export interface Shape {
   width(): number;
 
-  internalWidth?(): number;
-
   height(): number;
 
   blockAt(row: number, col: number): string;

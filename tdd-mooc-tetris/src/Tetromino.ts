@@ -35,26 +35,6 @@ export class Tetromino implements Shape {
     return this.#shape2[0].length;
   }
 
-  internalWidth(): number {
-    const width = this.#shape2.reduce((width, row, i) => {
-      const color = row.find((block) => block !== EmptyBlock);
-
-      if (!color) {
-        return width;
-      }
-
-      const rowWidth = row.lastIndexOf(color) + 1;
-
-      if (rowWidth > width) {
-        return rowWidth;
-      }
-
-      return width;
-    }, 0);
-
-    return width;
-  }
-
   height(): number {
     return this.#shape2.length;
   }

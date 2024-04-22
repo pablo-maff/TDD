@@ -81,14 +81,6 @@ class MovableShape implements Shape {
     return this.#col + this.#shape.width();
   }
 
-  internalWidth(): number {
-    if (!this.#shape.internalWidth) {
-      throw new Error("Shape missing internalWidth method");
-    }
-
-    return this.#col + this.#shape.internalWidth();
-  }
-
   toString(): string {
     return this.#shape.toString();
   }
@@ -330,14 +322,6 @@ export class Board implements Shape {
 
     // * if wall kick right is not possible then wall kick left is performed
     return shape.moveLeft().moveLeft();
-  }
-
-  #wallKickShape(shape: MovableShape): MovableShape {
-    const collisionCoordinates = this.#hitsImmobile(shape);
-
-    const collisionOnRightSideOfShape = shape.internalWidth() <= collisionCoordinates!.col + 1;
-
-    return collisionOnRightSideOfShape ? shape.moveLeft() : shape.moveRight();
   }
 
   #floorKick(shape: MovableShape): MovableShape {
