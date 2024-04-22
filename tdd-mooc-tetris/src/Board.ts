@@ -268,6 +268,11 @@ export class Board implements Shape {
       return this;
     }
 
+    // * If the next row is empty floor kick is not possible
+    if (this.#nextRowIsEmpty()) {
+      return this;
+    }
+
     // * If wall kick doesn't work is possible that a floor kick is needed
     const floorKickShape = this.#floorKick(attempt);
 
@@ -292,6 +297,12 @@ export class Board implements Shape {
 
     // * Not possible to perform wall or floor kicks
     return this;
+  }
+
+  #nextRowIsEmpty(): boolean {
+    const moveDown = this.#falling!.moveDown();
+
+    return !this.#hitsFloor(moveDown) && !this.#hitsImmobile(moveDown);
   }
 
   #wallKick(shape: MovableShape): MovableShape {

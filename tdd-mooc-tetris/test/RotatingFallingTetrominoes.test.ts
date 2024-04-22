@@ -403,8 +403,6 @@ describe("Rotating Falling tetrominoes", () => {
       board.tick();
       board.rotateRight();
 
-      console.log("board", board.toString());
-
       expect(board.toString()).to.equalShape(
         `..........
          ..........
@@ -627,6 +625,59 @@ describe("Rotating Falling tetrominoes", () => {
          .....I....
          ...IIII...
          ...IIII...`
+      );
+    });
+
+    test("can't floor kick if it is on the air above another block", () => {
+      const board = Board.loadBoard(
+        `..........
+         ..........
+         ..........
+         ..........
+         ..........
+         ...IIII...`
+      );
+
+      board.drop(Tetromino.I_SHAPE);
+      board.tick();
+      board.tick();
+      board.tick();
+      board.rotateRight();
+
+      expect(board.toString()).to.equalShape(
+        `..........
+         ..........
+         ..........
+         ...IIII...
+         ..........
+         ...IIII...`
+      );
+    });
+
+    test("can floor kick when collision happens on the side and there is room to rotate", () => {
+      const board = Board.loadBoard(
+        `..........
+         ..........
+         ..........
+         .......T..
+         .....TTT..
+         ....TTTT..`
+      );
+
+      board.drop(Tetromino.I_SHAPE);
+      moveRight(board, 4);
+      board.rotateLeft();
+      board.tick();
+      board.tick();
+      board.rotateRight();
+
+      expect(board.toString()).to.equalShape(
+        `..........
+       ..........
+       ......IIII
+       .......T..
+       .....TTT..
+       ....TTTT..`
       );
     });
   });
