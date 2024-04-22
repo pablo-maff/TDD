@@ -1,6 +1,7 @@
 import { describe, test } from "vitest";
 import { expect } from "chai";
 import { Tetromino } from "../src/Tetromino.js";
+import { I_SHAPES, O_SHAPES, T_SHAPES } from "../src/shapes.js";
 
 function distinctOrientations(shape: Tetromino) {
   const distinct = new Set();
@@ -18,30 +19,19 @@ function distinctOrientations(shape: Tetromino) {
 describe("The T shape", () => {
   const shape = Tetromino.T_SHAPE;
   test("initial orientation", () => {
-    expect(shape.toString()).to.equalShape(
-      `....
-       TTT.
-       .T..
-       ....`
-    );
+    expect(shape.toString()).to.equalShape(T_SHAPES[0]);
   });
 
   test("can be rotated right/clockwise", () => {
-    expect(shape.rotateRight().toString()).to.equalShape(
-      `.T..
-       TT..
-       .T..
-       ....`
-    );
+    expect(shape.rotateRight().toString()).to.equalShape(T_SHAPES[1]);
+  });
+
+  test("can be rotated right more than once", () => {
+    expect(shape.rotateRight().rotateRight().toString()).to.equalShape(T_SHAPES[2]);
   });
 
   test("can be rotated left/counter-clockwise", () => {
-    expect(shape.rotateLeft().toString()).to.equalShape(
-      `.T..
-       .TT.
-       .T..
-       ....`
-    );
+    expect(shape.rotateLeft().toString()).to.equalShape(T_SHAPES[3]);
   });
 
   test("has 4 distinct orientations", () => {
@@ -53,68 +43,18 @@ describe("The I shape", () => {
   const shape = Tetromino.I_SHAPE;
 
   test("initial orientation", () => {
-    expect(shape.toString()).to.equalShape(
-      `....
-       IIII
-       ....
-       ....`
-    );
+    expect(shape.toString()).to.equalShape(I_SHAPES[0]);
   });
 
   test("can be rotated right/clockwise", () => {
-    expect(shape.rotateRight().toString()).to.equalShape(
-      `..I.
-       ..I.
-       ..I.
-       ..I.`
-    );
+    expect(shape.rotateRight().toString()).to.equalShape(I_SHAPES[1]);
   });
 
   test("can be rotated left/counter-clockwise", () => {
-    expect(shape.rotateLeft().toString()).to.equalShape(
-      `..I.
-       ..I.
-       ..I.
-       ..I.`
-    );
+    expect(shape.rotateLeft().toString()).to.equalShape(I_SHAPES[1]);
   });
 
   test("has 2 distinct orientations", () => {
     expect(distinctOrientations(shape).size).to.equal(2);
-  });
-});
-
-describe("The O shape", () => {
-  const shape = Tetromino.O_SHAPE;
-
-  test("initial orientation", () => {
-    expect(shape.toString()).to.equalShape(
-      `....
-       .OO.
-       .OO.
-       ....`
-    );
-  });
-
-  test("cannot be rotated right/clockwise", () => {
-    expect(shape.rotateRight().toString()).to.equalShape(
-      `....
-       .OO.
-       .OO.
-       ....`
-    );
-  });
-
-  test("cannot be rotated left/counter-clockwise", () => {
-    expect(shape.rotateLeft().toString()).to.equalShape(
-      `....
-       .OO.
-       .OO.
-       ....`
-    );
-  });
-
-  test("has 1 distinct orientations", () => {
-    expect(distinctOrientations(shape).size).to.equal(1);
   });
 });

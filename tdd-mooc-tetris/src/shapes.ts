@@ -24,3 +24,35 @@ export function shapeToString(shape: Shape): string {
 }
 
 export const EmptyBlock = ".";
+
+export const T_SHAPES = [
+  `...
+   TTT
+   .T.`,
+  `.T.
+   TT.
+   .T.`,
+  `...
+   .T.
+   TTT`,
+  `.T.
+   .TT
+   .T.`,
+];
+
+export const I_SHAPES = [
+  `....
+   IIII
+   ....
+   ....`,
+  `..I.
+   ..I.
+   ..I.
+   ..I.`,
+];
+
+export const O_SHAPES = [
+  `...
+   .OO
+   .OO`,
+];

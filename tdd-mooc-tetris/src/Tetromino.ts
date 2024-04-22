@@ -1,42 +1,11 @@
-import { EmptyBlock, Shape } from "./shapes";
+import { EmptyBlock, I_SHAPES, O_SHAPES, Shape, T_SHAPES } from "./shapes";
 
 export class Tetromino implements Shape {
-  static T_SHAPE = new Tetromino(0, [
-    `....
-       TTT.
-       .T..
-       ....`,
-    `.T..
-       TT..
-       .T..
-       ....`,
-    `....
-       .T..
-       TTT.
-       ....`,
-    `.T..
-       .TT.
-       .T..
-       ....`,
-  ]);
+  static T_SHAPE = new Tetromino(0, T_SHAPES);
 
-  static I_SHAPE = new Tetromino(0, [
-    `....
-       IIII
-       ....
-       ....`,
-    `..I.
-       ..I.
-       ..I.
-       ..I.`,
-  ]);
+  static I_SHAPE = new Tetromino(0, I_SHAPES);
 
-  static O_SHAPE = new Tetromino(0, [
-    `....
-       .OO.
-       .OO.
-       ....`,
-  ]);
+  static O_SHAPE = new Tetromino(0, O_SHAPES);
 
   #currentOrientation: number;
   #orientations: string[];

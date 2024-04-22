@@ -281,7 +281,6 @@ export class Board implements Shape {
 
       return this;
     }
-    console.log("FLOOR KICK");
 
     // * If it is in horizontal position, it can only perform a single floor kick
     if (floorKickShape.toString().includes("IIII")) {
