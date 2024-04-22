@@ -282,6 +282,35 @@ describe("Rotating Falling tetrominoes", () => {
        ...I......`
       );
     });
+
+    test("can escape from a hollow by floor kicking", () => {
+      const board = Board.loadBoard(
+        `..........
+         ..........
+         X.........
+         X.........
+         X.........
+         XX.XXX....`
+      );
+
+      board.drop(Tetromino.T_SHAPE);
+      board.moveLeft();
+      board.moveLeft();
+      board.rotateRight();
+      board.tick();
+      board.tick();
+      board.tick();
+      board.rotateRight();
+
+      expect(board.toString()).to.equalShape(
+        `..........
+         ..........
+         X.........
+         X.T.......
+         XTTT......
+         XX.XXX....`
+      );
+    });
   });
 
   describe("I shape", () => {
