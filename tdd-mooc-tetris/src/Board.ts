@@ -61,6 +61,7 @@ class MovableShape implements Shape {
     return points;
   }
 
+  // * Maps board collision coordinates to internal shape coordinates
   collisionInternalPoints(collisions: Point[]): Point[] {
     return collisions.map((collision) => new Point(collision.row - this.#row, collision.col - this.#col));
   }
