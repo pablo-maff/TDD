@@ -233,10 +233,11 @@ export class Board implements Shape {
   }
 
   #handleFloorCollision(attempt: MovableShape): Shape {
-    const floorKick = this.#floorKick(attempt);
+    const floorKick1 = this.#floorKick(attempt);
+    const floorKick2 = this.#floorKick(floorKick1);
 
-    if (!this.#hitsImmobile(floorKick)) {
-      this.#falling = floorKick;
+    if (!this.#hitsImmobile(floorKick2)) {
+      this.#falling = floorKick2;
 
       return this;
     }
@@ -267,6 +268,29 @@ export class Board implements Shape {
       return this;
     }
 
+    // * If wall kick doesn't work is possible that a floor kick is needed
+    const floorKickShape = this.#floorKick(attempt);
+
+    if (!this.#hitsImmobile(floorKickShape)) {
+      this.#falling = floorKickShape;
+
+      return this;
+    }
+
+    // * If it is in horizontal position, it can only perform a single floor kick
+    if (floorKickShape.toString().includes("IIII")) {
+      return this;
+    }
+
+    const doubleFloorKickShape = this.#floorKick(floorKickShape);
+
+    if (!this.#hitsImmobile(doubleFloorKickShape)) {
+      this.#falling = doubleFloorKickShape;
+
+      return this;
+    }
+
+    // * Not possible to perform wall or floor kicks
     return this;
   }
 
@@ -285,7 +309,7 @@ export class Board implements Shape {
   }
 
   #floorKick(shape: MovableShape): MovableShape {
-    return shape.floorKick().floorKick();
+    return shape.floorKick();
   }
 
   #moveHorizontally(attempt: MovableShape) {

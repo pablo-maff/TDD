@@ -363,7 +363,7 @@ describe("Rotating Falling tetrominoes", () => {
       const board = Board.loadBoard(
         `..........
          ..........
-         ..........
+         .......T..
          .......T..
          .....TTT..
          ....TTTT..`
@@ -379,7 +379,7 @@ describe("Rotating Falling tetrominoes", () => {
       expect(board.toString()).to.equalShape(
         `..........
          ..........
-         ........I.
+         .......TI.
          .......TI.
          .....TTTI.
          ....TTTTI.`
@@ -390,7 +390,7 @@ describe("Rotating Falling tetrominoes", () => {
       const board = Board.loadBoard(
         `..........
          ..........
-         ..........
+         .......T..
          .......T..
          .....TTT..
          ....TTTT..`
@@ -403,10 +403,12 @@ describe("Rotating Falling tetrominoes", () => {
       board.tick();
       board.rotateRight();
 
+      console.log("board", board.toString());
+
       expect(board.toString()).to.equalShape(
         `..........
          ..........
-         ........I.
+         .......TI.
          .......TI.
          .....TTTI.
          ....TTTTI.`
@@ -599,6 +601,32 @@ describe("Rotating Falling tetrominoes", () => {
          .....I....
          .....I....
          .....I....`
+      );
+    });
+
+    test("can floor kick on top of blocks", () => {
+      const board = Board.loadBoard(
+        `..........
+         ..........
+         ..........
+         ..........
+         ...IIII...
+         ...IIII...`
+      );
+
+      board.drop(Tetromino.I_SHAPE);
+      board.tick();
+      board.tick();
+      board.tick();
+      board.rotateRight();
+
+      expect(board.toString()).to.equalShape(
+        `.....I....
+         .....I....
+         .....I....
+         .....I....
+         ...IIII...
+         ...IIII...`
       );
     });
   });
