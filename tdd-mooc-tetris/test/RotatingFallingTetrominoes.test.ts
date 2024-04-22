@@ -11,7 +11,7 @@ describe("Rotating Falling tetrominoes", () => {
   });
 
   describe("Center column rule", () => {
-    test("can not rotate if center column collides 1", () => {
+    test("can not kick if center column collides 1", () => {
       const board = Board.loadBoard(
         `..........
       ..........
@@ -36,7 +36,7 @@ describe("Rotating Falling tetrominoes", () => {
       );
     });
 
-    test("can not rotate if center column collides 2", () => {
+    test("can not kick if center column collides 2", () => {
       const board = Board.loadBoard(
         `..........
       ..........
@@ -63,7 +63,7 @@ describe("Rotating Falling tetrominoes", () => {
       );
     });
 
-    test("can not rotate if center column collides 3", () => {
+    test("can not kick if center column collides 3", () => {
       const board = Board.loadBoard(
         `..........
       ..........
@@ -91,7 +91,7 @@ describe("Rotating Falling tetrominoes", () => {
       );
     });
 
-    test("can not rotate if center column collides 4", () => {
+    test("can not kick if center column collides 4", () => {
       const board = Board.loadBoard(
         `..........
       ..........
@@ -115,6 +115,33 @@ describe("Rotating Falling tetrominoes", () => {
       ..........
       ..XL......
       .LLL......
+      ..........`
+      );
+    });
+
+    test("Clockwise rotation will successfully kick even if a different collision is detected before 1", () => {
+      const board = Board.loadBoard(
+        `..........
+      ..........
+      ......X...
+      ..........
+      .......X..
+      ..........`
+      );
+
+      board.drop(Tetromino.L_SHAPE);
+      board.tick();
+      board.tick();
+      board.tick();
+      moveRight(board, 3);
+      board.rotateRight();
+
+      expect(board.toString()).to.equalShape(
+        `..........
+      ..........
+      ......XLL.
+      ........L.
+      .......XL.
       ..........`
       );
     });

@@ -62,8 +62,8 @@ class MovableShape implements Shape {
   }
 
   // * Maps board collision coordinates to internal shape coordinates
-  collisionInternalPoints(collisions: Point[]): Point[] {
-    return collisions.map((collision) => new Point(collision.row - this.#row, collision.col - this.#col));
+  collisionInternalPoint(collision: Point): Point {
+    return new Point(collision.row - this.#row, collision.col - this.#col);
   }
 
   // * Checks if the block is within boundaries
@@ -252,9 +252,7 @@ export class Board implements Shape {
 
     // * center column collision rule applies for all tetrominoes except I
     if (!attempt.toString().includes("I")) {
-      const centerColumnCollision = attempt
-        .collisionInternalPoints(collisionCoordinates)
-        .some((collision) => collision.col === 1);
+      const centerColumnCollision = attempt.collisionInternalPoint(collisionCoordinates).col === 1;
 
       // * If center row collides on rotation kicking can't be performed
       if (centerColumnCollision) {
@@ -365,17 +363,11 @@ export class Board implements Shape {
     return falling.nonEmptyBlocks().some((block) => block.row >= this.#height);
   }
 
-  #hitsImmobile(falling: MovableShape): Point[] | false {
-    const collisions = falling.nonEmptyBlocks().filter((block) => {
+  #hitsImmobile(falling: MovableShape): Point | void {
+    return falling.nonEmptyBlocks().find((block) => {
       const row = block.row < 0 ? 0 : block.row;
       return this.#immobile[row][block.col] !== EmptyBlock;
     });
-
-    if (!collisions.length) {
-      return false;
-    }
-
-    return collisions;
   }
 
   #stopFalling(): void {
