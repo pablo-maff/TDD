@@ -244,16 +244,15 @@ export class Board implements Shape {
   // TODO: Refactor
   #handleBlockCollision(attempt: MovableShape): Shape {
     const collisionCoordinates = this.#hitsImmobile(attempt);
-    const collisionCoordinates2 = this.#hitsImmobile2(attempt);
 
-    if (!collisionCoordinates || !collisionCoordinates2) {
+    if (!collisionCoordinates) {
       return this;
     }
 
     // * center column collision rule applies for all tetrominoes except I
     if (!attempt.toString().includes("I")) {
       const centerColumnCollision = attempt
-        .collisionInternalPoints(collisionCoordinates2)
+        .collisionInternalPoints(collisionCoordinates)
         .some((collision) => collision.col === 1);
 
       // * If center row collides on rotation kicking can't be performed
@@ -365,18 +364,17 @@ export class Board implements Shape {
     return falling.nonEmptyBlocks().some((block) => block.row >= this.#height);
   }
 
-  #hitsImmobile(falling: MovableShape): Point | void {
-    return falling.nonEmptyBlocks().find((block) => {
+  #hitsImmobile(falling: MovableShape): Point[] | false {
+    const collisions = falling.nonEmptyBlocks().filter((block) => {
       const row = block.row < 0 ? 0 : block.row;
       return this.#immobile[row][block.col] !== EmptyBlock;
     });
-  }
 
-  #hitsImmobile2(falling: MovableShape): Point[] | void {
-    return falling.nonEmptyBlocks().filter((block) => {
-      const row = block.row < 0 ? 0 : block.row;
-      return this.#immobile[row][block.col] !== EmptyBlock;
-    });
+    if (!collisions.length) {
+      return false;
+    }
+
+    return collisions;
   }
 
   #stopFalling(): void {
