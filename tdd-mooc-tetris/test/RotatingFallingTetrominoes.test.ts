@@ -145,6 +145,34 @@ describe("Rotating Falling tetrominoes", () => {
       ..........`
       );
     });
+
+    test("Counter-clockwise rotation will successfully kick even if a different collision is detected before 2", () => {
+      const board = Board.loadBoard(
+        `..........
+      ..........
+      .X........
+      ..X.......
+      ..........
+      ..........`
+      );
+
+      board.drop(Tetromino.L_SHAPE);
+      board.rotateLeft();
+      board.tick();
+      board.tick();
+      board.rotateLeft();
+      moveLeft(board, 2);
+      board.rotateLeft();
+
+      expect(board.toString()).to.equalShape(
+        `..........
+      ..........
+      .XLL......
+      ..XL......
+      ...L......
+      ..........`
+      );
+    });
   });
 
   describe("T shape", () => {
