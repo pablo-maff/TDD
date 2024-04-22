@@ -221,7 +221,7 @@ export class Board implements Shape {
       return this;
     }
 
-    const doubleWallKick = this.#wallKick(wallKick);
+    const doubleWallKick = this.#doubleWallKick(attempt);
 
     if (!this.#hitsImmobile(doubleWallKick)) {
       this.#falling = doubleWallKick;
@@ -252,7 +252,8 @@ export class Board implements Shape {
       return this;
     }
 
-    const wallKickShape = this.#wallKickShape(attempt);
+    // ** WALL KICK ***
+    const wallKickShape = this.#wallKick(attempt);
 
     if (!this.#hitsImmobile(wallKickShape)) {
       this.#falling = wallKickShape;
@@ -260,14 +261,7 @@ export class Board implements Shape {
       return this;
     }
 
-    const doubleWallKickShape = this.#wallKickShape(wallKickShape);
-
-    if (!this.#hitsImmobile(doubleWallKickShape)) {
-      this.#falling = doubleWallKickShape;
-
-      return this;
-    }
-
+    // ** FLOOR KICK ***
     // * If the next row is empty floor kick is not possible
     if (this.#nextRowIsEmpty()) {
       return this;
@@ -282,15 +276,22 @@ export class Board implements Shape {
       return this;
     }
 
-    // * If it is in horizontal position, it can only perform a single floor kick
-    if (floorKickShape.toString().includes("IIII")) {
+    // ** DOUBLE FLOOR KICK ***
+    const doubleFloorKickShape = this.#floorKick(floorKickShape);
+
+    // * Can perform double floor kick if it doesn't hit any other block and in the case of I, if the rotation is not in horizontal position
+    const canDoubleFloorKick = !this.#hitsImmobile(doubleFloorKickShape) && !floorKickShape.toString().includes("IIII");
+    if (canDoubleFloorKick) {
+      this.#falling = doubleFloorKickShape;
+
       return this;
     }
 
-    const doubleFloorKickShape = this.#floorKick(floorKickShape);
+    // ** DOUBLE WALL KICK ***
+    const doubleWallKickShape = this.#doubleWallKick(attempt);
 
-    if (!this.#hitsImmobile(doubleFloorKickShape)) {
-      this.#falling = doubleFloorKickShape;
+    if (!this.#hitsImmobile(doubleWallKickShape)) {
+      this.#falling = doubleWallKickShape;
 
       return this;
     }
@@ -306,9 +307,29 @@ export class Board implements Shape {
   }
 
   #wallKick(shape: MovableShape): MovableShape {
-    const blockIsOnRightSideOfBoard = shape.width() > this.width() / 2;
+    const wallKickRight = shape.moveRight();
+    const canWallKickRight = !this.#hitsWall(wallKickRight) && !this.#hitsImmobile(wallKickRight);
 
-    return blockIsOnRightSideOfBoard ? shape.moveLeft() : shape.moveRight();
+    // * ARS has a right side bias for wall kicks, so if wall kick right is possible we return that
+    if (canWallKickRight) {
+      return wallKickRight;
+    }
+
+    // * if wall kick right is not possible then wall kick left is performed
+    return shape.moveLeft();
+  }
+
+  #doubleWallKick(shape: MovableShape): MovableShape {
+    const wallKickRight = shape.moveRight().moveRight();
+    const canWallKickRight = !this.#hitsWall(wallKickRight) && !this.#hitsImmobile(wallKickRight);
+
+    // * ARS has a right side bias for wall kicks, so if wall kick right is possible we return that
+    if (canWallKickRight) {
+      return wallKickRight;
+    }
+
+    // * if wall kick right is not possible then wall kick left is performed
+    return shape.moveLeft().moveLeft();
   }
 
   #wallKickShape(shape: MovableShape): MovableShape {

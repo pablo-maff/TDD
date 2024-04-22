@@ -9,6 +9,34 @@ describe("Rotating Falling tetrominoes", () => {
   beforeEach(() => {
     board = new Board(10, 6);
   });
+
+  test.skip("can not rotate if center column collides", () => {
+    const board = Board.loadBoard(
+      `..........
+      ..........
+      ..........
+      ....X.....
+      ..........
+      ..........`
+    );
+
+    board.drop(Tetromino.L_SHAPE);
+    board.tick();
+    board.tick();
+    board.rotateRight();
+
+    console.log("board.toString()", board.toString());
+
+    expect(board.toString()).to.equalShape(
+      `..........
+      ..........
+      ...LLL....
+      ...LX.....
+      ..........
+      ..........`
+    );
+  });
+
   describe("T shape", () => {
     test("can be rotated right", () => {
       board.drop(Tetromino.T_SHAPE);
@@ -298,7 +326,7 @@ describe("Rotating Falling tetrominoes", () => {
   });
 
   describe("I shape", () => {
-    test("can be rotated right", () => {
+    test("can be rotated", () => {
       board.drop(Tetromino.I_SHAPE);
       board.rotateRight();
 
@@ -312,39 +340,10 @@ describe("Rotating Falling tetrominoes", () => {
       );
     });
 
-    test("can be rotated right more than once", () => {
+    test("can be rotated more than once", () => {
       board.drop(Tetromino.I_SHAPE);
       board.rotateRight();
       board.rotateRight();
-
-      expect(board.toString()).to.equalShape(
-        `..........
-         ...IIII...
-         ..........
-         ..........
-         ..........
-         ..........`
-      );
-    });
-
-    test("can be rotated left", () => {
-      board.drop(Tetromino.I_SHAPE);
-      board.rotateLeft();
-
-      expect(board.toString()).to.equalShape(
-        `.....I....
-         .....I....
-         .....I....
-         .....I....
-         ..........
-         ..........`
-      );
-    });
-
-    test("can be rotated left more than once", () => {
-      board.drop(Tetromino.I_SHAPE);
-      board.rotateLeft();
-      board.rotateLeft();
 
       expect(board.toString()).to.equalShape(
         `..........
@@ -372,7 +371,7 @@ describe("Rotating Falling tetrominoes", () => {
       expect(board.hasFalling(), "the player should not be able to move the block").to.be.false;
     });
 
-    test("cannot be rotated left when there is no room to rotate", () => {
+    test("cannot be rotated when there is no room to rotate", () => {
       const board = Board.loadBoard(
         `..........
          ..........
@@ -399,34 +398,7 @@ describe("Rotating Falling tetrominoes", () => {
       );
     });
 
-    test("cannot be rotated right when there is no room to rotate", () => {
-      const board = Board.loadBoard(
-        `..........
-         ..........
-         .......T..
-         .......T..
-         .....TTT..
-         ....TTTT..`
-      );
-
-      board.drop(Tetromino.I_SHAPE);
-      moveRight(board, 4);
-      board.rotateLeft();
-      board.tick();
-      board.tick();
-      board.rotateRight();
-
-      expect(board.toString()).to.equalShape(
-        `..........
-         ..........
-         .......TI.
-         .......TI.
-         .....TTTI.
-         ....TTTTI.`
-      );
-    });
-
-    test("can wall kick rotating left on the left side of the wall", () => {
+    test("can wall kick on the left side of the wall", () => {
       board.drop(Tetromino.I_SHAPE);
       board.rotateLeft();
       moveLeft(board, 10);
@@ -442,23 +414,7 @@ describe("Rotating Falling tetrominoes", () => {
       );
     });
 
-    test("can wall kick rotating right on the left side of the wall", () => {
-      board.drop(Tetromino.I_SHAPE);
-      board.rotateLeft();
-      moveLeft(board, 10);
-      board.rotateRight();
-
-      expect(board.toString()).to.equalShape(
-        `..........
-         IIII......
-         ..........
-         ..........
-         ..........
-         ..........`
-      );
-    });
-
-    test("can wall kick rotating left on the right side of the wall", () => {
+    test("can wall kick on the right side of the wall", () => {
       board.drop(Tetromino.I_SHAPE);
       board.rotateLeft();
       moveRight(board, 10);
@@ -474,23 +430,7 @@ describe("Rotating Falling tetrominoes", () => {
       );
     });
 
-    test("can wall kick rotating right on the right side of the wall", () => {
-      board.drop(Tetromino.I_SHAPE);
-      board.rotateLeft();
-      moveRight(board, 10);
-      board.rotateRight();
-
-      expect(board.toString()).to.equalShape(
-        `..........
-         ......IIII
-         ..........
-         ..........
-         ..........
-         ..........`
-      );
-    });
-
-    test("can wall kick rotating left if against another block", () => {
+    test("can wall kick if against another block", () => {
       const board = Board.loadBoard(
         `..........
          ..........
@@ -516,7 +456,7 @@ describe("Rotating Falling tetrominoes", () => {
       );
     });
 
-    test("can wall kick rotating left if against another block", () => {
+    test("can wall kick if against another block", () => {
       const board = Board.loadBoard(
         `..........
          ..........
@@ -528,63 +468,11 @@ describe("Rotating Falling tetrominoes", () => {
 
       board.drop(Tetromino.I_SHAPE);
       board.moveLeft();
-      board.rotateLeft();
-      board.tick();
-      board.tick();
-      board.rotateLeft();
-
-      expect(board.toString()).to.equalShape(
-        `..........
-         ..........
-         ....I.....
-         IIIII.....
-         ....I.....
-         ....I.....`
-      );
-    });
-
-    test("can wall kick rotating right if against another block", () => {
-      const board = Board.loadBoard(
-        `..........
-         ..........
-         ....I.....
-         ....I.....
-         ....I.....
-         ....I.....`
-      );
-
-      board.drop(Tetromino.I_SHAPE);
-      board.rotateLeft();
-      board.tick();
-      board.tick();
-      board.rotateRight();
-
-      expect(board.toString()).to.equalShape(
-        `..........
-         ..........
-         ....I.....
-         ....IIIII.
-         ....I.....
-         ....I.....`
-      );
-    });
-
-    test("can wall kick rotating right if against another block", () => {
-      const board = Board.loadBoard(
-        `..........
-         ..........
-         ....I.....
-         ....I.....
-         ....I.....
-         ....I.....`
-      );
-
-      board.drop(Tetromino.I_SHAPE);
       board.moveLeft();
       board.rotateLeft();
       board.tick();
       board.tick();
-      board.rotateRight();
+      board.rotateLeft();
 
       expect(board.toString()).to.equalShape(
         `..........

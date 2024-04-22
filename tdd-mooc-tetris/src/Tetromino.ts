@@ -1,4 +1,4 @@
-import { EmptyBlock, I_SHAPES, O_SHAPES, Shape, T_SHAPES } from "./shapes";
+import { EmptyBlock, I_SHAPES, L_SHAPES, O_SHAPES, Shape, T_SHAPES } from "./shapes";
 
 export class Tetromino implements Shape {
   static T_SHAPE = new Tetromino(0, T_SHAPES);
@@ -6,6 +6,8 @@ export class Tetromino implements Shape {
   static I_SHAPE = new Tetromino(0, I_SHAPES);
 
   static O_SHAPE = new Tetromino(0, O_SHAPES);
+
+  static L_SHAPE = new Tetromino(0, L_SHAPES);
 
   #currentOrientation: number;
   #orientations: string[];
