@@ -1,4 +1,4 @@
-import { EmptyBlock, Shape, shapeToString } from "./shapes";
+import { EmptyBlock, I_SHAPES, Shape, shapeToString } from "./shapes";
 
 export class Point {
   row: number;
@@ -262,9 +262,9 @@ export class Board implements Shape {
 
     return (
       this.#setWallKick(attempt) ||
+      this.#setDoubleWallKick(attempt) ||
       this.#setFloorKick(attempt) ||
-      this.#setDoubleFloorKick(attempt) ||
-      this.#setDoubleWallKick(attempt)
+      this.#setDoubleFloorKick(attempt)
     );
   }
 
@@ -274,11 +274,24 @@ export class Board implements Shape {
 
   #setWallKick(attempt: MovableShape): MovableShape | null {
     const wallKickShape = this.#wallKick(attempt);
+    const attemptIsVerticalI = attempt.toString().includes("..I.");
 
-    if (this.#canKick(wallKickShape)) {
-      return (this.#falling = wallKickShape);
+    if (!this.#canKick(wallKickShape) || attemptIsVerticalI) {
+      return null;
     }
-    return null;
+
+    return (this.#falling = wallKickShape);
+  }
+
+  #setDoubleWallKick(attempt: MovableShape): MovableShape | null {
+    const doubleWallKick = this.#doubleWallKick(attempt);
+    const attemptIsVerticalI = attempt.toString().includes("..I.");
+
+    if (!this.#canKick(doubleWallKick) || attemptIsVerticalI) {
+      return null;
+    }
+
+    return (this.#falling = doubleWallKick);
   }
 
   #setFloorKick(attempt: MovableShape): MovableShape | null {
@@ -291,21 +304,13 @@ export class Board implements Shape {
     return (this.#falling = floorKickShape);
   }
 
-  #setDoubleWallKick(attempt: MovableShape): MovableShape | null {
-    // TODO: This verification should only be done in floor kicks. Need to find a way to remove it without breaking the game
-    const doubleWallKick = this.#doubleWallKick(attempt);
-    if (this.#nextRowIsEmpty() || !this.#canKick(doubleWallKick)) {
-      return null;
-    }
-
-    return (this.#falling = doubleWallKick);
-  }
-
   #setDoubleFloorKick(attempt: MovableShape): MovableShape | null {
     const doubleFloorKick = this.#doubleFloorKick(attempt);
-    const attemptIsVerticalI = attempt.toString().includes("IIII");
+    const attemptIsHorizontalI = attempt.toString().includes("IIII");
 
-    if (this.#nextRowIsEmpty() || !this.#canKick(doubleFloorKick) || attemptIsVerticalI) {
+    const canDoubleFloorKick = this.#nextRowIsEmpty() || !this.#canKick(doubleFloorKick) || attemptIsHorizontalI;
+
+    if (canDoubleFloorKick) {
       return null;
     }
 
