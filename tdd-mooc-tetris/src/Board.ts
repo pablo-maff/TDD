@@ -205,7 +205,7 @@ export class Board implements Shape {
     }
 
     if (this.#hitsFloor(attempt)) {
-      this.#handleFloorCollision(attempt);
+      this.#setDoubleFloorKick(attempt);
       return;
     }
 
@@ -234,16 +234,6 @@ export class Board implements Shape {
     }
   }
 
-  #handleFloorCollision(attempt: MovableShape): void {
-    const floorKick1 = this.#floorKick(attempt);
-    const floorKick2 = this.#floorKick(floorKick1);
-
-    if (!this.#hitsImmobile(floorKick2)) {
-      this.#falling = floorKick2;
-    }
-  }
-
-  // TODO: Refactor
   #handleBlockCollision(attempt: MovableShape): MovableShape | null {
     const collisionCoordinates = this.#hitsImmobile(attempt);
 
@@ -256,7 +246,7 @@ export class Board implements Shape {
       attempt.collisionInternalPoint(collisionCoordinates).col === 1 && !attempt.toString().includes("I");
 
     if (centerColumnCollision) {
-      // * If center row collides on rotation kicking can't be performed
+      // * If center row collides on rotation, kicking can't be performed
       return null;
     }
 
@@ -296,9 +286,9 @@ export class Board implements Shape {
     const doubleFloorKick = this.#doubleFloorKick(attempt);
     const attemptIsHorizontalI = attempt.toString().includes("IIII");
 
-    const canDoubleFloorKick = this.#nextRowIsEmpty() || !this.#canKick(doubleFloorKick) || attemptIsHorizontalI;
+    const cantDoubleFloorKick = this.#nextRowIsEmpty() || !this.#canKick(doubleFloorKick) || attemptIsHorizontalI;
 
-    if (canDoubleFloorKick) {
+    if (cantDoubleFloorKick) {
       return null;
     }
 
