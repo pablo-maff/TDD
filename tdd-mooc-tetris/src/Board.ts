@@ -243,13 +243,13 @@ export class Board implements Shape {
   }
 
   #hitsImmobile(attempt: MovableShape): boolean {
-    return !this.#collisionCoordinates(attempt);
+    return !!this.#collisionCoordinates(attempt);
   }
 
   #setWallKick(attempt: MovableShape): MovableShape | null {
     const attemptIsVerticalI = attempt.toString().includes("..I.");
 
-    if (!this.#hitsImmobile(attempt) || attemptIsVerticalI) {
+    if (this.#hitsImmobile(attempt) || attemptIsVerticalI) {
       return null;
     }
 
@@ -259,7 +259,7 @@ export class Board implements Shape {
   #setFloorKick(attempt: MovableShape): MovableShape | null {
     const floorKickShape = this.#floorKick(attempt);
 
-    if (this.#nextRowIsEmpty() || !this.#hitsImmobile(floorKickShape)) {
+    if (this.#nextRowIsEmpty() || this.#hitsImmobile(floorKickShape)) {
       return null;
     }
 
@@ -270,7 +270,7 @@ export class Board implements Shape {
     const doubleFloorKick = this.#doubleFloorKick(attempt);
     const attemptIsHorizontalI = attempt.toString().includes("IIII");
 
-    const cantDoubleFloorKick = this.#nextRowIsEmpty() || !this.#hitsImmobile(doubleFloorKick) || attemptIsHorizontalI;
+    const cantDoubleFloorKick = this.#nextRowIsEmpty() || this.#hitsImmobile(doubleFloorKick) || attemptIsHorizontalI;
 
     if (cantDoubleFloorKick) {
       return null;
