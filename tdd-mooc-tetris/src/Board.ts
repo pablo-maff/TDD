@@ -1,5 +1,4 @@
 import { EmptyBlock, Shape, shapeToString } from "./shapes";
-import { Block } from "./Block";
 
 export class Point {
   row: number;
@@ -264,7 +263,7 @@ export class Board implements Shape {
     // ** WALL KICK ***
     const wallKickShape = this.#wallKick(attempt);
 
-    if (!this.#hitsImmobile(wallKickShape)) {
+    if (this.#canKick(wallKickShape)) {
       this.#falling = wallKickShape;
       return;
     }
@@ -278,7 +277,7 @@ export class Board implements Shape {
     // * If wall kick doesn't work is possible that a floor kick is needed
     const floorKickShape = this.#floorKick(attempt);
 
-    if (!this.#hitsImmobile(floorKickShape)) {
+    if (this.#canKick(floorKickShape)) {
       this.#falling = floorKickShape;
       return;
     }
@@ -287,8 +286,8 @@ export class Board implements Shape {
     const doubleFloorKickShape = this.#floorKick(floorKickShape);
 
     // * Can perform double floor kick if it doesn't hit any other block and in the case of I, if the rotation is not in horizontal position
-    const canDoubleFloorKick = !this.#hitsImmobile(doubleFloorKickShape) && !floorKickShape.toString().includes("IIII");
-    if (canDoubleFloorKick) {
+    const attemptIsVerticalI = !floorKickShape.toString().includes("IIII");
+    if (this.#canKick(doubleFloorKickShape) && attemptIsVerticalI) {
       this.#falling = doubleFloorKickShape;
       return;
     }
@@ -296,10 +295,13 @@ export class Board implements Shape {
     // ** DOUBLE WALL KICK ***
     const doubleWallKickShape = this.#doubleWallKick(attempt);
 
-    if (!this.#hitsImmobile(doubleWallKickShape)) {
+    if (this.#canKick(doubleWallKickShape)) {
       this.#falling = doubleWallKickShape;
-      return;
     }
+  }
+
+  #canKick(attempt: MovableShape): boolean {
+    return !this.#hitsImmobile(attempt);
   }
 
   #nextRowIsEmpty(): boolean {
