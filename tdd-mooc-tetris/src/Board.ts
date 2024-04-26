@@ -293,15 +293,19 @@ export class Board implements Shape {
     }
 
     // ** DOUBLE WALL KICK ***
+    this.#setDoubleWallKick(attempt);
+  }
+
+  #canKick(attempt: MovableShape): boolean {
+    return !this.#hitsImmobile(attempt);
+  }
+
+  #setDoubleWallKick(attempt: MovableShape) {
     const doubleWallKickShape = this.#doubleWallKick(attempt);
 
     if (this.#canKick(doubleWallKickShape)) {
       this.#falling = doubleWallKickShape;
     }
-  }
-
-  #canKick(attempt: MovableShape): boolean {
-    return !this.#hitsImmobile(attempt);
   }
 
   #nextRowIsEmpty(): boolean {
