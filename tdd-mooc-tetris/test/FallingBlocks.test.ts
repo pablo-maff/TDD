@@ -17,15 +17,6 @@ describe("Falling blocks", () => {
     );
   });
 
-  test("refactor drop", () => {
-    board.drop(new Block("X"));
-    expect(board.toString()).to.equalShape(
-      `.X.
-       ...
-       ...`
-    );
-  });
-
   describe("When a block is dropped", () => {
     beforeEach(() => {
       board.drop(new Block("X"));
