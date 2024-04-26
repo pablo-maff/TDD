@@ -214,17 +214,12 @@ export class Board implements Shape {
       return;
     }
 
-    // * If we reach this point is because it is hitting a block
-    this.#handleBlockCollision(attempt);
+    if (this.#hitsImmobile(attempt)) {
+      this.#handleBlockCollision(attempt, this.#collisionCoordinates(attempt)!);
+    }
   }
 
-  #handleBlockCollision(attempt: MovableShape): MovableShape | null {
-    const collisionCoordinates = this.#collisionCoordinates(attempt);
-
-    if (!collisionCoordinates) {
-      return null;
-    }
-
+  #handleBlockCollision(attempt: MovableShape, collisionCoordinates: Point): MovableShape | null {
     // * center column collision rule applies for all tetrominoes except I
     const centerColumnCollision =
       attempt.collisionInternalPoint(collisionCoordinates).col === 1 && !attempt.toString().includes("I");
