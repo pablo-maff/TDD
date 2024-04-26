@@ -260,27 +260,27 @@ export class Board implements Shape {
       return;
     }
 
-    // ** WALL KICK ***
-    const wallKickShape = this.#wallKick(attempt);
-
-    if (this.#canKick(wallKickShape)) {
-      this.#falling = wallKickShape;
-      return;
-    }
-
-    // ** FLOOR KICK ***
-    // * If the next row is empty floor kick is not possible
-
-    // * If wall kick doesn't work is possible that a floor kick is needed
     const floorKickShape = this.#floorKick(attempt);
 
     return (
-      this.#setFloorKick(floorKickShape) || this.#setDoubleFloorKick(floorKickShape) || this.#setDoubleWallKick(attempt)
+      this.#setWallKick(attempt) ||
+      this.#setFloorKick(floorKickShape) ||
+      this.#setDoubleFloorKick(floorKickShape) ||
+      this.#setDoubleWallKick(attempt)
     );
   }
 
   #canKick(attempt: MovableShape): boolean {
     return !this.#hitsImmobile(attempt);
+  }
+
+  #setWallKick(attempt: MovableShape): MovableShape | null {
+    const wallKickShape = this.#wallKick(attempt);
+
+    if (this.#canKick(wallKickShape)) {
+      return (this.#falling = wallKickShape);
+    }
+    return null;
   }
 
   #setFloorKick(attempt: MovableShape): MovableShape | null {
