@@ -344,7 +344,7 @@ describe("Rotating Falling tetrominoes", () => {
       expect(board.hasFalling(), "the player should not be able to move the block").to.be.false;
     });
 
-    test("cannot be rotated when there is no room to rotate", () => {
+    test("cannot be rotated when there is no room to rotate 1", () => {
       const board = Board.loadBoard(
         `..........
          ..........
@@ -368,6 +368,32 @@ describe("Rotating Falling tetrominoes", () => {
          .......TI.
          .....TTTI.
          ....TTTTI.`
+      );
+    });
+
+    test("cannot be rotated when there is no room to rotate 2", () => {
+      const board = Board.loadBoard(
+        `..........
+         ..........
+         .......T..
+         .......T..
+         .....TTT..
+         ....TTTT..`
+      );
+
+      board.drop(Tetromino.I_SHAPE);
+      moveRight(board, 4);
+      board.rotateLeft();
+      board.tick();
+      board.rotateLeft();
+
+      expect(board.toString()).to.equalShape(
+        `..........
+         ........I.
+         .......TI.
+         .......TI.
+         .....TTTI.
+         ....TTTT..`
       );
     });
 
