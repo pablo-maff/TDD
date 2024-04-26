@@ -210,28 +210,12 @@ export class Board implements Shape {
     }
 
     if (this.#hitsWall(attempt)) {
-      this.#handleWallCollision(attempt);
+      this.#setWallKick(this.#wallKick(attempt)) || this.#setWallKick(this.#doubleWallKick(attempt));
       return;
     }
 
     // * If we reach this point is because it is hitting a block
     this.#handleBlockCollision(attempt);
-  }
-
-  #handleWallCollision(attempt: MovableShape): void {
-    const wallKick = this.#wallKick(attempt);
-
-    if (!this.#hitsImmobile(wallKick)) {
-      this.#falling = wallKick;
-      return;
-    }
-
-    const doubleWallKick = this.#doubleWallKick(attempt);
-
-    if (!this.#hitsImmobile(doubleWallKick)) {
-      this.#falling = doubleWallKick;
-      return;
-    }
   }
 
   #handleBlockCollision(attempt: MovableShape): MovableShape | null {
