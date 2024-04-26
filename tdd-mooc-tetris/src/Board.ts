@@ -270,9 +270,6 @@ export class Board implements Shape {
 
     // ** FLOOR KICK ***
     // * If the next row is empty floor kick is not possible
-    if (this.#nextRowIsEmpty()) {
-      return null;
-    }
 
     // * If wall kick doesn't work is possible that a floor kick is needed
     const floorKickShape = this.#floorKick(attempt);
@@ -287,6 +284,9 @@ export class Board implements Shape {
   }
 
   #setFloorKick(attempt: MovableShape): MovableShape | null {
+    if (this.#nextRowIsEmpty()) {
+      return null;
+    }
     if (this.#canKick(attempt)) {
       return (this.#falling = attempt);
     }
@@ -294,6 +294,10 @@ export class Board implements Shape {
   }
 
   #setDoubleWallKick(attempt: MovableShape): MovableShape | null {
+    // TODO: This verification should only be done in floor kicks. Need to find a way to remove it without breaking the game
+    if (this.#nextRowIsEmpty()) {
+      return null;
+    }
     const doubleWallKickShape = this.#doubleWallKick(attempt);
 
     if (this.#canKick(doubleWallKickShape)) {
@@ -304,6 +308,9 @@ export class Board implements Shape {
   }
 
   #setDoubleFloorKick(attempt: MovableShape): MovableShape | null {
+    if (this.#nextRowIsEmpty()) {
+      return null;
+    }
     const doubleFloorKickShape = this.#floorKick(attempt);
     // * Can perform double floor kick if it doesn't hit any other block and in the case of I, if the rotation is not in horizontal position
     const attemptIsVerticalI = !attempt.toString().includes("IIII");
