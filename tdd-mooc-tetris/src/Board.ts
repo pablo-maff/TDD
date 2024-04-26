@@ -244,7 +244,7 @@ export class Board implements Shape {
   }
 
   // TODO: Refactor
-  #handleBlockCollision(attempt: MovableShape): void {
+  #handleBlockCollision(attempt: MovableShape): MovableShape | null {
     const collisionCoordinates = this.#hitsImmobile(attempt);
 
     if (!collisionCoordinates) {
@@ -283,29 +283,31 @@ export class Board implements Shape {
     }
 
     // ** DOUBLE FLOOR KICK ***
-    const doubleFloorKickShape = this.#floorKick(floorKickShape);
-
-    // * Can perform double floor kick if it doesn't hit any other block and in the case of I, if the rotation is not in horizontal position
-    const attemptIsVerticalI = !floorKickShape.toString().includes("IIII");
-    if (this.#canKick(doubleFloorKickShape) && attemptIsVerticalI) {
-      this.#falling = doubleFloorKickShape;
-      return;
-    }
-
-    // ** DOUBLE WALL KICK ***
-    this.#setDoubleWallKick(attempt);
+    return this.#setDoubleFloorKick(floorKickShape) || this.#setDoubleWallKick(attempt);
   }
 
   #canKick(attempt: MovableShape): boolean {
     return !this.#hitsImmobile(attempt);
   }
 
-  #setDoubleWallKick(attempt: MovableShape) {
+  #setDoubleWallKick(attempt: MovableShape): MovableShape | null {
     const doubleWallKickShape = this.#doubleWallKick(attempt);
 
     if (this.#canKick(doubleWallKickShape)) {
       this.#falling = doubleWallKickShape;
     }
+
+    return null;
+  }
+
+  #setDoubleFloorKick(attempt: MovableShape): MovableShape | null {
+    const doubleFloorKickShape = this.#floorKick(attempt);
+    // * Can perform double floor kick if it doesn't hit any other block and in the case of I, if the rotation is not in horizontal position
+    const attemptIsVerticalI = !attempt.toString().includes("IIII");
+    if (this.#canKick(doubleFloorKickShape) && attemptIsVerticalI) {
+      return (this.#falling = doubleFloorKickShape);
+    }
+    return null;
   }
 
   #nextRowIsEmpty(): boolean {
