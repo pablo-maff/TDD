@@ -260,12 +260,10 @@ export class Board implements Shape {
       return null;
     }
 
-    const floorKickShape = this.#floorKick(attempt);
-
     return (
       this.#setWallKick(attempt) ||
-      this.#setFloorKick(floorKickShape) ||
-      this.#setDoubleFloorKick(floorKickShape) ||
+      this.#setFloorKick(attempt) ||
+      this.#setDoubleFloorKick(attempt) ||
       this.#setDoubleWallKick(attempt)
     );
   }
@@ -284,11 +282,13 @@ export class Board implements Shape {
   }
 
   #setFloorKick(attempt: MovableShape): MovableShape | null {
-    if (this.#nextRowIsEmpty() || !this.#canKick(attempt)) {
+    const floorKickShape = this.#floorKick(attempt);
+
+    if (this.#nextRowIsEmpty() || !this.#canKick(floorKickShape)) {
       return null;
     }
 
-    return (this.#falling = attempt);
+    return (this.#falling = floorKickShape);
   }
 
   #setDoubleWallKick(attempt: MovableShape): MovableShape | null {
@@ -302,7 +302,7 @@ export class Board implements Shape {
   }
 
   #setDoubleFloorKick(attempt: MovableShape): MovableShape | null {
-    const doubleFloorKick = this.#floorKick(attempt);
+    const doubleFloorKick = this.#doubleFloorKick(attempt);
     const attemptIsVerticalI = attempt.toString().includes("IIII");
 
     if (this.#nextRowIsEmpty() || !this.#canKick(doubleFloorKick) || attemptIsVerticalI) {
@@ -346,6 +346,10 @@ export class Board implements Shape {
 
   #floorKick(shape: MovableShape): MovableShape {
     return shape.floorKick();
+  }
+
+  #doubleFloorKick(shape: MovableShape): MovableShape {
+    return shape.floorKick().floorKick();
   }
 
   #moveHorizontally(attempt: MovableShape) {
