@@ -248,7 +248,7 @@ export class Board implements Shape {
     const collisionCoordinates = this.#hitsImmobile(attempt);
 
     if (!collisionCoordinates) {
-      return;
+      return null;
     }
 
     // * center column collision rule applies for all tetrominoes except I
@@ -257,7 +257,7 @@ export class Board implements Shape {
 
     if (centerColumnCollision) {
       // * If center row collides on rotation kicking can't be performed
-      return;
+      return null;
     }
 
     const floorKickShape = this.#floorKick(attempt);
@@ -284,40 +284,32 @@ export class Board implements Shape {
   }
 
   #setFloorKick(attempt: MovableShape): MovableShape | null {
-    if (this.#nextRowIsEmpty()) {
+    if (this.#nextRowIsEmpty() || !this.#canKick(attempt)) {
       return null;
     }
-    if (this.#canKick(attempt)) {
-      return (this.#falling = attempt);
-    }
-    return null;
+
+    return (this.#falling = attempt);
   }
 
   #setDoubleWallKick(attempt: MovableShape): MovableShape | null {
     // TODO: This verification should only be done in floor kicks. Need to find a way to remove it without breaking the game
-    if (this.#nextRowIsEmpty()) {
+    const doubleWallKick = this.#doubleWallKick(attempt);
+    if (this.#nextRowIsEmpty() || !this.#canKick(doubleWallKick)) {
       return null;
     }
-    const doubleWallKickShape = this.#doubleWallKick(attempt);
 
-    if (this.#canKick(doubleWallKickShape)) {
-      return (this.#falling = doubleWallKickShape);
-    }
-
-    return null;
+    return (this.#falling = doubleWallKick);
   }
 
   #setDoubleFloorKick(attempt: MovableShape): MovableShape | null {
-    if (this.#nextRowIsEmpty()) {
+    const doubleFloorKick = this.#floorKick(attempt);
+    const attemptIsVerticalI = attempt.toString().includes("IIII");
+
+    if (this.#nextRowIsEmpty() || !this.#canKick(doubleFloorKick) || attemptIsVerticalI) {
       return null;
     }
-    const doubleFloorKickShape = this.#floorKick(attempt);
-    // * Can perform double floor kick if it doesn't hit any other block and in the case of I, if the rotation is not in horizontal position
-    const attemptIsVerticalI = !attempt.toString().includes("IIII");
-    if (this.#canKick(doubleFloorKickShape) && attemptIsVerticalI) {
-      return (this.#falling = doubleFloorKickShape);
-    }
-    return null;
+
+    return (this.#falling = doubleFloorKick);
   }
 
   #nextRowIsEmpty(): boolean {
