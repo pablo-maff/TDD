@@ -153,7 +153,7 @@ export class Board implements Shape {
     }
 
     const attempt = this.#falling!.moveDown();
-    const canTick = !this.#hitsFloor(attempt) && !this.#hitsImmobile(attempt);
+    const canTick = !this.#hitsFloor(attempt) && !this.#collisionCoordinates(attempt);
 
     if (canTick) {
       this.#falling = attempt;
@@ -197,7 +197,7 @@ export class Board implements Shape {
     }
 
     const attempt = direction === "left" ? this.#falling!.rotateLeft() : this.#falling!.rotateRight();
-    const canRotate = !this.#hitsFloor(attempt) && !this.#hitsWall(attempt) && !this.#hitsImmobile(attempt);
+    const canRotate = !this.#hitsFloor(attempt) && !this.#hitsWall(attempt) && !this.#collisionCoordinates(attempt);
 
     if (canRotate) {
       this.#falling = attempt;
@@ -219,7 +219,7 @@ export class Board implements Shape {
   }
 
   #handleBlockCollision(attempt: MovableShape): MovableShape | null {
-    const collisionCoordinates = this.#hitsImmobile(attempt);
+    const collisionCoordinates = this.#collisionCoordinates(attempt);
 
     if (!collisionCoordinates) {
       return null;
@@ -243,7 +243,7 @@ export class Board implements Shape {
   }
 
   #canKick(attempt: MovableShape): boolean {
-    return !this.#hitsImmobile(attempt);
+    return !this.#collisionCoordinates(attempt);
   }
 
   #setWallKick(attempt: MovableShape): MovableShape | null {
@@ -282,12 +282,12 @@ export class Board implements Shape {
   #nextRowIsEmpty(): boolean {
     const moveDown = this.#falling!.moveDown();
 
-    return !this.#hitsFloor(moveDown) && !this.#hitsImmobile(moveDown);
+    return !this.#hitsFloor(moveDown) && !this.#collisionCoordinates(moveDown);
   }
 
   #wallKick(shape: MovableShape): MovableShape {
     const wallKickRight = shape.moveRight();
-    const canWallKickRight = !this.#hitsWall(wallKickRight) && !this.#hitsImmobile(wallKickRight);
+    const canWallKickRight = !this.#hitsWall(wallKickRight) && !this.#collisionCoordinates(wallKickRight);
 
     // * ARS has a right side bias for wall kicks, so if wall kick right is possible we return that
     if (canWallKickRight) {
@@ -300,7 +300,7 @@ export class Board implements Shape {
 
   #doubleWallKick(shape: MovableShape): MovableShape {
     const wallKickRight = shape.moveRight().moveRight();
-    const canWallKickRight = !this.#hitsWall(wallKickRight) && !this.#hitsImmobile(wallKickRight);
+    const canWallKickRight = !this.#hitsWall(wallKickRight) && !this.#collisionCoordinates(wallKickRight);
 
     // * ARS has a right side bias for wall kicks, so if wall kick right is possible we return that
     if (canWallKickRight) {
@@ -320,7 +320,7 @@ export class Board implements Shape {
   }
 
   #moveHorizontally(attempt: MovableShape) {
-    if (!this.#hitsWall(attempt) && !this.#hitsImmobile(attempt)) {
+    if (!this.#hitsWall(attempt) && !this.#collisionCoordinates(attempt)) {
       this.#falling = attempt;
     }
   }
@@ -338,7 +338,7 @@ export class Board implements Shape {
     return falling.nonEmptyBlocks().some((block) => block.row >= this.#height);
   }
 
-  #hitsImmobile(falling: MovableShape): Point | void {
+  #collisionCoordinates(falling: MovableShape): Point | void {
     return falling.nonEmptyBlocks().find((block) => {
       const row = block.row < 0 ? 0 : block.row;
       return this.#immobile[row][block.col] !== EmptyBlock;
