@@ -136,7 +136,7 @@ export class Board implements Shape {
       initialRow = 0;
     }
 
-    if (this.#falling) {
+    if (this.hasFalling()) {
       throw new Error("another piece is already falling");
     }
 
@@ -151,8 +151,9 @@ export class Board implements Shape {
     }
 
     const attempt = this.#falling!.moveDown();
+    const canTick = !this.#hitsFloor(attempt) && !this.#hitsImmobile(attempt);
 
-    if (!this.#hitsFloor(attempt) && !this.#hitsImmobile(attempt)) {
+    if (canTick) {
       this.#falling = attempt;
       return;
     }
@@ -177,87 +178,84 @@ export class Board implements Shape {
   }
 
   rotateRight(): Shape {
-    return this.#rotate("right");
+    this.#rotate("right");
+
+    return this;
   }
 
   rotateLeft(): Shape {
-    return this.#rotate("left");
+    this.#rotate("left");
+
+    return this;
   }
 
-  #rotate(direction: "left" | "right"): Shape {
+  #rotate(direction: "left" | "right"): void {
     if (!this.hasFalling()) {
-      return this;
+      return;
     }
 
     const attempt = direction === "left" ? this.#falling!.rotateLeft() : this.#falling!.rotateRight();
+    const canRotate = !this.#hitsFloor(attempt) && !this.#hitsWall(attempt) && !this.#hitsImmobile(attempt);
 
-    if (!this.#hitsFloor(attempt) && !this.#hitsWall(attempt) && !this.#hitsImmobile(attempt)) {
+    if (canRotate) {
       this.#falling = attempt;
-
-      return this;
+      return;
     }
 
     if (this.#hitsFloor(attempt)) {
-      return this.#handleFloorCollision(attempt);
+      this.#handleFloorCollision(attempt);
+      return;
     }
 
     if (this.#hitsWall(attempt)) {
-      return this.#handleWallCollision(attempt);
+      this.#handleWallCollision(attempt);
+      return;
     }
 
     // * If we reach this point is because it is hitting a block
-    return this.#handleBlockCollision(attempt);
+    this.#handleBlockCollision(attempt);
   }
 
-  #handleWallCollision(attempt: MovableShape): Shape {
+  #handleWallCollision(attempt: MovableShape): void {
     const wallKick = this.#wallKick(attempt);
 
     if (!this.#hitsImmobile(wallKick)) {
       this.#falling = wallKick;
-
-      return this;
+      return;
     }
 
     const doubleWallKick = this.#doubleWallKick(attempt);
 
     if (!this.#hitsImmobile(doubleWallKick)) {
       this.#falling = doubleWallKick;
-
-      return this;
+      return;
     }
-
-    return this;
   }
 
-  #handleFloorCollision(attempt: MovableShape): Shape {
+  #handleFloorCollision(attempt: MovableShape): void {
     const floorKick1 = this.#floorKick(attempt);
     const floorKick2 = this.#floorKick(floorKick1);
 
     if (!this.#hitsImmobile(floorKick2)) {
       this.#falling = floorKick2;
-
-      return this;
     }
-
-    return this;
   }
 
   // TODO: Refactor
-  #handleBlockCollision(attempt: MovableShape): Shape {
+  #handleBlockCollision(attempt: MovableShape): void {
     const collisionCoordinates = this.#hitsImmobile(attempt);
 
     if (!collisionCoordinates) {
-      return this;
+      return;
     }
 
     // * center column collision rule applies for all tetrominoes except I
-    if (!attempt.toString().includes("I")) {
-      const centerColumnCollision = attempt.collisionInternalPoint(collisionCoordinates).col === 1;
+    const centerColumnCollision =
+      attempt.collisionInternalPoint(collisionCoordinates).col === 1 && !attempt.toString().includes("I");
 
+    if (centerColumnCollision) {
       // * If center row collides on rotation kicking can't be performed
-      if (centerColumnCollision) {
-        return this;
-      }
+      return;
     }
 
     // ** WALL KICK ***
@@ -265,14 +263,13 @@ export class Board implements Shape {
 
     if (!this.#hitsImmobile(wallKickShape)) {
       this.#falling = wallKickShape;
-
-      return this;
+      return;
     }
 
     // ** FLOOR KICK ***
     // * If the next row is empty floor kick is not possible
     if (this.#nextRowIsEmpty()) {
-      return this;
+      return;
     }
 
     // * If wall kick doesn't work is possible that a floor kick is needed
@@ -280,8 +277,7 @@ export class Board implements Shape {
 
     if (!this.#hitsImmobile(floorKickShape)) {
       this.#falling = floorKickShape;
-
-      return this;
+      return;
     }
 
     // ** DOUBLE FLOOR KICK ***
@@ -291,8 +287,7 @@ export class Board implements Shape {
     const canDoubleFloorKick = !this.#hitsImmobile(doubleFloorKickShape) && !floorKickShape.toString().includes("IIII");
     if (canDoubleFloorKick) {
       this.#falling = doubleFloorKickShape;
-
-      return this;
+      return;
     }
 
     // ** DOUBLE WALL KICK ***
@@ -300,12 +295,8 @@ export class Board implements Shape {
 
     if (!this.#hitsImmobile(doubleWallKickShape)) {
       this.#falling = doubleWallKickShape;
-
-      return this;
+      return;
     }
-
-    // * Not possible to perform wall or floor kicks
-    return this;
   }
 
   #nextRowIsEmpty(): boolean {
