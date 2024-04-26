@@ -16,10 +16,22 @@ class MovableShape implements Shape {
   #row: number; // * The row of the topmost row of the shape
   #col: number; // * The column of the leftmost column of the shape
 
-  constructor(shape: Shape, row: number, col: number) {
+  constructor(shape: Shape, row: number, col?: number) {
     this.#shape = shape;
-    this.#row = row;
-    this.#col = col;
+
+    // * If col is specified just pass the values of row and col
+    if (typeof col === "number") {
+      this.#row = row;
+      this.#col = col;
+      return;
+    }
+
+    // * If col is not specified the shape is being dropped into the board so calculating the initial positions is necessary
+    this.#row = shape.width() === 1 ? 0 : -1;
+
+    const middleCol = Math.floor((row - shape.width()) / 2);
+
+    this.#col = middleCol;
   }
 
   floorKick(): MovableShape {
@@ -128,21 +140,12 @@ export class Board implements Shape {
     return new Board(width, height, immobile);
   }
 
-  drop(piece: Shape | string): void {
-    let initialRow = -1;
-
-    if (typeof piece === "string") {
-      piece = new Block(piece);
-      initialRow = 0;
-    }
-
+  drop(piece: Shape): void {
     if (this.hasFalling()) {
       throw new Error("another piece is already falling");
     }
 
-    const middleCol = Math.floor((this.#width - piece.width()) / 2);
-
-    this.#falling = new MovableShape(piece, initialRow, middleCol);
+    this.#falling = new MovableShape(piece, this.#width);
   }
 
   tick(): void {

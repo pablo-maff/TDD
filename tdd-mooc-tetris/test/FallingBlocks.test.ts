@@ -1,6 +1,7 @@
 import { beforeEach, describe, test } from "vitest";
 import { expect } from "chai";
 import { Board } from "../src/Board.js";
+import { Block } from "../src/Block.js";
 
 describe("Falling blocks", () => {
   let board: Board;
@@ -16,9 +17,18 @@ describe("Falling blocks", () => {
     );
   });
 
+  test("refactor drop", () => {
+    board.drop(new Block("X"));
+    expect(board.toString()).to.equalShape(
+      `.X.
+       ...
+       ...`
+    );
+  });
+
   describe("When a block is dropped", () => {
     beforeEach(() => {
-      board.drop("X");
+      board.drop(new Block("X"));
     });
 
     test("it starts from the top middle", () => {
@@ -41,7 +51,7 @@ describe("Falling blocks", () => {
 
     test("at most one block may be falling at a time", () => {
       const before = board.toString();
-      expect(() => board.drop("Y")).to.throw("already falling");
+      expect(() => board.drop(new Block("Y"))).to.throw("already falling");
       const after = board.toString();
       expect(after).to.equal(before);
     });
@@ -49,7 +59,7 @@ describe("Falling blocks", () => {
 
   describe("When a block reaches the bottom", () => {
     beforeEach(() => {
-      board.drop("X");
+      board.drop(new Block("X"));
       board.tick();
       board.tick();
     });
@@ -77,11 +87,11 @@ describe("Falling blocks", () => {
 
   describe("When a block lands on another block", () => {
     beforeEach(() => {
-      board.drop("X");
+      board.drop(new Block("X"));
       board.tick();
       board.tick();
       board.tick();
-      board.drop("Y");
+      board.drop(new Block("Y"));
       board.tick();
     });
 

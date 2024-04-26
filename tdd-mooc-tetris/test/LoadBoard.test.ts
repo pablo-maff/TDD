@@ -1,6 +1,7 @@
 import { expect } from "chai";
 import { Board } from "../src/Board.js";
 import { describe, test } from "vitest";
+import { Block } from "../src/Block.js";
 
 describe("A board represented as a string", () => {
   test("can be loaded with a 10x6 size", () => {
@@ -49,7 +50,7 @@ describe("A board represented as a string", () => {
        ....T.....`
     );
 
-    board.drop("X");
+    board.drop(new Block("X"));
 
     expect(board.toString()).to.equalShape(
       `....X.....
