@@ -271,30 +271,33 @@ export class Board implements Shape {
     // ** FLOOR KICK ***
     // * If the next row is empty floor kick is not possible
     if (this.#nextRowIsEmpty()) {
-      return;
+      return null;
     }
 
     // * If wall kick doesn't work is possible that a floor kick is needed
     const floorKickShape = this.#floorKick(attempt);
 
-    if (this.#canKick(floorKickShape)) {
-      this.#falling = floorKickShape;
-      return;
-    }
-
-    // ** DOUBLE FLOOR KICK ***
-    return this.#setDoubleFloorKick(floorKickShape) || this.#setDoubleWallKick(attempt);
+    return (
+      this.#setFloorKick(floorKickShape) || this.#setDoubleFloorKick(floorKickShape) || this.#setDoubleWallKick(attempt)
+    );
   }
 
   #canKick(attempt: MovableShape): boolean {
     return !this.#hitsImmobile(attempt);
   }
 
+  #setFloorKick(attempt: MovableShape): MovableShape | null {
+    if (this.#canKick(attempt)) {
+      return (this.#falling = attempt);
+    }
+    return null;
+  }
+
   #setDoubleWallKick(attempt: MovableShape): MovableShape | null {
     const doubleWallKickShape = this.#doubleWallKick(attempt);
 
     if (this.#canKick(doubleWallKickShape)) {
-      this.#falling = doubleWallKickShape;
+      return (this.#falling = doubleWallKickShape);
     }
 
     return null;
