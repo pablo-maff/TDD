@@ -261,8 +261,8 @@ export class Board implements Shape {
     }
 
     return (
-      this.#setWallKick(attempt) ||
-      this.#setDoubleWallKick(attempt) ||
+      this.#setWallKick(this.#wallKick(attempt)) ||
+      this.#setWallKick(this.#doubleWallKick(attempt)) ||
       this.#setFloorKick(attempt) ||
       this.#setDoubleFloorKick(attempt)
     );
@@ -273,25 +273,13 @@ export class Board implements Shape {
   }
 
   #setWallKick(attempt: MovableShape): MovableShape | null {
-    const wallKickShape = this.#wallKick(attempt);
     const attemptIsVerticalI = attempt.toString().includes("..I.");
 
-    if (!this.#canKick(wallKickShape) || attemptIsVerticalI) {
+    if (!this.#canKick(attempt) || attemptIsVerticalI) {
       return null;
     }
 
-    return (this.#falling = wallKickShape);
-  }
-
-  #setDoubleWallKick(attempt: MovableShape): MovableShape | null {
-    const doubleWallKick = this.#doubleWallKick(attempt);
-    const attemptIsVerticalI = attempt.toString().includes("..I.");
-
-    if (!this.#canKick(doubleWallKick) || attemptIsVerticalI) {
-      return null;
-    }
-
-    return (this.#falling = doubleWallKick);
+    return (this.#falling = attempt);
   }
 
   #setFloorKick(attempt: MovableShape): MovableShape | null {
