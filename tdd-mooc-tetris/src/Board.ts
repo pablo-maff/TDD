@@ -115,7 +115,6 @@ export class Board implements Shape {
     // * For loaded boards
     if (immobile) {
       this.#immobile = immobile;
-
       return;
     }
 
@@ -157,7 +156,6 @@ export class Board implements Shape {
 
     if (canTick) {
       this.#setFalling(attempt);
-
       return;
     }
 
@@ -165,19 +163,22 @@ export class Board implements Shape {
   }
 
   moveLeft(): void {
-    if (!this.hasFalling()) {
-      return;
-    }
-
     this.#moveHorizontally(this.#falling!.moveLeft());
   }
 
   moveRight(): void {
+    this.#moveHorizontally(this.#falling!.moveRight());
+  }
+
+  #moveHorizontally(attempt: MovableShape): void {
     if (!this.hasFalling()) {
       return;
     }
 
-    this.#moveHorizontally(this.#falling!.moveRight());
+    if (!this.#hitsWall(attempt) && !this.#hitsImmobile(attempt)) {
+      this.#setFalling(attempt);
+      return;
+    }
   }
 
   rotateRight(): Shape {
@@ -317,12 +318,6 @@ export class Board implements Shape {
 
   #doubleFloorKick(shape: MovableShape): MovableShape {
     return shape.floorKick().floorKick();
-  }
-
-  #moveHorizontally(attempt: MovableShape) {
-    if (!this.#hitsWall(attempt) && !this.#hitsImmobile(attempt)) {
-      return this.#setFalling(attempt);
-    }
   }
 
   #hitsWall(falling: MovableShape): boolean {
