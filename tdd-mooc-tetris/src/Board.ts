@@ -144,7 +144,7 @@ export class Board implements Shape {
       throw new Error("another piece is already falling");
     }
 
-    this.#falling = new MovableShape(piece, this.#width);
+    this.#setFalling(new MovableShape(piece, this.#width));
   }
 
   tick(): void {
@@ -156,7 +156,8 @@ export class Board implements Shape {
     const canTick = !this.#hitsFloor(attempt) && !this.#hitsImmobile(attempt);
 
     if (canTick) {
-      this.#falling = attempt;
+      this.#setFalling(attempt);
+
       return;
     }
 
@@ -200,7 +201,7 @@ export class Board implements Shape {
     const canRotate = !this.#hitsFloor(attempt) && !this.#hitsWall(attempt) && !this.#hitsImmobile(attempt);
 
     if (canRotate) {
-      this.#falling = attempt;
+      this.#setFalling(attempt);
       return;
     }
 
@@ -241,7 +242,7 @@ export class Board implements Shape {
     return !!this.#collisionCoordinates(attempt);
   }
 
-  #setFalling(attempt: MovableShape): MovableShape {
+  #setFalling(attempt: MovableShape | null): MovableShape | null {
     return (this.#falling = attempt);
   }
 
@@ -350,7 +351,7 @@ export class Board implements Shape {
         this.#immobile[row][col] = this.blockAt(row, col);
       }
     }
-    this.#falling = null;
+    this.#setFalling(null);
   }
 
   hasFalling(): boolean {
@@ -368,11 +369,11 @@ export class Board implements Shape {
   blockAt(row: number, col: number): string {
     const emptyBlock = this.#immobile[row][col];
 
-    if (!this.#falling) {
+    if (!this.hasFalling()) {
       return emptyBlock;
     }
 
-    const block = this.#falling.blockAt(row, col);
+    const block = this.#falling!.blockAt(row, col);
 
     if (block !== EmptyBlock) {
       return block;
