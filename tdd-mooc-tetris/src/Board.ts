@@ -181,13 +181,13 @@ export class Board implements Shape {
     }
   }
 
-  rotateRight(): Shape {
+  rotateRight(): Board {
     this.#rotate("right");
 
     return this;
   }
 
-  rotateLeft(): Shape {
+  rotateLeft(): Board {
     this.#rotate("left");
 
     return this;
@@ -239,14 +239,6 @@ export class Board implements Shape {
     );
   }
 
-  #hitsImmobile(attempt: MovableShape): boolean {
-    return !!this.#collisionCoordinates(attempt);
-  }
-
-  #setFalling(attempt: MovableShape | null): MovableShape | null {
-    return (this.#falling = attempt);
-  }
-
   #setWallKick(attempt: MovableShape): MovableShape | null {
     const attemptIsVerticalI = attempt.toString().includes("..I.");
 
@@ -269,6 +261,7 @@ export class Board implements Shape {
 
   #setDoubleFloorKick(attempt: MovableShape): MovableShape | null {
     const doubleFloorKick = this.#doubleFloorKick(attempt);
+    // * For double floor kick it is forbidden for horizontalI to perform it to not allow it to escape from a hollow that has its same height
     const attemptIsHorizontalI = attempt.toString().includes("IIII");
 
     const cantDoubleFloorKick = this.#nextRowIsEmpty() || this.#hitsImmobile(doubleFloorKick) || attemptIsHorizontalI;
@@ -278,12 +271,6 @@ export class Board implements Shape {
     }
 
     return this.#setFalling(doubleFloorKick);
-  }
-
-  #nextRowIsEmpty(): boolean {
-    const moveDown = this.#falling!.moveDown();
-
-    return !this.#hitsFloor(moveDown) && !this.#hitsImmobile(moveDown);
   }
 
   #wallKick(shape: MovableShape): MovableShape {
@@ -320,6 +307,17 @@ export class Board implements Shape {
     return shape.floorKick().floorKick();
   }
 
+  #collisionCoordinates(falling: MovableShape): Point | void {
+    return falling.nonEmptyBlocks().find((block) => {
+      const row = block.row < 0 ? 0 : block.row;
+      return this.#immobile[row][block.col] !== EmptyBlock;
+    });
+  }
+
+  #hitsImmobile(attempt: MovableShape): boolean {
+    return !!this.#collisionCoordinates(attempt);
+  }
+
   #hitsWall(falling: MovableShape): boolean {
     return falling.nonEmptyBlocks().some((block) => {
       const hitsLeftWall = block.col < 0;
@@ -333,11 +331,8 @@ export class Board implements Shape {
     return falling.nonEmptyBlocks().some((block) => block.row >= this.#height);
   }
 
-  #collisionCoordinates(falling: MovableShape): Point | void {
-    return falling.nonEmptyBlocks().find((block) => {
-      const row = block.row < 0 ? 0 : block.row;
-      return this.#immobile[row][block.col] !== EmptyBlock;
-    });
+  #setFalling(attempt: MovableShape | null): MovableShape | null {
+    return (this.#falling = attempt);
   }
 
   #stopFalling(): void {
@@ -347,6 +342,12 @@ export class Board implements Shape {
       }
     }
     this.#setFalling(null);
+  }
+
+  #nextRowIsEmpty(): boolean {
+    const moveDown = this.#falling!.moveDown();
+
+    return !this.#hitsFloor(moveDown) && !this.#hitsImmobile(moveDown);
   }
 
   hasFalling(): boolean {
