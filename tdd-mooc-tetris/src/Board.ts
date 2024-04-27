@@ -215,11 +215,11 @@ export class Board implements Shape {
     }
 
     if (this.#hitsImmobile(attempt)) {
-      this.#handleBlockCollision(attempt, this.#collisionCoordinates(attempt)!);
+      this.#handleKick(attempt, this.#collisionCoordinates(attempt)!);
     }
   }
 
-  #handleBlockCollision(attempt: MovableShape, collisionCoordinates: Point): MovableShape | null {
+  #handleKick(attempt: MovableShape, collisionCoordinates: Point): MovableShape | null {
     // * center column collision rule applies for all tetrominoes except I
     const centerColumnCollision =
       attempt.collisionInternalPoint(collisionCoordinates).col === 1 && !attempt.toString().includes("I");
@@ -241,6 +241,10 @@ export class Board implements Shape {
     return !!this.#collisionCoordinates(attempt);
   }
 
+  #setFalling(attempt: MovableShape): MovableShape {
+    return (this.#falling = attempt);
+  }
+
   #setWallKick(attempt: MovableShape): MovableShape | null {
     const attemptIsVerticalI = attempt.toString().includes("..I.");
 
@@ -248,7 +252,7 @@ export class Board implements Shape {
       return null;
     }
 
-    return (this.#falling = attempt);
+    return this.#setFalling(attempt);
   }
 
   #setFloorKick(attempt: MovableShape): MovableShape | null {
@@ -258,7 +262,7 @@ export class Board implements Shape {
       return null;
     }
 
-    return (this.#falling = floorKickShape);
+    return this.#setFalling(floorKickShape);
   }
 
   #setDoubleFloorKick(attempt: MovableShape): MovableShape | null {
@@ -271,7 +275,7 @@ export class Board implements Shape {
       return null;
     }
 
-    return (this.#falling = doubleFloorKick);
+    return this.#setFalling(doubleFloorKick);
   }
 
   #nextRowIsEmpty(): boolean {
@@ -316,7 +320,7 @@ export class Board implements Shape {
 
   #moveHorizontally(attempt: MovableShape) {
     if (!this.#hitsWall(attempt) && !this.#hitsImmobile(attempt)) {
-      this.#falling = attempt;
+      return this.#setFalling(attempt);
     }
   }
 
