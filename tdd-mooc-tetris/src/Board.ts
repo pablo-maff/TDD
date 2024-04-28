@@ -206,13 +206,13 @@ export class Board implements Shape {
       return;
     }
 
-    if (this.#hitsFloor(attempt)) {
-      this.#setDoubleFloorKick(attempt);
+    if (this.#hitsWall(attempt)) {
+      this.#setWallKick(this.#wallKick(attempt)) || this.#setWallKick(this.#doubleWallKick(attempt));
       return;
     }
 
-    if (this.#hitsWall(attempt)) {
-      this.#setWallKick(this.#wallKick(attempt)) || this.#setWallKick(this.#doubleWallKick(attempt));
+    if (this.#hitsFloor(attempt)) {
+      this.#setDoubleFloorKick(attempt);
       return;
     }
 
