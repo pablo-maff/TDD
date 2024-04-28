@@ -73,7 +73,7 @@ class MovableShape implements Shape {
   }
 
   // * Maps board collision coordinates to internal shape coordinates
-  collisionInternalPoint(collision: Point): Point {
+  collisionInternalCoordinates(collision: Point): Point {
     return new Point(collision.row - this.#row, collision.col - this.#col);
   }
 
@@ -224,7 +224,7 @@ export class Board implements Shape {
   #handleKick(attempt: MovableShape, collisionCoordinates: Point): MovableShape | null {
     // * center column collision rule applies for all tetrominoes except I
     const centerColumnCollision =
-      attempt.collisionInternalPoint(collisionCoordinates).col === 1 && !attempt.toString().includes("I");
+      attempt.collisionInternalCoordinates(collisionCoordinates).col === 1 && !attempt.toString().includes("I");
 
     if (centerColumnCollision) {
       // * If center row collides on rotation, kicking can't be performed
@@ -264,9 +264,10 @@ export class Board implements Shape {
     // * horizontalI can't perform it to not allow escaping from a hollow that has its same height
     const attemptIsHorizontalI = attempt.toString().includes(I_SHAPES[0].substring(0, 4));
 
-    const cantDoubleFloorKick = this.#nextRowIsEmpty() || this.#hitsImmobile(doubleFloorKick) || attemptIsHorizontalI;
+    const forbiddenDoubleFloorKick =
+      attemptIsHorizontalI || this.#nextRowIsEmpty() || this.#hitsImmobile(doubleFloorKick);
 
-    if (cantDoubleFloorKick) {
+    if (forbiddenDoubleFloorKick) {
       return null;
     }
 
