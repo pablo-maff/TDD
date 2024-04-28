@@ -1,7 +1,6 @@
 import { expect } from "chai";
 import { Board } from "../src/Board.js";
-import { fallToBottom, moveRight } from "./utils.js";
-import { beforeEach, describe, test } from "vitest";
+import { describe, test } from "vitest";
 import { Tetromino } from "../src/Tetromino.js";
 
 describe("Mihara's conspiracy", () => {
@@ -32,7 +31,7 @@ describe("Mihara's conspiracy", () => {
     );
   });
 
-  test("J doesn't fit empty hole on the left", () => {
+  test("J doesn't fit empty hole on the left if kicking right is possible", () => {
     const board = Board.loadBoard(
       `..........
        ..........
@@ -56,6 +55,33 @@ describe("Mihara's conspiracy", () => {
        .XX.......
        .X..JJJ...
        .XXX.XJ...`
+    );
+  });
+
+  test("J fits empty hole on the left if kicking right is not possible", () => {
+    const board = Board.loadBoard(
+      `..........
+       ..........
+       ..........
+       .XX...X...
+       .X....X...
+       .XXX.XX...`
+    );
+
+    board.drop(Tetromino.J_SHAPE);
+    board.rotateLeft();
+    board.tick();
+    board.tick();
+    board.tick();
+    board.rotateRight();
+
+    expect(board.toString()).to.equalShape(
+      `..........
+       ..........
+       ..........
+       .XX...X...
+       .XJJJ.X...
+       .XXXJXX...`
     );
   });
 });
