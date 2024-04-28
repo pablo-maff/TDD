@@ -82,7 +82,7 @@ export const J_SHAPES = [
    JJJ`,
   `.JJ
    .J.
-   .J,`,
+   .J.`,
 ];
 
 export const S_SHAPES = [
