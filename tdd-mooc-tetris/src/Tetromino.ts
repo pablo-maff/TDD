@@ -1,4 +1,4 @@
-import { EmptyBlock, I_SHAPES, L_SHAPES, O_SHAPES, Shape, T_SHAPES } from "./shapes";
+import { EmptyBlock, I_SHAPES, L_SHAPES, O_SHAPES, Shape, T_SHAPES, shapeToString } from "./shapes";
 
 export class Tetromino implements Shape {
   static T_SHAPE = new Tetromino(0, T_SHAPES);
@@ -44,13 +44,6 @@ export class Tetromino implements Shape {
   }
 
   toString(): string {
-    let s = "";
-    for (let row = 0; row < this.height(); row++) {
-      for (let col = 0; col < this.width(); col++) {
-        s += this.blockAt(row, col);
-      }
-      s += "\n";
-    }
-    return s;
+    return shapeToString(new Tetromino(this.#currentOrientation, this.#orientations));
   }
 }
