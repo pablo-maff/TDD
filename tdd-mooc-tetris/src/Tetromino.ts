@@ -44,6 +44,6 @@ export class Tetromino implements Shape {
   }
 
   toString(): string {
-    return shapeToString(new Tetromino(this.#currentOrientation, this.#orientations));
+    return shapeToString(this);
   }
 }
