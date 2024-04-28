@@ -240,9 +240,9 @@ export class Board implements Shape {
   }
 
   #setWallKick(attempt: MovableShape): MovableShape | null {
-    const attemptIsVerticalI = attempt.toString().includes("..I.");
+    const attemptIsVerticalI = attempt.toString().includes(I_SHAPES[1].substring(0, 4));
 
-    if (this.#hitsImmobile(attempt) || attemptIsVerticalI) {
+    if (attemptIsVerticalI || this.#hitsImmobile(attempt)) {
       return null;
     }
 
@@ -261,8 +261,8 @@ export class Board implements Shape {
 
   #setDoubleFloorKick(attempt: MovableShape): MovableShape | null {
     const doubleFloorKick = this.#doubleFloorKick(attempt);
-    // * For double floor kick it is forbidden for horizontalI to perform it to not allow it to escape from a hollow that has its same height
-    const attemptIsHorizontalI = attempt.toString().includes("IIII");
+    // * horizontalI can't perform it to not allow escaping from a hollow that has its same height
+    const attemptIsHorizontalI = attempt.toString().includes(I_SHAPES[0].substring(0, 4));
 
     const cantDoubleFloorKick = this.#nextRowIsEmpty() || this.#hitsImmobile(doubleFloorKick) || attemptIsHorizontalI;
 
