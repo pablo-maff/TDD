@@ -164,19 +164,23 @@ export class Board implements Shape {
     this.#clearLine();
   }
 
-  #clearLineIndex(): number {
-    return this.#immobile.findIndex((row) => row.every((block) => block !== EmptyBlock));
+  #findLineClearIndeces(): number[] {
+    return this.#immobile
+      .map((row, i) => (row.every((block) => block !== EmptyBlock) ? i : -1))
+      .filter((index) => index >= 0);
   }
 
   #clearLine(): void {
-    const clearLineIndex = this.#clearLineIndex();
+    const lineClearIndeces = this.#findLineClearIndeces();
 
-    if (clearLineIndex >= 0) {
-      const beforeCleared = this.#immobile.slice(0, clearLineIndex);
-      const afterCleared = this.#immobile.slice(clearLineIndex + 1);
-      const newLine = new Array(this.#width).fill(EmptyBlock);
+    if (lineClearIndeces.length) {
+      lineClearIndeces.forEach((index) => {
+        const beforeCleared = this.#immobile.slice(0, index);
+        const afterCleared = this.#immobile.slice(index + 1);
+        const newLine = new Array(this.#width).fill(EmptyBlock);
 
-      this.#immobile = [newLine].concat(beforeCleared, afterCleared);
+        this.#immobile = [newLine].concat(beforeCleared, afterCleared);
+      });
     }
   }
 
