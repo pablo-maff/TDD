@@ -83,4 +83,30 @@ describe("Line clear", () => {
        ....I.XXX`
     );
   });
+
+  test("triple is done if three horizontal lines are filled", () => {
+    const board = Board.loadBoard(
+      `.........
+       .........
+       ......XXX
+       XXXX.XXXX
+       XXXX.XXXX
+       XXXX.XXXX`
+    );
+
+    board.drop(Tetromino.I_SHAPE);
+    board.rotateLeft();
+    board.tick();
+    board.tick();
+    board.tick();
+
+    expect(board.toString()).to.equalShape(
+      `.........
+       .........
+       .........
+       .........
+       .........
+       ....I.XXX`
+    );
+  });
 });
