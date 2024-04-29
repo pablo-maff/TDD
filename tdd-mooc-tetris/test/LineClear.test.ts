@@ -109,4 +109,30 @@ describe("Line clear", () => {
        ....I.XXX`
     );
   });
+
+  test("quadruple (tetris) is done if four horizontal lines are filled", () => {
+    const board = Board.loadBoard(
+      `.........
+       ......XXX
+       XXXX.XXXX
+       XXXX.XXXX
+       XXXX.XXXX
+       XXXX.XXXX`
+    );
+
+    board.drop(Tetromino.I_SHAPE);
+    board.rotateLeft();
+    board.tick();
+    board.tick();
+    board.tick();
+
+    expect(board.toString()).to.equalShape(
+      `.........
+       .........
+       .........
+       .........
+       .........
+       ......XXX`
+    );
+  });
 });
