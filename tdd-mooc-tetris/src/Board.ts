@@ -160,28 +160,6 @@ export class Board implements Shape {
     }
 
     this.#stopFalling();
-
-    this.#clearLine();
-  }
-
-  #findLineClearIndeces(): number[] {
-    return this.#immobile
-      .map((row, i) => (row.every((block) => block !== EmptyBlock) ? i : -1))
-      .filter((index) => index >= 0);
-  }
-
-  #clearLine(): void {
-    const lineClearIndeces = this.#findLineClearIndeces();
-
-    if (lineClearIndeces.length) {
-      lineClearIndeces.forEach((index) => {
-        const beforeCleared = this.#immobile.slice(0, index);
-        const afterCleared = this.#immobile.slice(index + 1);
-        const newLine = new Array(this.#width).fill(EmptyBlock);
-
-        this.#immobile = [newLine].concat(beforeCleared, afterCleared);
-      });
-    }
   }
 
   moveLeft(): void {
@@ -365,6 +343,27 @@ export class Board implements Shape {
       }
     }
     this.#setFalling(null);
+    this.#clearLine();
+  }
+
+  #findLineClearIndeces(): number[] {
+    return this.#immobile
+      .map((row, i) => (row.every((block) => block !== EmptyBlock) ? i : -1))
+      .filter((index) => index >= 0);
+  }
+
+  #clearLine(): void {
+    const lineClearIndeces = this.#findLineClearIndeces();
+
+    if (lineClearIndeces.length) {
+      lineClearIndeces.forEach((index) => {
+        const beforeCleared = this.#immobile.slice(0, index);
+        const afterCleared = this.#immobile.slice(index + 1);
+        const newLine = new Array(this.#width).fill(EmptyBlock);
+
+        this.#immobile = [newLine].concat(beforeCleared, afterCleared);
+      });
+    }
   }
 
   #nextRowIsEmpty(): boolean {
