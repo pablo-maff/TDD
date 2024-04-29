@@ -160,6 +160,24 @@ export class Board implements Shape {
     }
 
     this.#stopFalling();
+
+    this.#clearLine();
+  }
+
+  #clearLineIndex(): number {
+    return this.#immobile.findIndex((row) => row.every((block) => block !== EmptyBlock));
+  }
+
+  #clearLine(): void {
+    const clearLineIndex = this.#clearLineIndex();
+
+    if (clearLineIndex >= 0) {
+      const beforeCleared = this.#immobile.slice(0, clearLineIndex);
+      const afterCleared = this.#immobile.slice(clearLineIndex + 1);
+      const newLine = new Array(this.#width).fill(EmptyBlock);
+
+      this.#immobile = [newLine].concat(beforeCleared, afterCleared);
+    }
   }
 
   moveLeft(): void {
