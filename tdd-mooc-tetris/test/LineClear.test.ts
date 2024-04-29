@@ -4,7 +4,7 @@ import { Tetromino } from "../src/Tetromino";
 import { expect } from "chai";
 
 describe("Line clear", () => {
-  test("single is done if a horizontal line is filled", () => {
+  test("single", () => {
     const board = Board.loadBoard(
       `.........
        .........
@@ -58,7 +58,7 @@ describe("Line clear", () => {
     );
   });
 
-  test("double is done if two horizontal lines are filled", () => {
+  test("double", () => {
     const board = Board.loadBoard(
       `.........
        .........
@@ -84,7 +84,7 @@ describe("Line clear", () => {
     );
   });
 
-  test("triple is done if three horizontal lines are filled", () => {
+  test("triple", () => {
     const board = Board.loadBoard(
       `.........
        .........
@@ -110,7 +110,7 @@ describe("Line clear", () => {
     );
   });
 
-  test("quadruple (tetris) is done if four horizontal lines are filled", () => {
+  test("quadruple (tetris)", () => {
     const board = Board.loadBoard(
       `.........
        ......XXX
@@ -133,6 +133,32 @@ describe("Line clear", () => {
        .........
        .........
        ......XXX`
+    );
+  });
+
+  test("can complete a hurdle", () => {
+    const board = Board.loadBoard(
+      `.........
+       .........
+       ......XXX
+       XXXX.XXXX
+       XXXX.XX.X
+       XXXX.XXXX`
+    );
+
+    board.drop(Tetromino.I_SHAPE);
+    board.rotateLeft();
+    board.tick();
+    board.tick();
+    board.tick();
+
+    expect(board.toString()).to.equalShape(
+      `.........
+       .........
+       .........
+       .........
+       ....I.XXX
+       XXXXIXX.X`
     );
   });
 });
