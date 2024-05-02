@@ -51,4 +51,34 @@ describe("Board Scoring", () => {
 
     expect(boardScoring.value).to.equal(2);
   });
+
+  test("sums up 3 points after 2 different line clear, a double and a simple one", () => {
+    const board = Board.loadBoard(
+      `.........
+       .........
+       ......XXX
+       XXXX.XXXX
+       XXX.XXXXX
+       XXX.XXXXX`
+    );
+
+    const boardScoring = new BoardScoring();
+
+    board.events.subscribe(boardScoring);
+
+    board.drop(Tetromino.T_SHAPE);
+    board.rotateLeft();
+    board.tick();
+    board.tick();
+    board.tick();
+
+    board.drop(Tetromino.I_SHAPE);
+    board.moveLeft();
+    board.rotateLeft();
+    board.tick();
+    board.tick();
+    board.tick();
+
+    expect(boardScoring.value).to.equal(3);
+  });
 });
