@@ -9,7 +9,22 @@ describe("Events Manager", () => {
     const observer = new DummyObserver();
 
     events.subscribe(observer);
+    events.notify(4);
 
-    expect(events.notify(4)).to.equal(5);
+    expect(observer.value).to.equal(5);
+  });
+
+  test("can notify 2 observers when an event happens", () => {
+    const events = new EventsManager();
+    const observer1 = new DummyObserver();
+    const observer2 = new DummyObserver();
+
+    events.subscribe(observer1);
+    events.subscribe(observer2);
+
+    events.notify(4);
+
+    expect(observer1.value).to.equal(5);
+    expect(observer2.value).to.equal(5);
   });
 });

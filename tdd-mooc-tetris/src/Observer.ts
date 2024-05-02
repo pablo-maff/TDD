@@ -4,7 +4,13 @@ export interface Observer {
 }
 
 export class DummyObserver implements Observer {
+  #state: number = 0;
+
   update(data: number) {
-    return data + 1;
+    this.#state = data + 1;
+  }
+
+  public get value(): number {
+    return this.#state;
   }
 }

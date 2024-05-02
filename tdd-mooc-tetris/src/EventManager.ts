@@ -12,21 +12,21 @@ export interface Subject {
 }
 
 export class EventsManager implements Subject {
-  #observer: Observer | null = null;
+  #observers: Observer[] = [];
 
   subscribe(observer: Observer): void {
-    this.#observer = observer;
+    this.#observers = [...this.#observers, observer];
   }
 
   unsubscribe(): void {
-    this.#observer = null;
+    this.#observers = this.#observers.slice(0, -1);
   }
 
   notify(data: any): void {
-    if (!this.#observer) {
+    if (!this.#observers) {
       throw new Error("observer is not defined");
     }
 
-    return this.#observer.update(data);
+    this.#observers.forEach((observer) => observer.update(data));
   }
 }
