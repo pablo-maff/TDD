@@ -57,4 +57,27 @@ describe("Nintento Scoring system", () => {
 
     expect(boardScoring.value).to.equal(100);
   });
+
+  test("adds 300 points when 3 lines are cleared at the same time", () => {
+    const board = Board.loadBoard(
+      `.........
+       .........
+       ......XXX
+       XXXX.XXXX
+       XXXX.XXXX
+       XXXX.XXXX`
+    );
+
+    const boardScoring = new NintendoScoring();
+
+    board.events.subscribe(boardScoring);
+
+    board.drop(Tetromino.I_SHAPE);
+    board.rotateLeft();
+    board.tick();
+    board.tick();
+    board.tick();
+
+    expect(boardScoring.value).to.equal(300);
+  });
 });
