@@ -1,4 +1,4 @@
-import { Observer } from "./DummyObserver";
+import { Observer } from "./Observer";
 
 export class BoardScoring implements Observer {
   #score: number = 0;

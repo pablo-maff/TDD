@@ -1,4 +1,4 @@
-import { Observer } from "./DummyObserver";
+import { Observer } from "./Observer";
 
 export interface Subject {
   subscribe(observer: Observer): void;
