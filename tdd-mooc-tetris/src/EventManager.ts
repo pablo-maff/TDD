@@ -8,7 +8,7 @@ export interface Subject {
   unsubscribe(eventType: string): void;
 
   // * Notify all observers about an event.
-  notify(data: any): void;
+  notify(data: number): void;
 }
 
 export class EventsManager implements Subject {
@@ -22,11 +22,7 @@ export class EventsManager implements Subject {
     this.#observers = this.#observers.slice(0, -1);
   }
 
-  notify(data: any): void {
-    if (!this.#observers) {
-      throw new Error("observer is not defined");
-    }
-
+  notify(data: number): void {
     this.#observers.forEach((observer) => observer.update(data));
   }
 }
