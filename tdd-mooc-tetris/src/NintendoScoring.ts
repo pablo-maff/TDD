@@ -1,7 +1,7 @@
 import { Observer } from "./Observer";
 
 export class NintendoScoring implements Observer {
-  #state: number = 0;
+  #score: number = 0;
 
   #ScorePerLinesCleared: Record<number, number> = Object.freeze({
     1: 40,
@@ -11,10 +11,10 @@ export class NintendoScoring implements Observer {
   });
 
   update(linesCleared: number): void {
-    this.#state = this.#ScorePerLinesCleared[linesCleared];
+    this.#score += this.#ScorePerLinesCleared[linesCleared];
   }
 
   public get value(): number {
-    return this.#state;
+    return this.#score;
   }
 }

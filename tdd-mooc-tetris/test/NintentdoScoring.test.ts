@@ -103,4 +103,34 @@ describe("Nintento Scoring system", () => {
 
     expect(boardScoring.value).to.equal(1200);
   });
+
+  test("sums up 140 points after 2 different line clear, a double and a simple one", () => {
+    const board = Board.loadBoard(
+      `.........
+       .........
+       ......XXX
+       XXXX.XXXX
+       XXX.XXXXX
+       XXX.XXXXX`
+    );
+
+    const boardScoring = new NintendoScoring();
+
+    board.events.subscribe(boardScoring);
+
+    board.drop(Tetromino.T_SHAPE);
+    board.rotateLeft();
+    board.tick();
+    board.tick();
+    board.tick();
+
+    board.drop(Tetromino.I_SHAPE);
+    board.moveLeft();
+    board.rotateLeft();
+    board.tick();
+    board.tick();
+    board.tick();
+
+    expect(boardScoring.value).to.equal(140);
+  });
 });
