@@ -3,27 +3,15 @@ import { Observer } from "./Observer";
 export class NintendoScoring implements Observer {
   #state: number = 0;
 
+  #ScorePerLinesCleared: Record<number, number> = Object.freeze({
+    1: 40,
+    2: 100,
+    3: 300,
+    4: 1200,
+  });
+
   update(linesCleared: number): void {
-    switch (linesCleared) {
-      case 1:
-        this.#state = 40;
-        break;
-
-      case 2:
-        this.#state = 100;
-        break;
-
-      case 3:
-        this.#state = 300;
-        break;
-
-      case 4:
-        this.#state = 1200;
-        break;
-
-      default:
-        break;
-    }
+    this.#state = this.#ScorePerLinesCleared[linesCleared];
   }
 
   public get value(): number {
