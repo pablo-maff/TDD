@@ -29,8 +29,7 @@ describe("Board Scoring", () => {
     expect(boardScoring.score).to.equal(1);
   });
 
-  test.skip("adds 2 points when 2 lines are cleared at the same time", () => {
-    const score = BoardScoring.score();
+  test("adds 2 points when 2 lines are cleared at the same time", () => {
     const board = Board.loadBoard(
       `.........
        .........
@@ -40,12 +39,16 @@ describe("Board Scoring", () => {
        XXXX.XXXX`
     );
 
+    const boardScoring = new BoardScoring();
+
+    board.events.subscribe(boardScoring);
+
     board.drop(Tetromino.I_SHAPE);
     board.rotateLeft();
     board.tick();
     board.tick();
     board.tick();
 
-    expect(score).to.equal(2);
+    expect(boardScoring.score).to.equal(2);
   });
 });
