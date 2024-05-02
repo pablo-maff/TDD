@@ -6,7 +6,6 @@ import { BoardScoring } from "../src/BoardScoring";
 
 describe("Board Scoring", () => {
   test("adds 1 point when a line is cleared", () => {
-    const score = BoardScoring.score();
     const board = Board.loadBoard(
       `.........
        .........
@@ -16,6 +15,10 @@ describe("Board Scoring", () => {
        XXXX.XXXX`
     );
 
+    const boardScoring = new BoardScoring();
+
+    board.events.subscribe(boardScoring);
+
     board.drop(Tetromino.T_SHAPE);
     board.tick();
     board.tick();
@@ -23,7 +26,7 @@ describe("Board Scoring", () => {
     board.tick();
     board.tick();
 
-    expect(score).to.equal(1);
+    expect(boardScoring.score).to.equal(1);
   });
 
   test.skip("adds 2 points when 2 lines are cleared at the same time", () => {

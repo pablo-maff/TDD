@@ -1,5 +1,5 @@
 import { describe, test } from "vitest";
-import { EventsManager } from "../src/EventManager";
+import { EventsManager } from "../src/EventsManager";
 import { DummyObserver } from "../src/Observer";
 import { expect } from "chai";
 

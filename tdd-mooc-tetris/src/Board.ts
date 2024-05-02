@@ -1,3 +1,4 @@
+import { EventsManager } from "./EventsManager";
 import { EmptyBlock, I_SHAPES, Shape, shapeToString } from "./shapes";
 
 export class Point {
@@ -107,8 +108,11 @@ export class Board implements Shape {
   #height: number;
   #falling: MovableShape | null = null;
   #immobile: string[][];
+  events: EventsManager;
 
   constructor(width: number, height: number, immobile?: string[][]) {
+    this.events = new EventsManager();
+
     this.#width = width;
     this.#height = height;
 
@@ -363,6 +367,8 @@ export class Board implements Shape {
 
         this.#immobile = [newLine].concat(beforeCleared, afterCleared);
       });
+
+      this.events.notify(lineClearIndeces.length);
     }
   }
 
