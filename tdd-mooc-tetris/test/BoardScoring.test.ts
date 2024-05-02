@@ -26,7 +26,7 @@ describe("Board Scoring", () => {
     board.tick();
     board.tick();
 
-    expect(boardScoring.score).to.equal(1);
+    expect(boardScoring.value).to.equal(1);
   });
 
   test("adds 2 points when 2 lines are cleared at the same time", () => {
@@ -49,6 +49,6 @@ describe("Board Scoring", () => {
     board.tick();
     board.tick();
 
-    expect(boardScoring.score).to.equal(2);
+    expect(boardScoring.value).to.equal(2);
   });
 });

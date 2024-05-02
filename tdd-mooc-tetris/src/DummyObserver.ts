@@ -1,6 +1,6 @@
 export interface Observer {
-  // * Receive update from subject.
   update(data: number): void;
+  value: number;
 }
 
 export class DummyObserver implements Observer {

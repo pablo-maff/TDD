@@ -1,13 +1,10 @@
-import { Observer } from "./Observer";
+import { Observer } from "./DummyObserver";
 
 export interface Subject {
-  // * Attach an observer to the subject.
   subscribe(observer: Observer): void;
 
-  // * Detach an observer from the subject.
   unsubscribe(eventType: string): void;
 
-  // * Notify all observers about an event.
   notify(data: number): void;
 }
 

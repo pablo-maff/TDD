@@ -1,6 +1,6 @@
 import { describe, test } from "vitest";
 import { EventsManager } from "../src/EventsManager";
-import { DummyObserver } from "../src/Observer";
+import { DummyObserver } from "../src/DummyObserver";
 import { expect } from "chai";
 
 describe("Events Manager", () => {

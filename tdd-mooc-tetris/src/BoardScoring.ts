@@ -1,4 +1,4 @@
-import { Observer } from "./Observer";
+import { Observer } from "./DummyObserver";
 
 export class BoardScoring implements Observer {
   #score: number = 0;
@@ -6,7 +6,8 @@ export class BoardScoring implements Observer {
   update(linesCleared: number) {
     this.#score = linesCleared;
   }
-  public get score() {
+
+  public get value() {
     return this.#score;
   }
 }
