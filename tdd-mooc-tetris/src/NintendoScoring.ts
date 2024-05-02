@@ -14,9 +14,11 @@ export class NintendoScoring implements Observer {
         break;
 
       case 3:
-        console.log("linesCleared", linesCleared);
-
         this.#state = 300;
+        break;
+
+      case 4:
+        this.#state = 1200;
         break;
 
       default:
