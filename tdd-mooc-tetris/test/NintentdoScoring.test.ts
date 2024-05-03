@@ -133,4 +133,30 @@ describe("Nintento Scoring system", () => {
 
     expect(boardScoring.value).to.equal(140);
   });
+
+  test("adds 80 points when 1 line is cleared on level 1", () => {
+    const board = Board.loadBoard(
+      `.........
+       .........
+       .........
+       .........
+       XXXX.XXXX
+       XXXX.XXXX`
+    );
+
+    board.setInitialLevel(1);
+
+    const boardScoring = new NintendoScoring();
+
+    board.events.subscribe(boardScoring);
+
+    board.drop(Tetromino.T_SHAPE);
+    board.tick();
+    board.tick();
+    board.tick();
+    board.tick();
+    board.tick();
+
+    expect(boardScoring.value).to.equal(80);
+  });
 });

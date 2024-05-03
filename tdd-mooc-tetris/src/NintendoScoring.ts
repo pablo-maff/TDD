@@ -11,7 +11,7 @@ export class NintendoScoring implements Observer {
   });
 
   update(data: Record<string, number>): void {
-    this.#score += this.#ScorePerLinesCleared[data.clearedLines];
+    this.#score += this.#ScorePerLinesCleared[data.clearedLines] * (data.level + 1);
   }
 
   public get value(): number {
