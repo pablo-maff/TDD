@@ -1,7 +1,4 @@
-export interface Observer {
-  update(data: Record<string, number>): void;
-  value: number;
-}
+import { Observer } from "../../src/EventsManager";
 
 export class DummyObserver implements Observer {
   #state: number = 0;
@@ -10,7 +7,7 @@ export class DummyObserver implements Observer {
     this.#state = data.value + 1;
   }
 
-  public get value(): number {
+  get value(): number {
     return this.#state;
   }
 }

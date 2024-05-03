@@ -1,5 +1,5 @@
 import { Board } from "../src/Board";
-import { Observer } from "../src/Observer";
+import { Observer } from "../src/EventsManager";
 import { Tetromino } from "../src/Tetromino";
 
 export function moveLeft(board: Board, positions: number) {

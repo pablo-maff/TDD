@@ -1,7 +1,7 @@
 import { beforeEach, describe, test } from "vitest";
 import { expect } from "chai";
 import { Board } from "../src/Board.js";
-import { Block } from "../src/Block.js";
+import { Block } from "./Doubles/Block.js";
 
 const X_BLOCK = "X";
 const Y_BLOCK = "Y";

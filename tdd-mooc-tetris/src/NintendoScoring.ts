@@ -1,4 +1,4 @@
-import { Observer } from "./Observer";
+import { Observer } from "./EventsManager";
 
 export class NintendoScoring implements Observer {
   #score: number = 0;
@@ -14,7 +14,7 @@ export class NintendoScoring implements Observer {
     this.#score += this.#ScorePerLinesCleared[data.clearedLines] * (data.level + 1);
   }
 
-  public get value(): number {
+  get value(): number {
     return this.#score;
   }
 }

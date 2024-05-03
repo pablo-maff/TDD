@@ -1,7 +1,6 @@
-import { EventsManager } from "./EventsManager";
-import { LevelDummy } from "./LevelDummy";
-import { Observer } from "./Observer";
+import { EventsManager, Observer } from "./EventsManager";
 import { EmptyBlock, I_SHAPES, Shape, shapeToString } from "./shapes";
+import { LevelsFixedGoal } from "./LevelsFixedGoal";
 
 export class Point {
   row: number;
@@ -122,7 +121,7 @@ export class Board implements Shape {
     // * For loaded boards
     if (immobile) {
       this.#immobile = immobile;
-      this.#level = new LevelDummy(level);
+      this.#level = new LevelsFixedGoal(level);
       return;
     }
 
@@ -132,7 +131,7 @@ export class Board implements Shape {
       this.#immobile[row] = new Array(width).fill(EmptyBlock);
     }
 
-    this.#level = new LevelDummy(level);
+    this.#level = new LevelsFixedGoal(level);
   }
 
   static loadBoard(board: string, level?: number): Board {

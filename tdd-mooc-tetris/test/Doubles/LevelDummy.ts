@@ -1,4 +1,4 @@
-import { Observer } from "./Observer";
+import { Observer } from "../../src/EventsManager";
 
 export class LevelDummy implements Observer {
   #level: number;
@@ -7,11 +7,11 @@ export class LevelDummy implements Observer {
     this.#level = initialLevel;
   }
 
-  update(data: Record<string, number>) {
+  update(data: Record<string, number>): void {
     this.#level += data.clearedLines;
   }
 
-  public get value(): number {
+  get value(): number {
     return this.#level;
   }
 }

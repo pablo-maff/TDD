@@ -1,4 +1,4 @@
-import { Observer } from "./Observer";
+import { Observer } from "../../src/EventsManager";
 
 export class ScoringDummy implements Observer {
   #score: number = 0;
@@ -7,7 +7,7 @@ export class ScoringDummy implements Observer {
     this.#score += data.clearedLines * (data.level + 1);
   }
 
-  public get value() {
+  get value() {
     return this.#score;
   }
 }

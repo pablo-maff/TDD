@@ -1,7 +1,7 @@
 import { describe, test } from "vitest";
 import { EventsManager } from "../src/EventsManager";
-import { DummyObserver } from "../src/Observer";
 import { expect } from "chai";
+import { DummyObserver } from "./Doubles/DummyObserver";
 
 describe("Events Manager", () => {
   test("can notify an observer when an event happens", () => {

@@ -1,8 +1,8 @@
 import { beforeEach, describe, test } from "vitest";
-import { Observer } from "../src/Observer";
 import { LevelsFixedGoal } from "../src/LevelsFixedGoal";
 import { expect } from "chai";
 import { lineClear } from "./utils";
+import { Observer } from "../src/EventsManager";
 
 function clearLines(amount: number, observer: Observer) {
   let remainingClears = amount;
@@ -60,5 +60,13 @@ describe("Levels Fixed Goal", () => {
     clearLines(10, level);
 
     expect(level.value).to.equal(5);
+  });
+
+  test("when starting from level 5 it levels up after 60 lines are cleared", () => {
+    const level = new LevelsFixedGoal(5);
+
+    clearLines(60, level);
+
+    expect(level.value).to.equal(6);
   });
 });

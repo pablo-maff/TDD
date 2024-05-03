@@ -1,8 +1,8 @@
 import { beforeEach, describe, test } from "vitest";
 import { expect } from "chai";
-import { LevelDummy } from "../src/LevelDummy";
+import { LevelDummy } from "./Doubles/LevelDummy";
 import { doubleLineClear, lineClear } from "./utils";
-import { Observer } from "../src/Observer";
+import { Observer } from "../src/EventsManager";
 
 describe("Board Levels", () => {
   let level: Observer;

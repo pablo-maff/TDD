@@ -1,5 +1,7 @@
-import { Observer } from "./Observer";
-
+export interface Observer {
+  update(data: Record<string, number>): void;
+  value: number;
+}
 export interface Subject {
   subscribe(observer: Observer): void;
 

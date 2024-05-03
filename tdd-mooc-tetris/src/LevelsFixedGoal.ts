@@ -1,4 +1,4 @@
-import { Observer } from "./Observer";
+import { Observer } from "./EventsManager";
 
 export class LevelsFixedGoal implements Observer {
   #level: number;
@@ -8,21 +8,20 @@ export class LevelsFixedGoal implements Observer {
     this.#level = initialLevel;
   }
 
-  update(data: Record<string, number>) {
+  update(data: Record<string, number>): void {
     this.#clearedLines += data.clearedLines;
+    this.#increaseLevel();
+  }
 
+  #increaseLevel(): void {
     const newLevel = Math.floor(this.#clearedLines / 10);
 
     if (this.#level < newLevel) {
-      this.#increaseLevel(newLevel);
+      this.#level = newLevel;
     }
   }
 
-  #increaseLevel(newLevel: number) {
-    this.#level = newLevel;
-  }
-
-  public get value(): number {
+  get value(): number {
     return this.#level;
   }
 }

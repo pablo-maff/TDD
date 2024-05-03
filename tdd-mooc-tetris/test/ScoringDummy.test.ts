@@ -1,6 +1,6 @@
 import { beforeEach, describe, test } from "vitest";
 import { expect } from "chai";
-import { ScoringDummy } from "../src/ScoringDummy";
+import { ScoringDummy } from "./Doubles/ScoringDummy";
 import { doubleLineClear, lineClear } from "./utils";
 
 describe("Board Scoring", () => {
