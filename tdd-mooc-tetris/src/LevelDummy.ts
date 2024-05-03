@@ -1,7 +1,11 @@
 import { Observer } from "./Observer";
 
 export class LevelDummy implements Observer {
-  #level: number = 0;
+  #level: number;
+
+  constructor(initialLevel: number = 0) {
+    this.#level = initialLevel;
+  }
 
   update(data: Record<string, number>) {
     this.#level += data.clearedLines;
