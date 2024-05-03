@@ -111,13 +111,19 @@ export class Board implements Shape {
   events: EventsManager;
   #level: number = 0;
 
-  constructor(width: number, height: number, immobile?: string[][]) {
+  constructor(width: number, height: number, immobile?: string[][], level?: number) {
     this.events = new EventsManager();
 
     this.#width = width;
     this.#height = height;
 
     // * For loaded boards
+    if (immobile && level) {
+      this.#immobile = immobile;
+      this.#level = level;
+      return;
+    }
+
     if (immobile) {
       this.#immobile = immobile;
       return;
@@ -128,9 +134,13 @@ export class Board implements Shape {
     for (let row = 0; row < height; row++) {
       this.#immobile[row] = new Array(width).fill(EmptyBlock);
     }
+
+    if (level) {
+      this.#level = level;
+    }
   }
 
-  static loadBoard(board: string): Board {
+  static loadBoard(board: string, level: number): Board {
     const immobile = board
       .replaceAll(" ", "")
       .trim()
@@ -140,7 +150,7 @@ export class Board implements Shape {
     const height = immobile.length;
     const width = immobile[0].length;
 
-    return new Board(width, height, immobile);
+    return new Board(width, height, immobile, level);
   }
 
   public set level(initialLevel: number) {
