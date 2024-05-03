@@ -1,4 +1,6 @@
 import { EventsManager } from "./EventsManager";
+import { LevelDummy } from "./LevelDummy";
+import { Observer } from "./Observer";
 import { EmptyBlock, I_SHAPES, Shape, shapeToString } from "./shapes";
 
 export class Point {
@@ -109,23 +111,18 @@ export class Board implements Shape {
   #falling: MovableShape | null = null;
   #immobile: string[][];
   events: EventsManager;
-  #level: number = 0;
+  #level: Observer;
 
-  constructor(width: number, height: number, immobile?: string[][], level?: number) {
+  constructor(width: number, height: number, immobile?: string[][], level: number = 0) {
     this.events = new EventsManager();
 
     this.#width = width;
     this.#height = height;
 
     // * For loaded boards
-    if (immobile && level) {
-      this.#immobile = immobile;
-      this.#level = level;
-      return;
-    }
-
     if (immobile) {
       this.#immobile = immobile;
+      this.#level = new LevelDummy(level);
       return;
     }
 
@@ -135,9 +132,7 @@ export class Board implements Shape {
       this.#immobile[row] = new Array(width).fill(EmptyBlock);
     }
 
-    if (level) {
-      this.#level = level;
-    }
+    this.#level = new LevelDummy(level);
   }
 
   static loadBoard(board: string, level?: number): Board {
@@ -154,7 +149,7 @@ export class Board implements Shape {
   }
 
   public get level(): number {
-    return this.#level;
+    return this.#level.value;
   }
 
   drop(piece: Shape): void {
@@ -383,7 +378,7 @@ export class Board implements Shape {
         this.#immobile = [newLine].concat(beforeCleared, afterCleared);
       });
 
-      this.events.notify({ clearedLines: lineClearIndeces.length, level: this.#level });
+      this.events.notify({ clearedLines: lineClearIndeces.length, level: this.level });
     }
   }
 
