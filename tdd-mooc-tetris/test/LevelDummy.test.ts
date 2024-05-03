@@ -1,6 +1,7 @@
 import { describe, test } from "vitest";
 import { Board } from "../src/Board";
 import { expect } from "chai";
+import { LevelDummy } from "../src/LevelDummy";
 
 describe("Board Levels", () => {
   test("start at 0", () => {
@@ -13,5 +14,12 @@ describe("Board Levels", () => {
     const board = new Board(3, 3, undefined, 5);
 
     expect(board.level).to.equal(5);
+  });
+
+  test("increase after a line is cleared", () => {
+    const board = new Board(3, 3);
+    const level = new LevelDummy();
+
+    expect(level.value).to.equal(0);
   });
 });

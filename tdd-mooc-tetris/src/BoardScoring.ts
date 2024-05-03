@@ -1,6 +1,6 @@
 import { Observer } from "./Observer";
 
-export class BoardScoring implements Observer {
+export class ScoringDummy implements Observer {
   #score: number = 0;
 
   update(data: Record<string, number>) {
