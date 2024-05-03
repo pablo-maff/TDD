@@ -10,7 +10,16 @@ export class LevelsFixedGoal implements Observer {
 
   update(data: Record<string, number>) {
     this.#clearedLines += data.clearedLines;
-    this.#level = Math.floor(this.#clearedLines / 10);
+
+    const newLevel = Math.floor(this.#clearedLines / 10);
+
+    if (this.#level < newLevel) {
+      this.#increaseLevel(newLevel);
+    }
+  }
+
+  #increaseLevel(newLevel: number) {
+    this.#level = newLevel;
   }
 
   public get value(): number {

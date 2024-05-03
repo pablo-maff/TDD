@@ -54,7 +54,7 @@ describe("Levels Fixed Goal", () => {
     expect(level.value).to.equal(15);
   });
 
-  test.skip("when starting from level 5 it doesn't level up after 10 lines are cleared", () => {
+  test("when starting from level 5 it doesn't level up after 10 lines are cleared", () => {
     const level = new LevelsFixedGoal(5);
 
     clearLines(10, level);
