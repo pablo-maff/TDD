@@ -109,6 +109,7 @@ export class Board implements Shape {
   #falling: MovableShape | null = null;
   #immobile: string[][];
   events: EventsManager;
+  #level: number = 0;
 
   constructor(width: number, height: number, immobile?: string[][]) {
     this.events = new EventsManager();
@@ -140,6 +141,10 @@ export class Board implements Shape {
     const width = immobile[0].length;
 
     return new Board(width, height, immobile);
+  }
+
+  setInitialLevel(level: number) {
+    this.#level = level;
   }
 
   drop(piece: Shape): void {
@@ -368,7 +373,7 @@ export class Board implements Shape {
         this.#immobile = [newLine].concat(beforeCleared, afterCleared);
       });
 
-      this.events.notify(lineClearIndeces.length);
+      this.events.notify({ clearedLines: lineClearIndeces.length, level: this.#level });
     }
   }
 

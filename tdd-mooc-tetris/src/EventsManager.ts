@@ -5,7 +5,7 @@ export interface Subject {
 
   unsubscribe(eventType: string): void;
 
-  notify(data: number): void;
+  notify(data: Record<string, number>): void;
 }
 
 export class EventsManager implements Subject {
@@ -19,7 +19,7 @@ export class EventsManager implements Subject {
     this.#observers = this.#observers.slice(0, -1);
   }
 
-  notify(data: number): void {
+  notify(data: Record<string, number>): void {
     this.#observers.forEach((observer) => observer.update(data));
   }
 }

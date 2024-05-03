@@ -10,8 +10,8 @@ export class NintendoScoring implements Observer {
     4: 1200,
   });
 
-  update(linesCleared: number): void {
-    this.#score += this.#ScorePerLinesCleared[linesCleared];
+  update(data: Record<string, number>): void {
+    this.#score += this.#ScorePerLinesCleared[data.clearedLines];
   }
 
   public get value(): number {
