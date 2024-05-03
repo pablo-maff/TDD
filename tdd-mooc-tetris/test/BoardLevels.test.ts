@@ -8,4 +8,12 @@ describe("Board Levels", () => {
 
     expect(board.level).to.equal(0);
   });
+
+  test("can be set to 5", () => {
+    const board = new Board(3, 3);
+
+    board.level = 5;
+
+    expect(board.level).to.equal(5);
+  });
 });
