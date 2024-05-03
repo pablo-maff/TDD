@@ -140,7 +140,7 @@ export class Board implements Shape {
     }
   }
 
-  static loadBoard(board: string, level: number): Board {
+  static loadBoard(board: string, level?: number): Board {
     const immobile = board
       .replaceAll(" ", "")
       .trim()
