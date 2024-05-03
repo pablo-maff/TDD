@@ -1,5 +1,5 @@
 import { Board } from "../src/Board";
-import { ScoringDummy } from "../src/BoardScoring";
+import { Observer } from "../src/Observer";
 import { Tetromino } from "../src/Tetromino";
 
 export function moveLeft(board: Board, positions: number) {
@@ -20,7 +20,7 @@ export function fallToBottom(board: Board) {
   }
 }
 
-export function lineClear(boardScoring: ScoringDummy, initialLevel?: number) {
+export function lineClear(observer: Observer, initialLevel?: number) {
   const board = Board.loadBoard(
     `.........
      .........
@@ -31,7 +31,7 @@ export function lineClear(boardScoring: ScoringDummy, initialLevel?: number) {
     initialLevel
   );
 
-  board.events.subscribe(boardScoring);
+  board.events.subscribe(observer);
 
   board.drop(Tetromino.T_SHAPE);
   board.tick();
@@ -41,7 +41,7 @@ export function lineClear(boardScoring: ScoringDummy, initialLevel?: number) {
   board.tick();
 }
 
-export function doubleLineClear(boardScoring: ScoringDummy, initialLevel?: number) {
+export function doubleLineClear(observer: Observer, initialLevel?: number) {
   const board = Board.loadBoard(
     `.........
      .........
@@ -52,7 +52,7 @@ export function doubleLineClear(boardScoring: ScoringDummy, initialLevel?: numbe
     initialLevel
   );
 
-  board.events.subscribe(boardScoring);
+  board.events.subscribe(observer);
 
   board.drop(Tetromino.I_SHAPE);
   board.rotateLeft();

@@ -1,38 +1,25 @@
-import { describe, test } from "vitest";
+import { beforeEach, describe, test } from "vitest";
 import { NintendoScoring } from "../src/NintendoScoring";
 import { expect } from "chai";
 import { Board } from "../src/Board";
 import { Tetromino } from "../src/Tetromino";
+import { lineClear } from "./utils";
 
 describe("Nintento Scoring system", () => {
-  test("starts with 0 points", () => {
-    const scoring = new NintendoScoring();
+  let scoringSystem: NintendoScoring;
 
-    expect(scoring.value).to.equal(0);
+  beforeEach(() => {
+    scoringSystem = new NintendoScoring();
+  });
+
+  test("starts with 0 points", () => {
+    expect(scoringSystem.value).to.equal(0);
   });
 
   test("adds 40 points if 1 line is cleared", () => {
-    const board = Board.loadBoard(
-      `.........
-       .........
-       .........
-       .........
-       XXXX.XXXX
-       XXXX.XXXX`
-    );
+    lineClear(scoringSystem);
 
-    const scoring = new NintendoScoring();
-
-    board.events.subscribe(scoring);
-
-    board.drop(Tetromino.T_SHAPE);
-    board.tick();
-    board.tick();
-    board.tick();
-    board.tick();
-    board.tick();
-
-    expect(scoring.value).to.equal(40);
+    expect(scoringSystem.value).to.equal(40);
   });
 
   test("adds 100 points when 2 lines are cleared at the same time", () => {
