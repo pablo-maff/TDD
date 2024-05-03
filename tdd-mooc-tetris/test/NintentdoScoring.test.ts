@@ -144,7 +144,7 @@ describe("Nintento Scoring system", () => {
        XXXX.XXXX`
     );
 
-    board.setInitialLevel(1);
+    board.level = 1;
 
     const boardScoring = new NintendoScoring();
 
