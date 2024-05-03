@@ -3,7 +3,7 @@ import { NintendoScoring } from "../src/NintendoScoring";
 import { expect } from "chai";
 import { Board } from "../src/Board";
 import { Tetromino } from "../src/Tetromino";
-import { lineClear } from "./utils";
+import { doubleLineClear, lineClear, quadrupleLineClear, tripleLineClear } from "./utils";
 
 describe("Nintento Scoring system", () => {
   let scoringSystem: NintendoScoring;
@@ -23,126 +23,33 @@ describe("Nintento Scoring system", () => {
   });
 
   test("adds 100 points when 2 lines are cleared at the same time", () => {
-    const board = Board.loadBoard(
-      `.........
-       .........
-       .........
-       ......XXX
-       XXXX.XXXX
-       XXXX.XXXX`
-    );
+    doubleLineClear(scoringSystem);
 
-    const boardScoring = new NintendoScoring();
-
-    board.events.subscribe(boardScoring);
-
-    board.drop(Tetromino.I_SHAPE);
-    board.rotateLeft();
-    board.tick();
-    board.tick();
-    board.tick();
-
-    expect(boardScoring.value).to.equal(100);
+    expect(scoringSystem.value).to.equal(100);
   });
 
   test("adds 300 points when 3 lines are cleared at the same time", () => {
-    const board = Board.loadBoard(
-      `.........
-       .........
-       ......XXX
-       XXXX.XXXX
-       XXXX.XXXX
-       XXXX.XXXX`
-    );
+    tripleLineClear(scoringSystem);
 
-    const boardScoring = new NintendoScoring();
-
-    board.events.subscribe(boardScoring);
-
-    board.drop(Tetromino.I_SHAPE);
-    board.rotateLeft();
-    board.tick();
-    board.tick();
-    board.tick();
-
-    expect(boardScoring.value).to.equal(300);
+    expect(scoringSystem.value).to.equal(300);
   });
 
   test("adds 1200 points when 4 lines are cleared at the same time", () => {
-    const board = Board.loadBoard(
-      `.........
-       ......XXX
-       XXXX.XXXX
-       XXXX.XXXX
-       XXXX.XXXX
-       XXXX.XXXX`
-    );
+    quadrupleLineClear(scoringSystem);
 
-    const boardScoring = new NintendoScoring();
-
-    board.events.subscribe(boardScoring);
-
-    board.drop(Tetromino.I_SHAPE);
-    board.rotateLeft();
-    board.tick();
-    board.tick();
-    board.tick();
-
-    expect(boardScoring.value).to.equal(1200);
+    expect(scoringSystem.value).to.equal(1200);
   });
 
   test("sums up 140 points after 2 different line clear, a double and a simple one", () => {
-    const board = Board.loadBoard(
-      `.........
-       .........
-       ......XXX
-       XXXX.XXXX
-       XXX.XXXXX
-       XXX.XXXXX`
-    );
+    doubleLineClear(scoringSystem);
+    lineClear(scoringSystem);
 
-    const boardScoring = new NintendoScoring();
-
-    board.events.subscribe(boardScoring);
-
-    board.drop(Tetromino.T_SHAPE);
-    board.rotateLeft();
-    board.tick();
-    board.tick();
-    board.tick();
-
-    board.drop(Tetromino.I_SHAPE);
-    board.moveLeft();
-    board.rotateLeft();
-    board.tick();
-    board.tick();
-    board.tick();
-
-    expect(boardScoring.value).to.equal(140);
+    expect(scoringSystem.value).to.equal(140);
   });
 
   test("adds 80 points when 1 line is cleared on level 1", () => {
-    const board = Board.loadBoard(
-      `.........
-       .........
-       .........
-       .........
-       XXXX.XXXX
-       XXXX.XXXX`,
-      1
-    );
+    lineClear(scoringSystem, 1);
 
-    const boardScoring = new NintendoScoring();
-
-    board.events.subscribe(boardScoring);
-
-    board.drop(Tetromino.T_SHAPE);
-    board.tick();
-    board.tick();
-    board.tick();
-    board.tick();
-    board.tick();
-
-    expect(boardScoring.value).to.equal(80);
+    expect(scoringSystem.value).to.equal(80);
   });
 });

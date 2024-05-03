@@ -60,3 +60,43 @@ export function doubleLineClear(observer: Observer, initialLevel?: number) {
   board.tick();
   board.tick();
 }
+
+export function tripleLineClear(observer: Observer, initialLevel?: number) {
+  const board = Board.loadBoard(
+    `.........
+     .........
+     ......XXX
+     XXXX.XXXX
+     XXXX.XXXX
+     XXXX.XXXX`,
+    initialLevel
+  );
+
+  board.events.subscribe(observer);
+
+  board.drop(Tetromino.I_SHAPE);
+  board.rotateLeft();
+  board.tick();
+  board.tick();
+  board.tick();
+}
+
+export function quadrupleLineClear(observer: Observer, initialLevel?: number) {
+  const board = Board.loadBoard(
+    `.........
+     ......XXX
+     XXXX.XXXX
+     XXXX.XXXX
+     XXXX.XXXX
+     XXXX.XXXX`,
+    initialLevel
+  );
+
+  board.events.subscribe(observer);
+
+  board.drop(Tetromino.I_SHAPE);
+  board.rotateLeft();
+  board.tick();
+  board.tick();
+  board.tick();
+}
