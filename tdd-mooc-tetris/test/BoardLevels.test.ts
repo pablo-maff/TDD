@@ -10,9 +10,7 @@ describe("Board Levels", () => {
   });
 
   test("can be set to 5", () => {
-    const board = new Board(3, 3);
-
-    board.level = 5;
+    const board = new Board(3, 3, undefined, 5);
 
     expect(board.level).to.equal(5);
   });

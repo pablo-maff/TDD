@@ -153,10 +153,6 @@ export class Board implements Shape {
     return new Board(width, height, immobile, level);
   }
 
-  public set level(initialLevel: number) {
-    this.#level = initialLevel;
-  }
-
   public get level(): number {
     return this.#level;
   }

@@ -89,10 +89,9 @@ describe("Board Scoring", () => {
        .........
        .........
        XXXX.XXXX
-       XXXX.XXXX`
+       XXXX.XXXX`,
+      1
     );
-
-    board.level = 1;
 
     const boardScoring = new BoardScoring();
 
