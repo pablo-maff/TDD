@@ -82,7 +82,7 @@ describe("Board Scoring", () => {
     expect(boardScoring.value).to.equal(3);
   });
 
-  test.skip("Adds two points when 1 line is cleared on level 1", () => {
+  test("adds two points when 1 line is cleared on level 1", () => {
     const board = Board.loadBoard(
       `.........
        .........
