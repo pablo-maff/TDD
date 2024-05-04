@@ -57,4 +57,22 @@ describe("Shuffle bag", () => {
 
     expect(() => bag.shuffle()).to.not.throw();
   });
+
+  test("shuffle does not lose items", () => {
+    const bag = new ShuffleBag();
+
+    let numRuns = 100;
+
+    do {
+      const nItems = getRandomInt(1000);
+      const items = new Array(nItems).fill(item);
+
+      bag.add(items);
+      bag.shuffle();
+
+      expect(bag.items.length).to.equal(nItems);
+
+      --numRuns;
+    } while (numRuns > 0);
+  });
 });

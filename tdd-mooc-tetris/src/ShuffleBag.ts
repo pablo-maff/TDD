@@ -18,7 +18,9 @@ export class ShuffleBag implements Observer {
 
     this.#items = this.#items.slice(0, -1);
   }
+
   shuffle() {}
+
   get items() {
     return this.#items;
   }
