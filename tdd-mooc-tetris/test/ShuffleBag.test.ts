@@ -3,6 +3,17 @@ import { beforeEach, describe, test } from "vitest";
 import { ShuffleBag } from "../src/ShuffleBag";
 import { getRandomInt } from "./utils";
 
+function randomChars(amount: number): string[] {
+  const chars = [];
+
+  while (amount > 0) {
+    chars.push(String.fromCharCode(getRandomInt(65535)));
+    --amount;
+  }
+
+  return chars;
+}
+
 describe("Shuffle bag", () => {
   let bag: ShuffleBag;
   let item: string;
@@ -13,26 +24,27 @@ describe("Shuffle bag", () => {
   });
 
   test("is created with 0 items in it", () => {
-    expect(bag.items.length).to.equal(0);
+    expect(bag.size).to.equal(0);
   });
 
   test("can add 1 item and return it", () => {
     bag.add([item]);
 
-    expect(bag.items[0]).to.equal(item);
+    expect(bag.size).to.equal(1);
   });
 
   test("can add multiple items", () => {
     let numRuns = 100;
 
     do {
-      const item = String.fromCharCode(getRandomInt(65535));
+      const bag = new ShuffleBag();
+
       const nItems = getRandomInt(1000);
-      const items = new Array(nItems).fill(item);
+      const items = randomChars(nItems);
 
       bag.add(items);
 
-      expect(bag.items.length).to.equal(nItems);
+      expect(bag.size).to.equal(nItems);
 
       --numRuns;
     } while (numRuns > 0);
@@ -42,7 +54,7 @@ describe("Shuffle bag", () => {
     bag.add([item]);
     bag.remove();
 
-    expect(bag.items.length).to.equal(0);
+    expect(bag.size).to.equal(0);
   });
 
   test("can't remove an item from an empty bag", () => {
@@ -57,18 +69,33 @@ describe("Shuffle bag", () => {
     let numRuns = 100;
 
     do {
-      const item = String.fromCharCode(getRandomInt(65535));
-      const nItems = getRandomInt(1000);
-      const items = new Array(nItems).fill(item);
+      const bag = new ShuffleBag();
+
+      const nItems = getRandomInt(100);
+      const items = randomChars(nItems);
 
       bag.add(items);
       bag.shuffle();
 
-      expect(bag.items.length).to.equal(nItems);
+      expect(bag.size).to.equal(nItems);
 
       --numRuns;
     } while (numRuns > 0);
   });
 
-  test.skip("shuffle changes order of items", () => {});
+  test("shuffle changes order of items", () => {
+    let numRuns = 100;
+
+    do {
+      const nItems = getRandomInt(100);
+      const items = randomChars(nItems);
+
+      bag.add(items);
+      bag.shuffle();
+
+      expect(bag.items).to.not.deep.equal(items);
+
+      --numRuns;
+    } while (numRuns > 0);
+  });
 });
