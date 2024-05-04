@@ -100,3 +100,7 @@ export function quadrupleLineClear(observer: Observer, initialLevel?: number) {
   board.tick();
   board.tick();
 }
+
+export function getRandomInt(max: number) {
+  return Math.floor(Math.random() * max);
+}

@@ -110,7 +110,7 @@ export class Board implements Shape {
   #falling: MovableShape | null = null;
   #immobile: string[][];
   events: EventsManager;
-  #level: Observer;
+  #level: LevelsFixedGoal;
 
   constructor(width: number, height: number, immobile?: string[][], level: number = 0) {
     this.events = new EventsManager();

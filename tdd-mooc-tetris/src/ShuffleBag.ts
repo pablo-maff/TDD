@@ -7,10 +7,18 @@ export class ShuffleBag implements Observer {
     return; // TODO: trigger shuffling on update
   }
 
-  set add(items: string[]) {
+  add(items: string[]) {
     this.#items = items;
   }
 
+  remove() {
+    if (!this.#items.length) {
+      throw new Error("empty bag");
+    }
+
+    this.#items = this.#items.slice(0, -1);
+  }
+  shuffle() {}
   get items() {
     return this.#items;
   }
