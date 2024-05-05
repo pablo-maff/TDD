@@ -13,9 +13,7 @@
     "url": "https://github.com/luontola/tdd-mooc-tetris.git"
   },
   "private": true,
-  "dependencies": {
-    "lodash": "^4.17.21"
-  },
+  "type": "module",
   "devDependencies": {
     "chai": "^4.3.10",
     "http-server": "^14.1.1",
@@ -29,10 +27,11 @@
     "npm": ">=10"
   },
   "scripts": {
-    "start": "http-server src -o / -c-1",
+    "start": "http-server build -o / -c-1",
     "test": "vitest run",
     "autotest": "vitest watch",
     "format": "prettier --write .",
-    "lint": "tsc"
+    "lint": "tsc --noEmit",
+    "build": "tsc && cp src/index.html build"
   }
 }

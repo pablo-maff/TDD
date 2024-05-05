@@ -4,11 +4,14 @@
     "forceConsistentCasingInFileNames": true,
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "noEmit": true,
+    "noEmit": false,
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
     // My settings
-    "strictPropertyInitialization": true // All the declared fields need to be initialized in the constructor
-  }
+    "strictPropertyInitialization": true, // All the declared fields need to be initialized in the constructor
+    "outDir": "./build/"
+  },
+  "include": ["./**/*.ts"],
+  "exclude": ["./test/**/*"]
 }

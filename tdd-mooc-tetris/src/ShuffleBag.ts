@@ -1,5 +1,5 @@
-import { getRandomInt } from "../test/utils";
-import { Shape } from "./shapes";
+import { Shape } from "./shapes.js";
+import { getRandomInt } from "./utils.js";
 
 export class ShuffleBag {
   #bag: Shape[] = [];

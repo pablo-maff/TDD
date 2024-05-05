@@ -9,7 +9,7 @@ import {
   T_SHAPES,
   Z_SHAPES,
   shapeToString,
-} from "./shapes";
+} from "./shapes.js";
 
 export class Tetromino implements Shape {
   static T_SHAPE = new Tetromino(0, T_SHAPES);

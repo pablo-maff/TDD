@@ -1,6 +1,6 @@
-import { EventsManager, Observer } from "./EventsManager";
-import { EmptyBlock, I_SHAPES, Shape, shapeToString } from "./shapes";
-import { LevelsFixedGoal } from "./LevelsFixedGoal";
+import { EventsManager } from "./EventsManager.js";
+import { EmptyBlock, I_SHAPES, Shape, shapeToString } from "./shapes.js";
+import { LevelsFixedGoal } from "./LevelsFixedGoal.js";
 
 export class Point {
   row: number;
@@ -173,6 +173,10 @@ export class Board implements Shape {
     }
 
     this.#stopFalling();
+  }
+
+  moveDown(): void {
+    this.tick();
   }
 
   moveLeft(): void {

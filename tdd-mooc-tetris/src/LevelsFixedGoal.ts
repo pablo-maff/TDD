@@ -1,4 +1,4 @@
-import { Observer } from "./EventsManager";
+import { Observer } from "./EventsManager.js";
 
 export class LevelsFixedGoal implements Observer {
   #level: number;

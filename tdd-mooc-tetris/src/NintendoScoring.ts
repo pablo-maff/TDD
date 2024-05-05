@@ -1,4 +1,4 @@
-import { Observer } from "./EventsManager";
+import { Observer } from "./EventsManager.js";
 
 export class NintendoScoring implements Observer {
   #score: number = 0;
