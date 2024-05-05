@@ -1,44 +1,48 @@
 import { getRandomInt } from "../test/utils";
-import { Observer } from "./EventsManager";
 
-export class ShuffleBag implements Observer {
-  #items: string[] = [];
-  // #currentItem: Shape;
-  #currentPosition: number = -1;
+export class ShuffleBag {
+  #bag: string[] = [];
+  #tempBag: string[] = [];
 
-  update(data: Record<string, number>): void {
-    return; // TODO: trigger shuffling on update
+  constructor(items: string[]) {
+    if (!items.length) {
+      throw new Error("items must contain at least one item");
+    }
+
+    this.#add(items);
+    this.#shuffle();
   }
 
-  add(items: string[]) {
+  next() {
+    if (!this.size) {
+      this.#tempBag = this.#bag;
+      this.#shuffle();
+    }
+
+    return this.#tempBag.pop();
+  }
+
+  #add(items: string[]) {
     for (let i = 0; i < items.length; i++) {
-      this.#items.push(items[i]);
+      this.#bag.push(items[i]);
+      this.#tempBag.push(items[i]);
     }
   }
 
-  remove() {
-    if (!this.#items.length) {
-      throw new Error("empty bag");
-    }
-
-    this.#items = this.#items.slice(0, -1);
-  }
-
-  shuffle() {
+  #shuffle() {
     if (this.size > 1) {
       for (let i = this.size - 1; i > 0; i--) {
-        // const j: number = getRandomInt(i + 1)
-        const j = Math.floor(Math.random() * (i + 1));
-        [this.#items[i], this.#items[j]] = [this.#items[j], this.#items[i]];
+        const j: number = getRandomInt(1, i);
+        [this.#tempBag[i], this.#tempBag[j]] = [this.#tempBag[j], this.#tempBag[i]];
       }
     }
   }
 
   get items() {
-    return this.#items;
+    return this.#tempBag;
   }
 
   get size() {
-    return this.#items.length;
+    return this.#tempBag.length;
   }
 }

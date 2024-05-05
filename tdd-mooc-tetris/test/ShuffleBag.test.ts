@@ -7,7 +7,7 @@ function randomChars(amount: number): string[] {
   const chars = [];
 
   while (amount > 0) {
-    chars.push(String.fromCharCode(getRandomInt(65535)));
+    chars.push(String.fromCharCode(getRandomInt(0, 65535)));
     --amount;
   }
 
@@ -15,34 +15,30 @@ function randomChars(amount: number): string[] {
 }
 
 describe("Shuffle bag", () => {
-  let bag: ShuffleBag;
   let item: string;
 
   beforeEach(() => {
-    bag = new ShuffleBag();
-    item = String.fromCharCode(getRandomInt(65535));
+    item = String.fromCharCode(getRandomInt(0, 65535));
   });
 
-  test("is created with 0 items in it", () => {
-    expect(bag.size).to.equal(0);
+  test("can not create an empty bag", () => {
+    expect(() => new ShuffleBag([])).to.throw("items must contain at least one item");
   });
 
   test("can add 1 item and return it", () => {
-    bag.add([item]);
+    const bag = new ShuffleBag([item]);
 
-    expect(bag.size).to.equal(1);
+    expect(bag.items[0]).to.equal(item);
   });
 
   test("can add multiple items", () => {
     let numRuns = 100;
 
     do {
-      const bag = new ShuffleBag();
-
-      const nItems = getRandomInt(1000);
+      const nItems = getRandomInt(1, 1000);
       const items = randomChars(nItems);
 
-      bag.add(items);
+      const bag = new ShuffleBag(items);
 
       expect(bag.size).to.equal(nItems);
 
@@ -50,50 +46,33 @@ describe("Shuffle bag", () => {
     } while (numRuns > 0);
   });
 
-  test("can remove an item", () => {
-    bag.add([item]);
-    bag.remove();
+  test("can extract an item", () => {
+    const bag = new ShuffleBag([item]);
 
-    expect(bag.size).to.equal(0);
+    const nextItem = bag.next();
+
+    expect(nextItem).to.equal(item);
   });
 
-  test("can't remove an item from an empty bag", () => {
-    expect(() => bag.remove()).to.throw("empty bag");
-  });
-
-  test("can shuffle an empty bag", () => {
-    expect(() => bag.shuffle()).to.not.throw();
-  });
-
-  test("shuffle does not lose items", () => {
+  test("the bag refills after is emptied and returns another item", () => {
     let numRuns = 100;
 
     do {
-      const bag = new ShuffleBag();
-
-      const nItems = getRandomInt(100);
+      const nItems = getRandomInt(1, 1000);
       const items = randomChars(nItems);
 
-      bag.add(items);
-      bag.shuffle();
+      const bag = new ShuffleBag(items);
 
-      expect(bag.size).to.equal(nItems);
+      let remainingExtractions = nItems;
 
-      --numRuns;
-    } while (numRuns > 0);
-  });
+      while (remainingExtractions > 0) {
+        bag.next();
+        --remainingExtractions;
+      }
 
-  test("shuffle changes order of items", () => {
-    let numRuns = 100;
+      const itemFromRefilledBag = bag.next();
 
-    do {
-      const nItems = getRandomInt(100);
-      const items = randomChars(nItems);
-
-      bag.add(items);
-      bag.shuffle();
-
-      expect(bag.items).to.not.deep.equal(items);
+      expect(items).to.include(itemFromRefilledBag);
 
       --numRuns;
     } while (numRuns > 0);
