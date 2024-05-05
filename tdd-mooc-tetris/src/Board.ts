@@ -28,6 +28,7 @@ class MovableShape implements Shape {
     }
 
     // * If col is not specified the shape is being dropped into the board so calculating the initial positions is necessary
+
     this.#row = shape.width() === 1 ? 0 : -1;
 
     const middleCol = Math.floor((row - shape.width()) / 2);
@@ -156,7 +157,17 @@ export class Board implements Shape {
       throw new Error("another piece is already falling");
     }
 
-    this.#setFalling(new MovableShape(piece, this.#width));
+    const newShape = new MovableShape(piece, this.#width);
+
+    if (this.#hitsImmobile(newShape)) {
+      throw new Error("GAME OVER");
+    }
+
+    this.#setFalling(newShape);
+
+    if (this.#hitsImmobile(newShape)) {
+      console.log("GAME OVER");
+    }
   }
 
   tick(): void {

@@ -108,5 +108,19 @@ describe("Falling blocks", () => {
       );
       expect(board.hasFalling(), "the block should stop moving").to.be.false;
     });
+
+    test("game finishes when surpasses the top", () => {
+      board.tick();
+      board.drop(new Block(Y_BLOCK));
+      board.tick();
+
+      expect(board.toString()).to.equalShape(
+        `.Y.
+         .Y.
+         .X.`
+      );
+
+      expect(() => board.drop(new Block(Y_BLOCK))).to.throw("GAME OVER");
+    });
   });
 });
