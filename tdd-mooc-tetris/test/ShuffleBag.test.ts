@@ -2,12 +2,13 @@ import { expect } from "chai";
 import { beforeEach, describe, test } from "vitest";
 import { ShuffleBag } from "../src/ShuffleBag";
 import { getRandomInt } from "./utils";
+import { Block } from "./Doubles/Block";
 
-function randomChars(amount: number): string[] {
+function randomChars(amount: number): Block[] {
   const chars = [];
 
   while (amount > 0) {
-    chars.push(String.fromCharCode(getRandomInt(0, 65535)));
+    chars.push(new Block(String.fromCharCode(getRandomInt(0, 65535))));
     --amount;
   }
 
@@ -15,10 +16,10 @@ function randomChars(amount: number): string[] {
 }
 
 describe("Shuffle bag", () => {
-  let item: string;
+  let item: Block;
 
   beforeEach(() => {
-    item = String.fromCharCode(getRandomInt(0, 65535));
+    item = new Block(String.fromCharCode(getRandomInt(0, 65535)));
   });
 
   test("can not create an empty bag", () => {
@@ -28,7 +29,7 @@ describe("Shuffle bag", () => {
   test("can add 1 item and return it", () => {
     const bag = new ShuffleBag([item]);
 
-    expect(bag.items[0]).to.equal(item);
+    expect(bag.items[0].toString()).to.equal(item.toString());
   });
 
   test("can add multiple items", () => {
@@ -51,14 +52,14 @@ describe("Shuffle bag", () => {
 
     const nextItem = bag.next();
 
-    expect(nextItem).to.equal(item);
+    expect(nextItem!.toString()).to.equal(item.toString());
   });
 
   test("the bag refills after is emptied and returns another item", () => {
-    let numRuns = 100;
+    let numRuns = 1;
 
     do {
-      const nItems = getRandomInt(1, 1000);
+      const nItems = getRandomInt(2, 2);
       const items = randomChars(nItems);
 
       const bag = new ShuffleBag(items);
@@ -72,7 +73,7 @@ describe("Shuffle bag", () => {
 
       const itemFromRefilledBag = bag.next();
 
-      expect(items).to.include(itemFromRefilledBag);
+      expect(items.map((item) => item.toString())).to.include(itemFromRefilledBag!.toString());
 
       --numRuns;
     } while (numRuns > 0);

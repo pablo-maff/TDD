@@ -1,10 +1,11 @@
 import { getRandomInt } from "../test/utils";
+import { Shape } from "./shapes";
 
 export class ShuffleBag {
-  #bag: string[] = [];
-  #tempBag: string[] = [];
+  #bag: Shape[] = [];
+  #tempBag: Shape[] = [];
 
-  constructor(items: string[]) {
+  constructor(items: Shape[]) {
     if (!items.length) {
       throw new Error("items must contain at least one item");
     }
@@ -22,7 +23,7 @@ export class ShuffleBag {
     return this.#tempBag.pop();
   }
 
-  #add(items: string[]) {
+  #add(items: Shape[]) {
     for (let i = 0; i < items.length; i++) {
       this.#bag.push(items[i]);
       this.#tempBag.push(items[i]);
