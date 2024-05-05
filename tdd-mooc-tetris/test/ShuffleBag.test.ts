@@ -5,7 +5,7 @@ import { Block } from "./Doubles/Block";
 import { getRandomInt } from "../src/utils";
 
 function randomChars(amount: number): Block[] {
-  const chars = [];
+  const chars: Block[] = [];
 
   while (amount > 0) {
     chars.push(new Block(String.fromCharCode(getRandomInt(0, 65535))));
@@ -55,11 +55,33 @@ describe("Shuffle bag", () => {
     expect(nextItem!.toString()).to.equal(item.toString());
   });
 
-  test("the bag refills after is emptied and returns another item", () => {
-    let numRuns = 1;
+  test("can extract multiple items", () => {
+    let numRuns = 100;
 
     do {
-      const nItems = getRandomInt(2, 2);
+      const nItems = getRandomInt(1, 100);
+      const items = randomChars(nItems);
+
+      const bag = new ShuffleBag(items);
+
+      let remainingExtractions = nItems;
+
+      while (remainingExtractions > 0) {
+        const nextTetromino = bag.next();
+
+        expect(items.map((item) => item.toString())).to.include(nextTetromino!.toString());
+        --remainingExtractions;
+      }
+
+      --numRuns;
+    } while (numRuns > 0);
+  });
+
+  test("the bag refills after is emptied and returns another item", () => {
+    let numRuns = 100;
+
+    do {
+      const nItems = getRandomInt(1, 1000);
       const items = randomChars(nItems);
 
       const bag = new ShuffleBag(items);

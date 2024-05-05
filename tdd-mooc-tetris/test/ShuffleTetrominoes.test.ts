@@ -2,6 +2,7 @@ import { beforeEach, describe, test } from "vitest";
 import { ShuffleBag } from "../src/ShuffleBag";
 import { Tetromino } from "../src/Tetromino";
 import { expect } from "chai";
+import { getRandomInt } from "../src/utils";
 
 describe("Shuffle tetrominoes", () => {
   const Tetrominoes = [
@@ -21,11 +22,11 @@ describe("Shuffle tetrominoes", () => {
     bag = new ShuffleBag(Tetrominoes);
   });
 
-  test("bag is created with the 7 different types of tetrominoes", () => {
+  test("is created with the 7 different types of tetrominoes", () => {
     expect(bag.items.map((item) => item.toString())).to.have.members(stringifiedTetrominoes);
   });
 
-  test("bag withdraws a tetromino and reduces its size", () => {
+  test("can extract a tetromino and reduces its size", () => {
     const nextTetromino = bag.next();
 
     expect(bag.items.map((item) => item.toString())).to.not.include(nextTetromino!.toString());
@@ -33,7 +34,7 @@ describe("Shuffle tetrominoes", () => {
     expect(bag.size).to.equal(6);
   });
 
-  test("bag withdraws all tetrominoes", () => {
+  test("can extract all tetrominoes", () => {
     let remainingWithdrawals = 7;
 
     while (remainingWithdrawals > 0) {
@@ -44,8 +45,8 @@ describe("Shuffle tetrominoes", () => {
     expect(bag.size).to.equal(0);
   });
 
-  test("bag withdraws all tetrominoes without repeting any", () => {
-    const extractedTetrominoes = [];
+  test("can extract all tetrominoes without repeating any", () => {
+    const extractedTetrominoes: string[] = [];
     let remainingWithdrawals = 7;
 
     while (remainingWithdrawals > 0) {
@@ -62,18 +63,23 @@ describe("Shuffle tetrominoes", () => {
     expect(bag.size).to.equal(0);
   });
 
-  test("bag refills after being emptied and returns another tetromino", () => {
-    let remainingWithdrawals = 8;
+  test("can extract multiple tetrominoes", () => {
+    let numRuns = 100;
 
-    while (remainingWithdrawals > 0) {
-      const nextTetromino = bag.next();
+    do {
+      const bag = new ShuffleBag(Tetrominoes);
 
-      expect(bag.items.map((item) => item.toString())).to.not.include(nextTetromino!.toString());
-      expect(stringifiedTetrominoes).to.include(nextTetromino!.toString());
+      let remainingWithdrawals = getRandomInt(8, 100);
 
-      --remainingWithdrawals;
-    }
+      while (remainingWithdrawals > 0) {
+        const nextTetromino = bag.next();
 
-    expect(bag.size).to.equal(6);
+        expect(bag.items.map((item) => item.toString())).to.not.include(nextTetromino!.toString());
+        expect(stringifiedTetrominoes).to.include(nextTetromino!.toString());
+
+        --remainingWithdrawals;
+      }
+      --numRuns;
+    } while (numRuns > 0);
   });
 });
