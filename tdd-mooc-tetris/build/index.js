@@ -81,7 +81,7 @@ function tick(game) {
     }
 }
 function adjustDifficulty(game) {
-    const tickDuration = TICK_DURATION_PER_LEVEL[game.scoring.level];
+    const tickDuration = TICK_DURATION_PER_LEVEL[game.board.level];
     if (tickDuration) {
         game.tickDuration = tickDuration;
     }

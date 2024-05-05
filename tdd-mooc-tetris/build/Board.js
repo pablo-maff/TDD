@@ -95,6 +95,7 @@ export class Board {
         if (immobile) {
             this.#immobile = immobile;
             this.#level = new LevelsFixedGoal(level);
+            this.events.subscribe(this.#level);
             return;
         }
         // * For fresh boards
@@ -103,6 +104,7 @@ export class Board {
             this.#immobile[row] = new Array(width).fill(EmptyBlock);
         }
         this.#level = new LevelsFixedGoal(level);
+        this.events.subscribe(this.#level);
     }
     static loadBoard(board, level) {
         const immobile = board
@@ -121,7 +123,11 @@ export class Board {
         if (this.hasFalling()) {
             throw new Error("another piece is already falling");
         }
-        this.#setFalling(new MovableShape(piece, this.#width));
+        const newShape = new MovableShape(piece, this.#width);
+        this.#setFalling(newShape);
+        if (this.#hitsImmobile(newShape)) {
+            throw new Error("GAME OVER");
+        }
     }
     tick() {
         if (!this.hasFalling()) {

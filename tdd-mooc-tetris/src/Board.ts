@@ -123,6 +123,7 @@ export class Board implements Shape {
     if (immobile) {
       this.#immobile = immobile;
       this.#level = new LevelsFixedGoal(level);
+      this.events.subscribe(this.#level);
       return;
     }
 
@@ -133,6 +134,7 @@ export class Board implements Shape {
     }
 
     this.#level = new LevelsFixedGoal(level);
+    this.events.subscribe(this.#level);
   }
 
   static loadBoard(board: string, level?: number): Board {
@@ -159,14 +161,10 @@ export class Board implements Shape {
 
     const newShape = new MovableShape(piece, this.#width);
 
-    if (this.#hitsImmobile(newShape)) {
-      throw new Error("GAME OVER");
-    }
-
     this.#setFalling(newShape);
 
     if (this.#hitsImmobile(newShape)) {
-      console.log("GAME OVER");
+      throw new Error("GAME OVER");
     }
   }
 

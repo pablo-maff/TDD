@@ -11,7 +11,7 @@ export class ShuffleBag {
     }
     next() {
         if (!this.size) {
-            this.#tempBag = this.#bag;
+            this.#tempBag = [...this.#bag];
             this.#shuffle();
         }
         return this.#tempBag.pop();
