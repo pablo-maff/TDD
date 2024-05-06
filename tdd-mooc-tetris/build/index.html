@@ -4,15 +4,26 @@
     <meta charset="UTF-8" />
     <title>Tetris</title>
     <style>
+      #game-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
       #game {
         width: 400px;
         height: 800px;
         border: 1px solid black;
       }
+      #game-over-dialog {
+        display: none;
+      }
     </style>
   </head>
   <body>
-    <canvas id="game"></canvas>
+    <div id="game-container">
+      <canvas id="game"></canvas>
+      <dialog id="game-over-dialog">GAME OVER</dialog>
+    </div>
     <script type="module" src="index.js"></script>
   </body>
 </html>

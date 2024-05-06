@@ -112,9 +112,12 @@ export class Board implements Shape {
   #immobile: string[][];
   events: EventsManager;
   #level: LevelsFixedGoal;
+  isPlaying: boolean;
 
   constructor(width: number, height: number, immobile?: string[][], level: number = 0) {
     this.events = new EventsManager();
+
+    this.isPlaying = true;
 
     this.#width = width;
     this.#height = height;
@@ -154,7 +157,7 @@ export class Board implements Shape {
     return this.#level.value;
   }
 
-  drop(piece: Shape): void {
+  drop(piece: Shape): void | Record<string, number | boolean> {
     if (this.hasFalling()) {
       throw new Error("another piece is already falling");
     }
@@ -163,8 +166,9 @@ export class Board implements Shape {
 
     this.#setFalling(newShape);
 
+    // * GAME OVER
     if (this.#hitsImmobile(newShape)) {
-      throw new Error("GAME OVER");
+      this.isPlaying = false;
     }
   }
 

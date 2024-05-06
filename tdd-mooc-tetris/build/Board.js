@@ -87,8 +87,10 @@ export class Board {
     #immobile;
     events;
     #level;
+    isPlaying;
     constructor(width, height, immobile, level = 0) {
         this.events = new EventsManager();
+        this.isPlaying = true;
         this.#width = width;
         this.#height = height;
         // * For loaded boards
@@ -125,8 +127,9 @@ export class Board {
         }
         const newShape = new MovableShape(piece, this.#width);
         this.#setFalling(newShape);
+        // * GAME OVER
         if (this.#hitsImmobile(newShape)) {
-            throw new Error("GAME OVER");
+            this.isPlaying = false;
         }
     }
     tick() {

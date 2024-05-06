@@ -6,7 +6,8 @@ import { Tetromino } from "./Tetromino.js";
 // TODO: change this code to match the API you have created, if you want to run the game for some manual testing
 function initGame() {
   const canvas = document.getElementById("game");
-  console.log("canvas", canvas);
+  const gameOverDialog = document.getElementById("game-over-dialog");
+
   const columns = 10;
   const rows = 20;
   const game = {
@@ -29,8 +30,6 @@ function initGame() {
   };
 
   game.board.events.subscribe(game.scoring);
-
-  console.log("game", game);
 
   document.addEventListener("keydown", (event) => {
     if (event.code === "Space") {
@@ -56,9 +55,13 @@ function initGame() {
   });
 
   const render = (timestamp: any) => {
-    progressTime(game, timestamp);
-    renderGame(game, canvas, timestamp);
-    window.requestAnimationFrame(render);
+    if (game.board.isPlaying) {
+      progressTime(game, timestamp);
+      renderGame(game, canvas, timestamp);
+      window.requestAnimationFrame(render);
+    } else {
+      gameOverDialog!.style.display = "inline";
+    }
   };
   window.requestAnimationFrame(render);
 }

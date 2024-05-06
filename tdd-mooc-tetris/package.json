@@ -27,11 +27,11 @@
     "npm": ">=10"
   },
   "scripts": {
-    "start": "http-server build -o / -c-1",
+    "start": "npm run build && http-server build -o / -c-1",
     "test": "vitest run",
     "autotest": "vitest watch",
     "format": "prettier --write .",
     "lint": "tsc --noEmit",
-    "build": "tsc && cp src/index.html build"
+    "build": "rm -r build && tsc && cp src/index.html build"
   }
 }

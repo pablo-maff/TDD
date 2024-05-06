@@ -120,7 +120,9 @@ describe("Falling blocks", () => {
          .X.`
       );
 
-      expect(() => board.drop(new Block(Y_BLOCK))).to.throw("GAME OVER");
+      board.drop(new Block(Y_BLOCK));
+
+      expect(board.isPlaying).to.equal(false);
     });
   });
 });
