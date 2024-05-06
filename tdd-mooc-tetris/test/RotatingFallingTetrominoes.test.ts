@@ -1,7 +1,5 @@
-import { expect } from "chai";
 import { Board } from "../src/Board.js";
 import { fallToBottom, moveRight } from "./utils.js";
-import { beforeEach, describe, test } from "vitest";
 import { Tetromino } from "../src/Tetromino.js";
 
 describe("Rotating Falling tetrominoes", () => {

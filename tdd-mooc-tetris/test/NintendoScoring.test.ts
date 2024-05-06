@@ -1,6 +1,4 @@
-import { beforeEach, describe, test } from "vitest";
 import { NintendoScoring } from "../src/NintendoScoring.js";
-import { expect } from "chai";
 import { doubleLineClear, lineClear, quadrupleLineClear, tripleLineClear } from "./utils.js";
 
 describe("Nintento Scoring system", () => {

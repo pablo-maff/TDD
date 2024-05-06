@@ -1,7 +1,5 @@
-import { beforeEach, describe, test } from "vitest";
 import { ShuffleBag } from "../src/ShuffleBag.js";
 import { Tetromino } from "../src/Tetromino.js";
-import { expect } from "chai";
 import { getRandomInt } from "../src/utils.js";
 
 describe("Shuffle tetrominoes", () => {

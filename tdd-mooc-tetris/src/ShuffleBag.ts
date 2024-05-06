@@ -14,14 +14,20 @@ export class ShuffleBag {
     this.#shuffle();
   }
 
-  next() {
+  next(): Shape {
     if (!this.size) {
       this.#tempBag = [...this.#bag];
 
       this.#shuffle();
     }
 
-    return this.#tempBag.pop();
+    const nextItem = this.#tempBag.pop();
+
+    if (!nextItem) {
+      throw new Error("Error: unable to find next item");
+    }
+
+    return nextItem;
   }
 
   #add(items: Shape[]) {

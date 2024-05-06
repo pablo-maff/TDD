@@ -9,9 +9,9 @@
     "strict": true,
     "target": "es2022",
     // My settings
-    "lib": ["ES2022", "DOM"],
     "strictPropertyInitialization": true, // All the declared fields need to be initialized in the constructor
-    "outDir": "./dist/"
+    "outDir": "./dist/",
+    "types": ["vitest/globals"]
   },
   "include": ["./**/*.ts"],
   "exclude": ["./test/**/*"]

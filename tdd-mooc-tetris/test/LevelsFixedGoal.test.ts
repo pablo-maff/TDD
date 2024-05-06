@@ -1,6 +1,4 @@
-import { beforeEach, describe, test } from "vitest";
 import { LevelsFixedGoal } from "../src/LevelsFixedGoal.js";
-import { expect } from "chai";
 import { lineClear } from "./utils.js";
 import { Observer } from "../src/EventsManager.js";
 

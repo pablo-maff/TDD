@@ -1,5 +1,3 @@
-import { beforeEach, describe, test } from "vitest";
-import { expect } from "chai";
 import { ScoringDummy } from "./Doubles/ScoringDummy.js";
 import { doubleLineClear, lineClear } from "./utils.js";
 

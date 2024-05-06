@@ -1,6 +1,4 @@
-import { expect } from "chai";
 import { Board } from "../src/Board.js";
-import { describe, test } from "vitest";
 import { Tetromino } from "../src/Tetromino.js";
 
 describe("Mihara's conspiracy", () => {

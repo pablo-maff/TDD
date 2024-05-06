@@ -3,13 +3,23 @@ import { NintendoScoring } from "./NintendoScoring.js";
 import { ShuffleBag } from "./ShuffleBag.js";
 import { Tetromino } from "./Tetromino.js";
 
+interface Game {
+  columns: number;
+  rows: number;
+  tickDuration: number;
+  nextTick: number;
+  scoring: NintendoScoring;
+  board: Board;
+  tetrominoes: ShuffleBag;
+}
+
 function initGame() {
   const canvas = document.getElementById("game");
   const gameOverDialog = document.getElementById("game-over-dialog");
 
   const columns = 10;
   const rows = 20;
-  const game = {
+  const game: Game = {
     columns,
     rows,
     tickDuration: 1000,
@@ -53,21 +63,21 @@ function initGame() {
     event.preventDefault(); // prevent game keys from scrolling the window
   });
 
-  const render = (timestamp: any) => {
-    if (game.board.isPlaying) {
-      progressTime(game, timestamp);
-      renderGame(game, canvas, timestamp);
-      window.requestAnimationFrame(render);
-    } else {
+  const render = (timestamp: DOMHighResTimeStamp) => {
+    if (!game.board.isPlaying) {
       gameOverDialog!.style.display = "inline";
     }
+
+    progressTime(game, timestamp);
+    renderGame(game, canvas, timestamp);
+    window.requestAnimationFrame(render);
   };
   window.requestAnimationFrame(render);
 }
 
 // game logic
 
-function progressTime(game: any, timestamp: any) {
+function progressTime(game: Game, timestamp: DOMHighResTimeStamp) {
   if (timestamp >= game.nextTick) {
     tick(game);
     adjustDifficulty(game);
