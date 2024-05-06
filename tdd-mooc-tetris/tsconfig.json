@@ -13,5 +13,5 @@
     "outDir": "./build/"
   },
   "include": ["./**/*.ts"],
-  "exclude": ["./test/**/*"]
+  "exclude": ["build/", "./test/**/*"]
 }

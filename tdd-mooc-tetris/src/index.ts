@@ -3,7 +3,6 @@ import { NintendoScoring } from "./NintendoScoring.js";
 import { ShuffleBag } from "./ShuffleBag.js";
 import { Tetromino } from "./Tetromino.js";
 
-// TODO: change this code to match the API you have created, if you want to run the game for some manual testing
 function initGame() {
   const canvas = document.getElementById("game");
   const gameOverDialog = document.getElementById("game-over-dialog");

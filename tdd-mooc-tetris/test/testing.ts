@@ -1,3 +1,11 @@
+declare global {
+  export namespace Chai {
+    interface Assertion {
+      equalShape(shape: string): Promise<void>;
+    }
+  }
+}
+
 import { Assertion } from "chai";
 
 export function normalize(s) {
