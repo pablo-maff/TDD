@@ -1,3 +1,4 @@
+import { log } from "console";
 import { Board } from "./Board.js";
 import { NintendoScoring } from "./NintendoScoring.js";
 import { ShuffleBag } from "./ShuffleBag.js";
@@ -14,8 +15,9 @@ interface Game {
 }
 
 function initGame() {
-  const canvas = document.getElementById("game");
-  const gameOverDialog = document.getElementById("game-over-dialog");
+  const canvas = document.getElementById("game") as HTMLCanvasElement;
+  const gameOverDialog = document.getElementById("game-over-dialog") as HTMLDialogElement;
+  const scoreParagraph = document.getElementById("score") as HTMLParagraphElement;
 
   const columns = 10;
   const rows = 20;
@@ -64,12 +66,15 @@ function initGame() {
   });
 
   const render = (timestamp: DOMHighResTimeStamp) => {
+    // * Finish game
     if (!game.board.isPlaying) {
-      gameOverDialog!.style.display = "inline";
+      gameOverDialog.style.display = "inline";
+      scoreParagraph.innerText += ` ${game.scoring.value}`;
+      return;
     }
 
     progressTime(game, timestamp);
-    renderGame(game, canvas, timestamp);
+    renderGame(game, canvas);
     window.requestAnimationFrame(render);
   };
   window.requestAnimationFrame(render);
@@ -85,7 +90,7 @@ function progressTime(game: Game, timestamp: DOMHighResTimeStamp) {
   }
 }
 
-function tick(game: any) {
+function tick(game: Game) {
   if (!game.board.hasFalling()) {
     game.board.drop(game.tetrominoes.next());
   } else {
@@ -93,14 +98,12 @@ function tick(game: any) {
   }
 }
 
-function adjustDifficulty(game: any) {
-  const tickDuration = TICK_DURATION_PER_LEVEL[game.board.level as keyof typeof TICK_DURATION_PER_LEVEL];
-  if (tickDuration) {
-    game.tickDuration = tickDuration;
-  }
+function adjustDifficulty(game: Game) {
+  game.tickDuration = TICK_DURATION_PER_LEVEL[game.board.level as keyof typeof TICK_DURATION_PER_LEVEL] ?? 33;
 }
 
 const TICK_DURATION_PER_LEVEL = {
+  0: 1000,
   1: 33 * 15,
   2: 33 * 13,
   3: 33 * 11,
@@ -115,12 +118,16 @@ const TICK_DURATION_PER_LEVEL = {
 
 // rendering
 
-function renderGame(game: any, canvas: any, timestamp: any) {
+function renderGame(game: Game, canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext("2d");
   const canvasWidth = (canvas.width = canvas.clientWidth);
   const canvasHeight = (canvas.height = canvas.clientHeight);
   const cellWidth = canvasWidth / game.columns;
   const cellHeight = canvasHeight / game.rows;
+
+  if (!ctx) {
+    throw new Error("Unable to find game canvas context");
+  }
 
   drawBackground(ctx, canvasWidth, canvasHeight);
   for (let row = 0; row < game.rows; row++) {
@@ -129,6 +136,7 @@ function renderGame(game: any, canvas: any, timestamp: any) {
       drawCell(ctx, { cell, row, column, cellWidth, cellHeight });
     }
   }
+
   drawScoring(ctx, {
     level: game.board.level,
     score: game.scoring.value,
@@ -136,7 +144,7 @@ function renderGame(game: any, canvas: any, timestamp: any) {
   });
 }
 
-function drawBackground(ctx: any, canvasWidth: any, canvasHeight: any) {
+function drawBackground(ctx: CanvasRenderingContext2D, canvasWidth: number, canvasHeight: number) {
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 }
@@ -153,8 +161,14 @@ const CELL_COLORS: { [key: string]: string } = {
 };
 
 function drawCell(
-  ctx: any,
-  { cell, row, column, cellWidth, cellHeight }: { cell: any; row: any; column: any; cellWidth: any; cellHeight: any }
+  ctx: CanvasRenderingContext2D,
+  {
+    cell,
+    row,
+    column,
+    cellWidth,
+    cellHeight,
+  }: { cell: string; row: number; column: number; cellWidth: number; cellHeight: number }
 ) {
   ctx.fillStyle = CELL_COLORS[cell];
   const x = cellWidth * column;
@@ -163,8 +177,8 @@ function drawCell(
 }
 
 function drawScoring(
-  ctx: { font: any; textAlign: any; fillStyle: string; fillText: (arg0: any, arg1: any, arg2: any) => void },
-  { score, level, canvasWidth }: { level: any; score: any; canvasWidth: any }
+  ctx: CanvasRenderingContext2D,
+  { score, level, canvasWidth }: { level: number; score: number; canvasWidth: number }
 ) {
   const margin = 5;
   const fontSize = 22;
@@ -185,8 +199,8 @@ function drawScoring(
 }
 
 function drawText(
-  ctx: { font: any; textAlign: any; fillStyle: string; fillText: (arg0: any, arg1: any, arg2: any) => void },
-  { text, x, y, font, textAlign }: { text: string; x: number; y: number; font: string; textAlign: string }
+  ctx: CanvasRenderingContext2D,
+  { text, x, y, font, textAlign }: { text: string; x: number; y: number; font: string; textAlign: CanvasTextAlign }
 ) {
   ctx.font = font;
   ctx.textAlign = textAlign || "left";
