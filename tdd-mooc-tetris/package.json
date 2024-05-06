@@ -29,11 +29,11 @@
     "npm": ">=10"
   },
   "scripts": {
-    "start": "npm run build && http-server build -o / -c-1",
+    "start": "npm run build && http-server dist -o / -c-1",
     "test": "vitest run",
     "autotest": "vitest watch",
     "format": "prettier --write .",
     "lint": "tsc --noEmit",
-    "build": "mkdir -p build && rm -r build && tsc && cp src/index.html build"
+    "build": "mkdir -p dist && rm -r dist && tsc && cp src/index.html dist"
   }
 }

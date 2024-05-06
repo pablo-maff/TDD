@@ -11,7 +11,7 @@
     // My settings
     "lib": ["ES2022", "DOM"],
     "strictPropertyInitialization": true, // All the declared fields need to be initialized in the constructor
-    "outDir": "./build/"
+    "outDir": "./dist/"
   },
   "include": ["./**/*.ts"],
   "exclude": ["./test/**/*"]
