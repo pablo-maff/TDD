@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import { beforeEach, describe, test } from "vitest";
-import { ShuffleBag } from "../src/ShuffleBag";
-import { Block } from "./Doubles/Block";
-import { getRandomInt } from "../src/utils";
+import { ShuffleBag } from "../src/ShuffleBag.js";
+import { Block } from "./Doubles/Block.js";
+import { getRandomInt } from "../src/utils.js";
 
 function randomChars(amount: number): Block[] {
   const chars: Block[] = [];

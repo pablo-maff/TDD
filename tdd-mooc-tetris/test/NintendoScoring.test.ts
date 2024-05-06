@@ -1,9 +1,7 @@
 import { beforeEach, describe, test } from "vitest";
-import { NintendoScoring } from "../src/NintendoScoring";
+import { NintendoScoring } from "../src/NintendoScoring.js";
 import { expect } from "chai";
-import { Board } from "../src/Board";
-import { Tetromino } from "../src/Tetromino";
-import { doubleLineClear, lineClear, quadrupleLineClear, tripleLineClear } from "./utils";
+import { doubleLineClear, lineClear, quadrupleLineClear, tripleLineClear } from "./utils.js";
 
 describe("Nintento Scoring system", () => {
   let scoringSystem: NintendoScoring;

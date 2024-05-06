@@ -1,8 +1,8 @@
 import { beforeEach, describe, test } from "vitest";
-import { LevelsFixedGoal } from "../src/LevelsFixedGoal";
+import { LevelsFixedGoal } from "../src/LevelsFixedGoal.js";
 import { expect } from "chai";
-import { lineClear } from "./utils";
-import { Observer } from "../src/EventsManager";
+import { lineClear } from "./utils.js";
+import { Observer } from "../src/EventsManager.js";
 
 function clearLines(amount: number, observer: Observer) {
   let remainingClears = amount;
@@ -14,7 +14,7 @@ function clearLines(amount: number, observer: Observer) {
 }
 
 describe("Levels Fixed Goal", () => {
-  let level: Observer;
+  let level: LevelsFixedGoal;
 
   beforeEach(() => {
     level = new LevelsFixedGoal();

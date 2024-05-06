@@ -1,7 +1,7 @@
 import { beforeEach, describe, test } from "vitest";
 import { expect } from "chai";
-import { ScoringDummy } from "./Doubles/ScoringDummy";
-import { doubleLineClear, lineClear } from "./utils";
+import { ScoringDummy } from "./Doubles/ScoringDummy.js";
+import { doubleLineClear, lineClear } from "./utils.js";
 
 describe("Board Scoring", () => {
   let scoringSystem: ScoringDummy;

@@ -16,6 +16,7 @@
   "type": "module",
   "devDependencies": {
     "@types/chai": "^4.3.16",
+    "@types/node": "^20.12.8",
     "chai": "^4.3.10",
     "http-server": "^14.1.1",
     "prettier": "^3.1.1",
@@ -33,6 +34,6 @@
     "autotest": "vitest watch",
     "format": "prettier --write .",
     "lint": "tsc --noEmit",
-    "build": "rm -r build && tsc && cp src/index.html build"
+    "build": "mkdir -p build && rm -r build && tsc && cp src/index.html build"
   }
 }

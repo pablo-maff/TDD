@@ -10,6 +10,10 @@ const changedLinesLimit = 10;
 test("📎 Looks like you are changing lots of production code at a time. Prefer working in small, safe steps.", async () => {
   const { stdout } = await exec("git diff --numstat -- src");
 
+  if (typeof stdout !== "string") {
+    throw new Error("error getting line changes");
+  }
+
   const changes = stdout
     .split("\n")
     .map((line) => line.split("\t"))

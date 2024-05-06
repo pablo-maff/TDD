@@ -1,8 +1,8 @@
 import { beforeEach, describe, test } from "vitest";
-import { ShuffleBag } from "../src/ShuffleBag";
-import { Tetromino } from "../src/Tetromino";
+import { ShuffleBag } from "../src/ShuffleBag.js";
+import { Tetromino } from "../src/Tetromino.js";
 import { expect } from "chai";
-import { getRandomInt } from "../src/utils";
+import { getRandomInt } from "../src/utils.js";
 
 describe("Shuffle tetrominoes", () => {
   const Tetrominoes = [

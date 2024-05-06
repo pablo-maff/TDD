@@ -1,11 +1,10 @@
 import { beforeEach, describe, test } from "vitest";
 import { expect } from "chai";
-import { LevelDummy } from "./Doubles/LevelDummy";
-import { doubleLineClear, lineClear } from "./utils";
-import { Observer } from "../src/EventsManager";
+import { LevelDummy } from "./Doubles/LevelDummy.js";
+import { doubleLineClear, lineClear } from "./utils.js";
 
 describe("Board Levels", () => {
-  let level: Observer;
+  let level: LevelDummy;
 
   beforeEach(() => {
     level = new LevelDummy();

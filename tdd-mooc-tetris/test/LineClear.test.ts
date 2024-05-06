@@ -1,6 +1,6 @@
 import { describe, test } from "vitest";
-import { Board } from "../src/Board";
-import { Tetromino } from "../src/Tetromino";
+import { Board } from "../src/Board.js";
+import { Tetromino } from "../src/Tetromino.js";
 import { expect } from "chai";
 
 describe("Line clear", () => {

@@ -1,4 +1,4 @@
-import { Shape, shapeToString } from "../../src/shapes";
+import { Shape, shapeToString } from "../../src/shapes.js";
 // * Test double class
 export class Block implements Shape {
   #color;

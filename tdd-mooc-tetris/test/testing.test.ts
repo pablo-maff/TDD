@@ -1,6 +1,6 @@
 import { test } from "vitest";
 import { expect } from "chai";
-import { normalize } from "./testing.mjs";
+import { normalize } from "./testing.js";
 
 test("normalize", () => {
   expect(normalize("")).to.equal("\n");

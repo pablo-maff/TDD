@@ -1,4 +1,4 @@
-import { Observer } from "../../src/EventsManager";
+import { Observer } from "../../src/EventsManager.js";
 
 export class DummyObserver implements Observer {
   #state: number = 0;

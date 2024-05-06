@@ -1,84 +1,84 @@
 export function shapeToString(shape) {
-  let s = "";
-  for (let row = 0; row < shape.height(); row++) {
-    for (let col = 0; col < shape.width(); col++) {
-      s += shape.blockAt(row, col);
+    let s = "";
+    for (let row = 0; row < shape.height(); row++) {
+        for (let col = 0; col < shape.width(); col++) {
+            s += shape.blockAt(row, col);
+        }
+        s += "\n";
     }
-    s += "\n";
-  }
-  return s;
+    return s;
 }
 export const EmptyBlock = ".";
 export const T_SHAPES = [
-  `...
+    `...
    TTT
    .T.`,
-  `.T.
+    `.T.
    TT.
    .T.`,
-  `...
+    `...
    .T.
    TTT`,
-  `.T.
+    `.T.
    .TT
    .T.`,
 ];
 export const I_SHAPES = [
-  `....
+    `....
    IIII
    ....
    ....`,
-  `..I.
+    `..I.
    ..I.
    ..I.
    ..I.`,
 ];
 export const O_SHAPES = [
-  `...
+    `...
    .OO
    .OO`,
 ];
 export const L_SHAPES = [
-  `...
+    `...
    LLL
    L..`,
-  `LL.
+    `LL.
    .L.
    .L.`,
-  `...
+    `...
    ..L
    LLL`,
-  `.L.
+    `.L.
    .L.
    .LL`,
 ];
 export const J_SHAPES = [
-  `...
+    `...
    JJJ
    ..J`,
-  `.J.
+    `.J.
    .J.
    JJ.`,
-  `...
+    `...
    J..
    JJJ`,
-  `.JJ
+    `.JJ
    .J.
    .J.`,
 ];
 export const S_SHAPES = [
-  `...
+    `...
    .SS
    SS.`,
-  `S..
+    `S..
    SS.
    .S.`,
 ];
 export const Z_SHAPES = [
-  `...
+    `...
    ZZ.
    .ZZ`,
-  `..Z
+    `..Z
    .ZZ
    .Z.`,
 ];

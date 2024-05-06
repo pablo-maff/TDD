@@ -8,11 +8,11 @@ declare global {
 
 import { Assertion } from "chai";
 
-export function normalize(s) {
+export function normalize(s: string): string {
   return s.replaceAll(" ", "").trim() + "\n";
 }
 
-Assertion.addMethod("equalShape", function (expected) {
+Assertion.addMethod("equalShape", function (expected: string) {
   const actual = this._obj;
   new Assertion(actual).to.be.a("string");
 

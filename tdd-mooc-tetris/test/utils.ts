@@ -1,6 +1,6 @@
-import { Board } from "../src/Board";
-import { Observer } from "../src/EventsManager";
-import { Tetromino } from "../src/Tetromino";
+import { Board } from "../src/Board.js";
+import { Observer } from "../src/EventsManager.js";
+import { Tetromino } from "../src/Tetromino.js";
 
 export function moveLeft(board: Board, positions: number) {
   for (let i = 0; i < positions; i++) {
