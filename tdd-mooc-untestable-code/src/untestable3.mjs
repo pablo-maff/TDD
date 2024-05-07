@@ -1,10 +1,8 @@
-import { readFile } from "node:fs/promises";
 import { parse } from "csv-parse/sync";
 
 // * parsePeopleCsv is also reading the file, which is outside of the scope defined by the function name
-// TODO: Remove the read operation and pass the csv file as its parameter
-export async function parsePeopleCsv(filePath) {
-  const csvData = await readFile(filePath, { encoding: "utf8" });
+// TODO: Remove the read operation and pass the csv file as its parameter DONE
+export function parsePeopleCsv(csvData) {
   const records = parse(csvData, {
     skip_empty_lines: true,
     trim: true,
