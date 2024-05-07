@@ -6,9 +6,7 @@ function diceRoll() {
 
 // * diceHandValue includes randomness by directly assigning the result of diceRoll to its variables which makes it untestable
 // TODO: Move die1 and die2 to be parameters of diceHandValue
-export function diceHandValue() {
-  const die1 = diceRoll();
-  const die2 = diceRoll();
+export function diceHandValue(die1, die2) {
   if (die1 === die2) {
     // one pair
     return 100 + die1;
