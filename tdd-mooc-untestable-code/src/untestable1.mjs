@@ -1,5 +1,8 @@
 const millisPerDay = 24 * 60 * 60 * 1000;
 
+// * Reading the current time is untestable.
+// TODO: 1. Pass now as the function parameter
+// TODO: 2. Replace new Date passed as argument of christmasDay.setFullYear with the parameter now
 export function daysUntilChristmas() {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
