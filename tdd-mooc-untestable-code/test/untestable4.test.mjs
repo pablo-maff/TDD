@@ -3,15 +3,21 @@ import { PasswordService, PostgresUserDao } from "../src/untestable4.mjs";
 
 describe("Untestable 4: enterprise application", () => {
   let service;
-  beforeEach(() => {
+  beforeEach(async () => {
     service = new PasswordService();
+
+    await PostgresUserDao.getInstance().save({
+      userId: 1,
+      passwordHash: "asd"
+    })
   });
 
   afterEach(() => {
     PostgresUserDao.getInstance().close();
   });
 
-  test("todo", async () => {
-    // TODO: write proper tests for both PasswordService and PostgresUserDao
+  test("PasswordService fails to change password", async () => {
+
+    // await service.changePassword()
   });
 });

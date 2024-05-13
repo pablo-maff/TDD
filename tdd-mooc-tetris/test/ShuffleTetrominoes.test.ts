@@ -61,7 +61,7 @@ describe("Shuffle tetrominoes", () => {
     expect(bag.size).to.equal(0);
   });
 
-  test("can extract multiple tetrominoes", () => {
+  test("can extract multiple tetrominoes from a refilled bag", () => {
     let numRuns = 100;
 
     do {

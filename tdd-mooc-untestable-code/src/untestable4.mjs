@@ -1,6 +1,9 @@
 import argon2 from "@node-rs/argon2";
 import pg from "pg";
+import 'dotenv/config'
 
+// * It is a singleton
+// TODO 1: Change it to just create one
 export class PostgresUserDao {
   static instance;
 
