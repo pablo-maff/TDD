@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, test } from "vitest";
 import { PasswordService, PostgresUserDao } from "../src/untestable4.mjs";
+import { expect } from "chai";
 
 describe("Untestable 4: enterprise application", () => {
   let service;
@@ -17,7 +18,6 @@ describe("Untestable 4: enterprise application", () => {
   });
 
   test("PasswordService fails to change password", async () => {
-
-    // await service.changePassword()
+    expect(async () => await service.changePassword(1, "fds", "dsa")).to.throw
   });
 });

@@ -2,8 +2,10 @@ import argon2 from "@node-rs/argon2";
 import pg from "pg";
 import 'dotenv/config'
 
+// * password is saved as plain text
 // * It is a singleton
-// TODO 1: Change it to just create one
+// TODO 1: Encrypt password on save and store the password hash
+// TODO 2: Change it to just create one
 export class PostgresUserDao {
   static instance;
 
@@ -56,6 +58,7 @@ export class PasswordService {
 
   async changePassword(userId, oldPassword, newPassword) {
     const user = await this.users.getById(userId);
+    console.log("user", user);
     if (!argon2.verifySync(user.passwordHash, oldPassword)) {
       throw new Error("wrong old password");
     }
