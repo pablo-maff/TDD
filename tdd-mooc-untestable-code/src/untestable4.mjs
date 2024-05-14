@@ -4,7 +4,7 @@ import 'dotenv/config'
 // * It is a singleton
 // TODO 1: Encrypt password on save and store the password hash DONE
 // TODO 2: Change it to just create one DONE
-// TODO 3: Extract methods into their own class to comply with SRP
+// TODO 3: Extract methods into their own class to comply with SRP DONE
 export class PostgresUserDao {
   constructor(db) {
     this.db = db
@@ -38,14 +38,6 @@ export class PostgresUserDao {
     );
   }
 
-  encryptPassword(password) {
-    return argon2.hashSync(password)
-  }
-
-  verifyPassword(passwordHash, password) {
-    return argon2.verifySync(passwordHash, password)
-  }
-
   async deleteAll() {
     await this.db.query(`
       delete from users
@@ -54,20 +46,27 @@ export class PostgresUserDao {
 }
 
 export class PasswordService {
-  constructor(db) {
+  constructor(db, hasher) {
     this.users = db;
+    this.hasher = hasher;
   }
 
   async changePassword(userId, oldPassword, newPassword) {
     const user = await this.users.getById(userId);
-    if (!this.users.verifyPassword(user.passwordHash, oldPassword)) {
+    if (!this.hasher.verifyPassword(user.passwordHash, oldPassword)) {
       throw new Error("wrong old password");
     }
-    user.passwordHash = this.users.encryptPassword(newPassword);
+    user.passwordHash = this.hasher.encryptPassword(newPassword);
     await this.users.save(user);
   }
 }
 
-export class PostgresService {
+export class Argon2Hasher {
+  encryptPassword(password) {
+    return argon2.hashSync(password);
+  }
 
+  verifyPassword(passwordHash, password) {
+    return argon2.verifySync(passwordHash, password);
+  }
 }

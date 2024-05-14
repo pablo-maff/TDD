@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, test } from "vitest";
-import { PasswordService, PostgresUserDao } from "../src/untestable4.mjs";
+import { Argon2Hasher, PasswordService, PostgresUserDao } from "../src/untestable4.mjs";
 import { expect } from "chai";
 import pg from "pg";
 
@@ -7,6 +7,7 @@ describe("Untestable 4: enterprise application", () => {
   let service;
   let user;
   let users;
+  let hasher;
   beforeEach(async () => {
     users = new PostgresUserDao(new pg.Pool({
       user: process.env.PGUSER,
@@ -16,13 +17,15 @@ describe("Untestable 4: enterprise application", () => {
       port: process.env.PGPORT,
     }))
 
-    service = new PasswordService(users);
+    hasher = new Argon2Hasher()
+
+    service = new PasswordService(users, hasher);
 
     await users.deleteAll()
 
     await users.save({
       userId: 1,
-      passwordHash: users.encryptPassword("asd")
+      passwordHash: hasher.encryptPassword("asd")
     })
 
     user = await users.getById(1)
