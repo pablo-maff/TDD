@@ -1,28 +1,34 @@
-import { afterAll, beforeEach, describe, test } from "vitest";
+import { afterEach, beforeEach, describe, test } from "vitest";
 import { PasswordService, PostgresUserDao } from "../src/untestable4.mjs";
 import { expect } from "chai";
+import pg from "pg";
 
 describe("Untestable 4: enterprise application", () => {
   let service;
-  let users = PostgresUserDao.getInstance();
   let user;
+  let users;
   beforeEach(async () => {
-    service = new PasswordService();
+    users = new PostgresUserDao(new pg.Pool({
+      user: process.env.PGUSER,
+      host: process.env.PGHOST,
+      database: process.env.PGDATABASE,
+      password: process.env.PGPASSWORD,
+      port: process.env.PGPORT,
+    }))
+
+    service = new PasswordService(users);
+
     await users.deleteAll()
 
+    await users.save({
+      userId: 1,
+      passwordHash: users.encryptPassword("asd")
+    })
+
     user = await users.getById(1)
-
-    if (!user) {
-      await users.save({
-        userId: 1,
-        passwordHash: users.encryptPassword("asd")
-      })
-
-      user = await users.getById(1)
-    }
   });
 
-  afterAll(() => {
+  afterEach(() => {
     users.close();
   });
 

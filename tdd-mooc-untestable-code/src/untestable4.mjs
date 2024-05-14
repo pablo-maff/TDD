@@ -1,27 +1,14 @@
 import argon2 from "@node-rs/argon2";
-import pg from "pg";
 import 'dotenv/config'
 
 // * It is a singleton
 // TODO 1: Encrypt password on save and store the password hash DONE
-// TODO 2: Change it to just create one
+// TODO 2: Change it to just create one DONE
+// TODO 3: Extract methods into their own class to comply with SRP
 export class PostgresUserDao {
-  static instance;
-
-  static getInstance() {
-    if (!this.instance) {
-      this.instance = new PostgresUserDao();
-    }
-    return this.instance;
+  constructor(db) {
+    this.db = db
   }
-
-  db = new pg.Pool({
-    user: process.env.PGUSER,
-    host: process.env.PGHOST,
-    database: process.env.PGDATABASE,
-    password: process.env.PGPASSWORD,
-    port: process.env.PGPORT,
-  });
 
   close() {
     this.db.end();
@@ -67,7 +54,9 @@ export class PostgresUserDao {
 }
 
 export class PasswordService {
-  users = PostgresUserDao.getInstance();
+  constructor(db) {
+    this.users = db;
+  }
 
   async changePassword(userId, oldPassword, newPassword) {
     const user = await this.users.getById(userId);
@@ -77,4 +66,8 @@ export class PasswordService {
     user.passwordHash = this.users.encryptPassword(newPassword);
     await this.users.save(user);
   }
+}
+
+export class PostgresService {
+
 }
