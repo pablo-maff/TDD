@@ -51,6 +51,12 @@ export class PostgresUserDao {
       [user.userId, user.passwordHash]
     );
   }
+
+  async deleteAll() {
+    await this.db.query(`
+      delete from users
+    `)
+  }
 }
 
 export class PasswordService {
@@ -58,7 +64,6 @@ export class PasswordService {
 
   async changePassword(userId, oldPassword, newPassword) {
     const user = await this.users.getById(userId);
-    console.log("user", user);
     if (!argon2.verifySync(user.passwordHash, oldPassword)) {
       throw new Error("wrong old password");
     }
