@@ -11,7 +11,7 @@ describe("Untestable 4: enterprise application", () => {
 
     await PostgresUserDao.getInstance().save({
       userId: 1,
-      passwordHash: "asd"
+      password: "asd"
     })
 
     user = await PostgresUserDao.getInstance().getById(1)
@@ -22,10 +22,11 @@ describe("Untestable 4: enterprise application", () => {
   });
 
   test("PasswordService fails to change password", async () => {
+    console.log("user", user);
     expect(async () => await service.changePassword(user.userId, "fds", "dsa")).to.throw
   });
 
-  test.skip("PasswordService changes password", async () => {
+  test("PasswordService changes password", async () => {
     await service.changePassword(1, "asd", "dsa")
 
     const updatedUser = await PostgresUserDao.getInstance().getById(1)

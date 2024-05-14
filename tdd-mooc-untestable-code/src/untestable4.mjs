@@ -43,12 +43,18 @@ export class PostgresUserDao {
   }
 
   async save(user) {
+    let passwordHash = user.passwordHash
+
+    if (!passwordHash) {
+      passwordHash = argon2.hashSync(user.password)
+    }
+
     await this.db.query(
       `insert into users (user_id, password_hash)
        values ($1, $2)
        on conflict (user_id) do update
            set password_hash = excluded.password_hash`,
-      [user.userId, user.passwordHash]
+      [user.userId, passwordHash]
     );
   }
 
