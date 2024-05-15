@@ -27,11 +27,15 @@ export class Shop {
     return name === "Aged Brie"
   }
 
+  #isSulfuras(name) {
+    return name === "Sulfuras, Hand of Ragnaros"
+  }
+
   updateItems() {
     for (var i = 0; i < this.items.length; i++) {
       if (!this.#isAgedBrie(this.items[i].name) && !this.#isBackstagePass(this.items[i].name)) {
         if (this.items[i].quality > 0) {
-          if (this.items[i].name != "Sulfuras, Hand of Ragnaros") {
+          if (!this.#isSulfuras(this.items[i].name)) {
             this.#updateQuality(i, -1)
           }
         }
@@ -52,14 +56,14 @@ export class Shop {
           }
         }
       }
-      if (this.items[i].name != "Sulfuras, Hand of Ragnaros") {
+      if (!this.#isSulfuras(this.items[i].name)) {
         this.#updateSellIn(i, -1)
       }
       if (this.items[i].sellIn < 0) {
         if (!this.#isAgedBrie(this.items[i].name)) {
           if (!this.#isBackstagePass(this.items[i].name)) {
             if (this.items[i].quality > 0) {
-              if (this.items[i].name != "Sulfuras, Hand of Ragnaros") {
+              if (!this.#isSulfuras(this.items[i].name)) {
                 this.#updateQuality(i, -1)
               }
             }
