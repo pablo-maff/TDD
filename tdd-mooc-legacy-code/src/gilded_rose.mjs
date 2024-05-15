@@ -33,46 +33,48 @@ export class Shop {
 
   updateItems() {
     for (var i = 0; i < this.items.length; i++) {
-      if (!this.#isAgedBrie(this.items[i].name) && !this.#isBackstagePass(this.items[i].name)) {
-        if (this.items[i].quality > 0) {
-          if (!this.#isSulfuras(this.items[i].name)) {
+      const currentItem = this.items[i]
+
+      if (!this.#isAgedBrie(currentItem.name) && !this.#isBackstagePass(currentItem.name)) {
+        if (currentItem.quality > 0) {
+          if (!this.#isSulfuras(currentItem.name)) {
             this.#updateQuality(i, -1)
           }
         }
       } else {
-        if (this.items[i].quality < 50) {
+        if (currentItem.quality < 50) {
           this.#updateQuality(i, 1)
-          if (this.#isBackstagePass(this.items[i].name)) {
-            if (this.items[i].sellIn < 11) {
-              if (this.items[i].quality < 50) {
+          if (this.#isBackstagePass(currentItem.name)) {
+            if (currentItem.sellIn < 11) {
+              if (currentItem.quality < 50) {
                 this.#updateQuality(i, 1)
               }
             }
-            if (this.items[i].sellIn < 6) {
-              if (this.items[i].quality < 50) {
+            if (currentItem.sellIn < 6) {
+              if (currentItem.quality < 50) {
                 this.#updateQuality(i, 1)
               }
             }
           }
         }
       }
-      if (!this.#isSulfuras(this.items[i].name)) {
+      if (!this.#isSulfuras(currentItem.name)) {
         this.#updateSellIn(i, -1)
       }
-      if (this.items[i].sellIn < 0) {
-        if (!this.#isAgedBrie(this.items[i].name)) {
-          if (!this.#isBackstagePass(this.items[i].name)) {
-            if (this.items[i].quality > 0) {
-              if (!this.#isSulfuras(this.items[i].name)) {
+      if (currentItem.sellIn < 0) {
+        if (!this.#isAgedBrie(currentItem.name)) {
+          if (!this.#isBackstagePass(currentItem.name)) {
+            if (currentItem.quality > 0) {
+              if (!this.#isSulfuras(currentItem.name)) {
                 this.#updateQuality(i, -1)
               }
             }
           } else {
-            this.#updateQuality(i, -this.items[i].quality)
+            this.#updateQuality(i, -currentItem.quality)
           }
         } else {
-          if (this.items[i].quality < 50) {
-            this.#updateQuality(i, this.items[i].quality)
+          if (currentItem.quality < 50) {
+            this.#updateQuality(i, currentItem.quality)
           }
         }
       }
