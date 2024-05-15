@@ -23,12 +23,16 @@ export class Shop {
     this.items = items;
   }
 
+  #updateItem(updatedItem) {
+    this.items = this.items.map(item => item.name !== updatedItem.name ? item : updatedItem)
+  }
+
   #updateQuality(currentItem, newValue) {
-    this.items = this.items.map(item => item.name !== currentItem.name ? item : currentItem.updateQuality(newValue))
+    this.#updateItem(currentItem.updateQuality(newValue))
   }
 
   #updateSellIn(currentItem, newValue) {
-    this.items = this.items.map(item => item.name !== currentItem.name ? item : currentItem.updateSellIn(newValue))
+    this.#updateItem(currentItem.updateSellIn(newValue))
   }
 
   #isBackstagePass(name) {
