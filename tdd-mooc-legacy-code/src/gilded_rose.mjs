@@ -62,20 +62,14 @@ export class Shop {
         this.#updateSellIn(i, -1)
       }
       if (currentItem.sellIn < 0) {
-        if (!this.#isAgedBrie(currentItem.name)) {
-          if (!this.#isBackstagePass(currentItem.name)) {
-            if (currentItem.quality > 0) {
-              if (!this.#isSulfuras(currentItem.name)) {
-                this.#updateQuality(i, -1)
-              }
-            }
-          } else {
-            this.#updateQuality(i, -currentItem.quality)
-          }
-        } else {
-          if (currentItem.quality < 50) {
-            this.#updateQuality(i, currentItem.quality)
-          }
+        if (this.#isBackstagePass(currentItem.name)) {
+          this.#updateQuality(i, -currentItem.quality)
+        }
+        if (this.#isAgedBrie(currentItem.name) && currentItem.quality < 50) {
+          this.#updateQuality(i, currentItem.quality)
+        }
+        if (!this.#isSulfuras(currentItem.name) && !this.#isAgedBrie(currentItem.name) && currentItem.quality > 0) {
+          this.#updateQuality(i, -1)
         }
       }
     }
