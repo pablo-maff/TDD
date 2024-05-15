@@ -23,6 +23,12 @@ export class Shop {
     this.items = items;
   }
 
+  #specialItemsDict = {
+    backstage: "Backstage passes to a TAFKAL80ETC concert",
+    brie: "Aged Brie",
+    sulfuras: "Sulfuras, Hand of Ragnaros"
+  }
+
   #updateItem(updatedItem) {
     this.items = this.items.map(item => item.name !== updatedItem.name ? item : updatedItem)
   }
@@ -36,15 +42,15 @@ export class Shop {
   }
 
   #isBackstagePass(name) {
-    return name === "Backstage passes to a TAFKAL80ETC concert"
+    return name === this.#specialItemsDict.backstage
   }
 
   #isAgedBrie(name) {
-    return name === "Aged Brie"
+    return name === this.#specialItemsDict.brie
   }
 
   #isSulfuras(name) {
-    return name === "Sulfuras, Hand of Ragnaros"
+    return name === this.#specialItemsDict.sulfuras
   }
 
   updateItems() {
