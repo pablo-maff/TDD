@@ -94,6 +94,12 @@ export class Shop {
       }
 
       if (this.#isAgedBrie(item.name)) {
+        if (item.sellIn < 0) {
+          item.updateQuality(item.quality + 2);
+
+          return item
+        }
+
         item.updateQuality(item.quality + 1);
 
         return item

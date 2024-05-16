@@ -9,7 +9,7 @@ const sulfuras = "Sulfuras, Hand of Ragnaros"
 describe("Gilded Rose", () => {
   test("foo, sellIn 0, quality 0", () => {
     const gildedRose = new Shop([new Item("foo", 0, 0)]);
-    const items = gildedRose.updateItems();
+    const items = gildedRose.dayPassed();
     expect(items[0].name).to.equal("foo");
     expect(items[0].sellIn).to.equal(-1);
     expect(items[0].quality).to.equal(0);
@@ -17,7 +17,7 @@ describe("Gilded Rose", () => {
 
   test("Aged Brie, sellIn 0, quality 0", () => {
     const gildedRose = new Shop([new Item("Aged Brie", 0, 0)]);
-    const items = gildedRose.updateItems();
+    const items = gildedRose.dayPassed();
     expect(items[0].name).to.equal("Aged Brie");
     expect(items[0].sellIn).to.equal(-1);
     expect(items[0].quality).to.equal(2);
@@ -220,6 +220,15 @@ describe("Gilded Rose", () => {
     shop.dayPassed()
 
     expect(shop.items[0].quality).to.equal(22)
+  })
+
+  test("Aged Brie increases in Quality twice as fast after sellIn is negative", () => {
+    const shop = new Shop([new Item(agedBrie, 1, 20)])
+
+    shop.dayPassed()
+    shop.dayPassed()
+
+    expect(shop.items[0].quality).to.equal(23)
   })
 
   test("The Quality of an item is never more than 50", () => {
