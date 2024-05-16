@@ -57,13 +57,18 @@ export class Shop {
 
   dayPassed() {
     return this.items.map(item => {
+      if (this.#isSulfuras(item.name)) {
+        return item
+      }
+
       item.updateSellIn(item.sellIn - 1);
 
       if (item.quality === 50) {
         return item
       }
 
-      if (item.name === this.#itemsDict.brie) {
+
+      if (this.#isAgedBrie(item.name) || this.#isBackstagePass(item.name)) {
         item.updateQuality(item.quality + 1);
 
         return item

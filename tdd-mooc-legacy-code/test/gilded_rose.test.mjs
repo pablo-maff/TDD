@@ -4,6 +4,7 @@ import { Item, Shop } from "../src/gilded_rose.mjs";
 
 const backStageItem = "Backstage passes to a TAFKAL80ETC concert"
 const agedBrie = "Aged Brie"
+const sulfuras = "Sulfuras, Hand of Ragnaros"
 
 describe("Gilded Rose", () => {
   test("foo, sellIn 0, quality 0", () => {
@@ -228,5 +229,32 @@ describe("Gilded Rose", () => {
     shop.dayPassed()
 
     expect(shop.items[0].quality).to.equal(50)
+  })
+
+  test("Sulfuras never has to be sold", () => {
+    const shop = new Shop([new Item(sulfuras, 20, 49)])
+
+    shop.dayPassed()
+    shop.dayPassed()
+
+    expect(shop.items[0].sellIn).to.equal(20)
+  })
+
+  test("Sulfuras never decreases in quality", () => {
+    const shop = new Shop([new Item(sulfuras, 20, 49)])
+
+    shop.dayPassed()
+    shop.dayPassed()
+
+    expect(shop.items[0].quality).to.equal(49)
+  })
+
+  test("Backstage passes increases in Quality as its SellIn value approaches", () => {
+    const shop = new Shop([new Item(backStageItem, 20, 20)])
+
+    shop.dayPassed()
+    shop.dayPassed()
+
+    expect(shop.items[0].quality).to.equal(22)
   })
 });
