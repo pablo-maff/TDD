@@ -25,7 +25,7 @@ describe("Gilded Rose", () => {
 
   test("Backstage passes to a TAFKAL80ETC concert, sellIn 0, quality 0", () => {
     const gildedRose = new Shop([new Item(backStageItem, 0, 0)]);
-    const items = gildedRose.updateItems();
+    const items = gildedRose.dayPassed();
     expect(items[0].name).to.equal(backStageItem);
     expect(items[0].sellIn).to.equal(-1);
     expect(items[0].quality).to.equal(0);
@@ -33,7 +33,7 @@ describe("Gilded Rose", () => {
 
   test("Sulfuras, Hand of Ragnaros, sellIn 0, quality 0", () => {
     const gildedRose = new Shop([new Item("Sulfuras, Hand of Ragnaros", 0, 80)]);
-    const items = gildedRose.updateItems();
+    const items = gildedRose.dayPassed();
     expect(items[0].name).to.equal("Sulfuras, Hand of Ragnaros");
     expect(items[0].sellIn).to.equal(0);
     expect(items[0].quality).to.equal(80);
@@ -41,7 +41,7 @@ describe("Gilded Rose", () => {
 
   test("foo, sellIn 0, quality 1", () => {
     const gildedRose = new Shop([new Item("foo", 0, 1)]);
-    const items = gildedRose.updateItems();
+    const items = gildedRose.dayPassed();
     expect(items[0].name).to.equal("foo");
     expect(items[0].sellIn).to.equal(-1);
     expect(items[0].quality).to.equal(0);

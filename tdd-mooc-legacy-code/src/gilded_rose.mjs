@@ -12,7 +12,11 @@ export class Item {
   updateQuality(value) {
     if (value >= 0) {
       this.quality = value
+
+      return this
     }
+
+    this.quality = 0
 
     return this
   }
@@ -71,7 +75,6 @@ export class Shop {
         return item
       }
 
-
       if (this.#isBackstagePass(item.name)) {
         if (item.sellIn < 0) {
           item.updateQuality(0);
@@ -106,9 +109,11 @@ export class Shop {
       }
 
       if (item.sellIn >= 0) {
+        console.log("item", item);
         item.updateQuality(item.quality - 1);
         return item
       }
+      console.log("item2", item);
 
       item.updateQuality(item.quality - 2);
 
