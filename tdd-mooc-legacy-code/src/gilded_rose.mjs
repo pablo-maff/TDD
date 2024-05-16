@@ -105,6 +105,10 @@ export class Shop {
       }
 
       if (this.#isConjured(item.name)) {
+        if (item.sellIn < 0) {
+          return item.updateQuality(item.quality - 4)
+        }
+
         return item.updateQuality(item.quality - 2)
       }
 
