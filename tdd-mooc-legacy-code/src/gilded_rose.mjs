@@ -88,6 +88,14 @@ export class Shop {
     return item.updateQuality(item.quality + 1);
   }
 
+  #updateConjured(item) {
+    if (item.sellIn < 0) {
+      return item.updateQuality(item.quality - 4)
+    }
+
+    return item.updateQuality(item.quality - 2)
+  }
+
   dayPassed() {
     this.items.map(item => {
       if (this.#isSulfuras(item.name)) {
@@ -105,11 +113,7 @@ export class Shop {
       }
 
       if (this.#isConjured(item.name)) {
-        if (item.sellIn < 0) {
-          return item.updateQuality(item.quality - 4)
-        }
-
-        return item.updateQuality(item.quality - 2)
+        return this.#updateConjured(item)
       }
 
       if (item.sellIn >= 0) {
