@@ -165,4 +165,12 @@ describe("Gilded Rose", () => {
 
     expect(shop.items[0].quality).to.equal(0)
   })
+
+  test("Conjured item loses 2 quality points per day before sellIn date", () => {
+    const shop = new Shop([new Item(itemsDict.conjured, 1, 20)])
+
+    shop.dayPassed()
+
+    expect(shop.items[0].quality).to.equal(18)
+  })
 });

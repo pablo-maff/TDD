@@ -1,7 +1,8 @@
 export const itemsDict = {
   backstage: "Backstage passes to a TAFKAL80ETC concert",
   brie: "Aged Brie",
-  sulfuras: "Sulfuras, Hand of Ragnaros"
+  sulfuras: "Sulfuras, Hand of Ragnaros",
+  conjured: "Conjured"
 }
 
 export class Item {
@@ -59,6 +60,10 @@ export class Shop {
     return name === itemsDict.sulfuras
   }
 
+  #isConjured(name) {
+    return name === itemsDict.conjured
+  }
+
   #updateBackstagePass(item) {
     if (item.sellIn < 0) {
       return item.updateQuality(0);
@@ -97,6 +102,10 @@ export class Shop {
 
       if (this.#isAgedBrie(item.name)) {
         return this.#updateAgedBrie(item)
+      }
+
+      if (this.#isConjured(item.name)) {
+        return item.updateQuality(item.quality - 2)
       }
 
       if (item.sellIn >= 0) {
