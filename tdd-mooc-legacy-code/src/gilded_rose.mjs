@@ -54,7 +54,18 @@ export class Shop {
   }
 
   dayPassed() {
-    return this.items.map(item => item.updateSellIn(item.sellIn - 1))
+    return this.items.map(item => {
+      item.updateSellIn(item.sellIn - 1);
+
+      if (item.sellIn >= 0) {
+        item.updateQuality(item.quality - 1);
+        return item
+      }
+
+      item.updateQuality(item.quality - 2);
+
+      return item
+    })
   }
 
   updateItems() {

@@ -183,4 +183,25 @@ describe("Gilded Rose", () => {
 
     expect(updatedShopItemsSellIn).to.deep.equal([0, 10])
   })
+
+  test("Shop updates quality value for all items after a day has passed", () => {
+    const item1 = new Item("foo", 1, 1)
+    const item2 = new Item("bar", 11, 11)
+
+    const shop = new Shop([item1, item2])
+    const shopAfterDayPassed = shop.dayPassed()
+
+    const updatedShopItemsQuality = shopAfterDayPassed.map(item => item.quality)
+
+    expect(updatedShopItemsQuality).to.deep.equal([0, 10])
+  })
+
+  test("Once the sell by date has passed, quality degrades twice as fast", () => {
+    const shop = new Shop([new Item("foo", 1, 10)])
+
+    shop.dayPassed()
+    shop.dayPassed()
+
+    expect(shop.items[0].quality).to.equal(7)
+  })
 });
