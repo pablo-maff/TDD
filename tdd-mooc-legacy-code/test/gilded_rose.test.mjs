@@ -32,11 +32,11 @@ describe("Gilded Rose", () => {
   });
 
   test("Sulfuras, Hand of Ragnaros, sellIn 0, quality 0", () => {
-    const gildedRose = new Shop([new Item("Sulfuras, Hand of Ragnaros", 0, 0)]);
+    const gildedRose = new Shop([new Item("Sulfuras, Hand of Ragnaros", 0, 80)]);
     const items = gildedRose.updateItems();
     expect(items[0].name).to.equal("Sulfuras, Hand of Ragnaros");
     expect(items[0].sellIn).to.equal(0);
-    expect(items[0].quality).to.equal(0);
+    expect(items[0].quality).to.equal(80);
   });
 
   test("foo, sellIn 0, quality 1", () => {
@@ -79,11 +79,11 @@ describe("Gilded Rose", () => {
   });
 
   test("Sulfuras, Hand of Ragnaros, sellIn 99, quality 99", () => {
-    const gildedRose = new Shop([new Item("Sulfuras, Hand of Ragnaros", 99, 99)]);
+    const gildedRose = new Shop([new Item("Sulfuras, Hand of Ragnaros", 99, 80)]);
     const items = gildedRose.updateItems();
     expect(items[0].name).to.equal("Sulfuras, Hand of Ragnaros");
     expect(items[0].sellIn).to.equal(99);
-    expect(items[0].quality).to.equal(99);
+    expect(items[0].quality).to.equal(80);
   });
 
   test("Backstage passes to a TAFKAL80ETC concert, sellIn 5, quality 40", () => {
@@ -135,11 +135,11 @@ describe("Gilded Rose", () => {
   });
 
   test("Sulfuras, Hand of Ragnaros, sellIn -1, quality 99", () => {
-    const gildedRose = new Shop([new Item("Sulfuras, Hand of Ragnaros", -1, 99)]);
+    const gildedRose = new Shop([new Item("Sulfuras, Hand of Ragnaros", -1, 80)]);
     const items = gildedRose.updateItems();
     expect(items[0].name).to.equal("Sulfuras, Hand of Ragnaros");
     expect(items[0].sellIn).to.equal(-1);
-    expect(items[0].quality).to.equal(99);
+    expect(items[0].quality).to.equal(80);
   });
 
 
@@ -232,7 +232,7 @@ describe("Gilded Rose", () => {
   })
 
   test("Sulfuras never has to be sold", () => {
-    const shop = new Shop([new Item(sulfuras, 20, 49)])
+    const shop = new Shop([new Item(sulfuras, 20)])
 
     shop.dayPassed()
     shop.dayPassed()
@@ -240,13 +240,13 @@ describe("Gilded Rose", () => {
     expect(shop.items[0].sellIn).to.equal(20)
   })
 
-  test("Sulfuras never decreases in quality", () => {
-    const shop = new Shop([new Item(sulfuras, 20, 49)])
+  test("Sulfuras never decreases in quality and it is always 80", () => {
+    const shop = new Shop([new Item(sulfuras, 20)])
 
     shop.dayPassed()
     shop.dayPassed()
 
-    expect(shop.items[0].quality).to.equal(49)
+    expect(shop.items[0].quality).to.equal(80)
   })
 
   test("Backstage passes increases in Quality as its SellIn value approaches", () => {

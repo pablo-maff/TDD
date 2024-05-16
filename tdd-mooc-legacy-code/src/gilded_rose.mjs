@@ -3,6 +3,10 @@ export class Item {
     this.name = name;
     this.sellIn = sellIn;
     this.quality = quality;
+
+    if (name === "Sulfuras, Hand of Ragnaros") {
+      this.quality = 80
+    }
   }
 
   updateQuality(value) {
