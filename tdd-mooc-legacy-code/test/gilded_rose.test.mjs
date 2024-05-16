@@ -7,103 +7,12 @@ const agedBrie = "Aged Brie"
 const sulfuras = "Sulfuras, Hand of Ragnaros"
 
 describe("Gilded Rose", () => {
-  test("foo, sellIn 0, quality 0", () => {
-    const gildedRose = new Shop([new Item("foo", 0, 0)]);
-    const items = gildedRose.dayPassed();
-    expect(items[0].name).to.equal("foo");
-    expect(items[0].sellIn).to.equal(-1);
-    expect(items[0].quality).to.equal(0);
-  });
-
-  test("Aged Brie, sellIn 0, quality 0", () => {
-    const gildedRose = new Shop([new Item("Aged Brie", 0, 0)]);
-    const items = gildedRose.dayPassed();
-    expect(items[0].name).to.equal("Aged Brie");
-    expect(items[0].sellIn).to.equal(-1);
-    expect(items[0].quality).to.equal(2);
-  });
-
-  test("Backstage passes to a TAFKAL80ETC concert, sellIn 0, quality 0", () => {
-    const gildedRose = new Shop([new Item(backStageItem, 0, 0)]);
-    const items = gildedRose.dayPassed();
-    expect(items[0].name).to.equal(backStageItem);
-    expect(items[0].sellIn).to.equal(-1);
-    expect(items[0].quality).to.equal(0);
-  });
-
-  test("Sulfuras, Hand of Ragnaros, sellIn 0, quality 0", () => {
-    const gildedRose = new Shop([new Item("Sulfuras, Hand of Ragnaros", 0, 80)]);
-    const items = gildedRose.dayPassed();
-    expect(items[0].name).to.equal("Sulfuras, Hand of Ragnaros");
-    expect(items[0].sellIn).to.equal(0);
-    expect(items[0].quality).to.equal(80);
-  });
-
-  test("foo, sellIn 0, quality 1", () => {
-    const gildedRose = new Shop([new Item("foo", 0, 1)]);
-    const items = gildedRose.dayPassed();
-    expect(items[0].name).to.equal("foo");
-    expect(items[0].sellIn).to.equal(-1);
-    expect(items[0].quality).to.equal(0);
-  });
-
-  test("shop without arguments defaults to empty array", () => {
+  test("Empty shop defaults to empty array", () => {
     const gildedRose = new Shop();
     const items = gildedRose.dayPassed()
     expect(items).to.deep.equal([])
   })
 
-
-  test("Aged Brie, sellIn 0, quality 50", () => {
-    const gildedRose = new Shop([new Item("Aged Brie", 0, 50)]);
-    const items = gildedRose.dayPassed();
-    expect(items[0].name).to.equal("Aged Brie");
-    expect(items[0].sellIn).to.equal(-1);
-    expect(items[0].quality).to.equal(50);
-  });
-
-  test("Sulfuras, Hand of Ragnaros, sellIn 99, quality 80", () => {
-    const gildedRose = new Shop([new Item("Sulfuras, Hand of Ragnaros", 99, 80)]);
-    const items = gildedRose.dayPassed();
-    expect(items[0].name).to.equal("Sulfuras, Hand of Ragnaros");
-    expect(items[0].sellIn).to.equal(99);
-    expect(items[0].quality).to.equal(80);
-  });
-
-  test("Backstage passes to a TAFKAL80ETC concert, sellIn 5, quality 40", () => {
-    const gildedRose = new Shop([new Item(backStageItem, 5, 40)]);
-    const items = gildedRose.dayPassed();
-    expect(items[0].name).to.equal(backStageItem);
-    expect(items[0].sellIn).to.equal(4);
-    expect(items[0].quality).to.equal(43);
-  });
-
-  test("Backstage passes to a TAFKAL80ETC concert, sellIn 10, quality 50", () => {
-    const gildedRose = new Shop([new Item(backStageItem, 10, 50)]);
-    const items = gildedRose.dayPassed();
-    expect(items[0].name).to.equal(backStageItem);
-    expect(items[0].sellIn).to.equal(9);
-    expect(items[0].quality).to.equal(50);
-  });
-
-  test("foo, sellIn 1, quality 10", () => {
-    const gildedRose = new Shop([new Item("foo", 1, 10)]);
-    const items = gildedRose.dayPassed();
-    expect(items[0].name).to.equal("foo");
-    expect(items[0].sellIn).to.equal(0);
-    expect(items[0].quality).to.equal(9);
-  });
-
-  test("Sulfuras, Hand of Ragnaros, sellIn -1, quality 99", () => {
-    const gildedRose = new Shop([new Item("Sulfuras, Hand of Ragnaros", -1, 80)]);
-    const items = gildedRose.dayPassed();
-    expect(items[0].name).to.equal("Sulfuras, Hand of Ragnaros");
-    expect(items[0].sellIn).to.equal(-1);
-    expect(items[0].quality).to.equal(80);
-  });
-
-
-  // * ------ New tests for refactoring after reading the requirements using TDD + parallel changes strategy
   test("Item has a sellIn value", () => {
     const item = new Item("foo", 1, 1)
 
@@ -123,9 +32,26 @@ describe("Gilded Rose", () => {
   })
 
   test("Item can update quality value", () => {
-    const item = new Item("foo", 1, 1).updateQuality(2)
+    const item = new Item("foo", 1, 0).updateQuality(1)
 
-    expect(item.quality).to.equal(2)
+    expect(item.quality).to.equal(1)
+  })
+
+  test("Item maximum quality is 50", () => {
+    const item = new Item("foo", 1, 51)
+    expect(item.quality).to.equal(50)
+  })
+
+  test("Item quality maximum updated value is 50", () => {
+    const item = new Item("foo", 1, 1).updateQuality(51)
+
+    expect(item.quality).to.equal(50)
+  })
+
+  test("Item quality minimum updated value is 0", () => {
+    const item = new Item("foo", 1, 1).updateQuality(-1)
+
+    expect(item.quality).to.equal(0)
   })
 
   test("Item has a sellIn value", () => {
@@ -167,12 +93,6 @@ describe("Gilded Rose", () => {
     expect(shop.items[0].quality).to.equal(7)
   })
 
-  test("The quality of an item is never negative", () => {
-    const item = new Item("foo", 1, 0).updateQuality(-1)
-
-    expect(item.quality).to.equal(0)
-  })
-
   test("Aged Brie increases in Quality the older it gets", () => {
     const shop = new Shop([new Item(agedBrie, 20, 20)])
 
@@ -191,16 +111,7 @@ describe("Gilded Rose", () => {
     expect(shop.items[0].quality).to.equal(23)
   })
 
-  test("The Quality of an item is never more than 50", () => {
-    const shop = new Shop([new Item(agedBrie, 20, 49)])
-
-    shop.dayPassed()
-    shop.dayPassed()
-
-    expect(shop.items[0].quality).to.equal(50)
-  })
-
-  test("Sulfuras never has to be sold", () => {
+  test("Sulfuras never has to be sold so sellIn remains the same", () => {
     const shop = new Shop([new Item(sulfuras, 20)])
 
     shop.dayPassed()
@@ -227,28 +138,33 @@ describe("Gilded Rose", () => {
     expect(shop.items[0].quality).to.equal(22)
   })
 
-  test("Backstage passes quality increases by 2 when there are 10 days or less for the concert", () => {
-    const shop = new Shop([new Item(backStageItem, 10, 20)])
+  test("Backstage passes quality increases by 2 when there are 10 days or less left for the concert", () => {
+    const shop = new Shop([new Item(backStageItem, 11, 20)])
 
     shop.dayPassed()
-    shop.dayPassed()
 
-    expect(shop.items[0].quality).to.equal(24)
+    expect(shop.items[0].quality).to.equal(22)
   })
 
-  test("Backstage passes quality increases by 3 when there are 5 days or less for the concert", () => {
-    const shop = new Shop([new Item(backStageItem, 5, 20)])
+  test("Backstage passes quality increases by 3 when there are 5 days or less left for the concert 1", () => {
+    const shop = new Shop([new Item(backStageItem, 6, 20)])
 
     shop.dayPassed()
-    shop.dayPassed()
 
-    expect(shop.items[0].quality).to.equal(26)
+    expect(shop.items[0].quality).to.equal(23)
   })
 
-  test("Backstage passes quality drops to 0 after the concert", () => {
+  test("Backstage passes quality increases by 3 when there is 1 day left for the concert 2", () => {
     const shop = new Shop([new Item(backStageItem, 1, 20)])
 
     shop.dayPassed()
+
+    expect(shop.items[0].quality).to.equal(23)
+  })
+
+  test("Backstage passes quality drops to 0 after the concert", () => {
+    const shop = new Shop([new Item(backStageItem, 0, 20)])
+
     shop.dayPassed()
 
     expect(shop.items[0].quality).to.equal(0)

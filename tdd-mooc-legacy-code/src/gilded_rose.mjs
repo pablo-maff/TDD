@@ -4,24 +4,28 @@ export class Item {
     this.sellIn = sellIn;
     this.quality = quality;
 
+    if (quality >= 51) {
+      this.quality = 50
+    }
+
     if (name === "Sulfuras, Hand of Ragnaros") {
       this.quality = 80
-    } else if (quality > 50) {
-      throw new Error("Quality can't be greater than 50")
     }
   }
 
   updateQuality(value) {
-    if (value > 50) {
+    if (value >= 51) {
+      this.quality = 50
+
       return this
     }
 
-    if (value >= 0) {
-      this.quality = value
+    if (value <= -1) {
+      this.quality = 0
       return this
     }
 
-    this.quality = 0
+    this.quality = value
     return this
   }
 
@@ -62,10 +66,6 @@ export class Shop {
       }
 
       item.updateSellIn(item.sellIn - 1);
-
-      if (item.quality === 50) {
-        return item
-      }
 
       if (this.#isBackstagePass(item.name)) {
         if (item.sellIn < 0) {
