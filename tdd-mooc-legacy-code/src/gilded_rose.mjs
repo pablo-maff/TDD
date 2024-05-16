@@ -1,3 +1,9 @@
+export const itemsDict = {
+  backstage: "Backstage passes to a TAFKAL80ETC concert",
+  brie: "Aged Brie",
+  sulfuras: "Sulfuras, Hand of Ragnaros"
+}
+
 export class Item {
   constructor(name, sellIn, quality) {
     this.name = name;
@@ -8,7 +14,7 @@ export class Item {
       this.quality = 50
     }
 
-    if (name === "Sulfuras, Hand of Ragnaros") {
+    if (name === itemsDict.sulfuras) {
       this.quality = 80
     }
   }
@@ -41,22 +47,16 @@ export class Shop {
     this.items = items;
   }
 
-  #itemsDict = {
-    backstage: "Backstage passes to a TAFKAL80ETC concert",
-    brie: "Aged Brie",
-    sulfuras: "Sulfuras, Hand of Ragnaros"
-  }
-
   #isBackstagePass(name) {
-    return name === this.#itemsDict.backstage
+    return name === itemsDict.backstage
   }
 
   #isAgedBrie(name) {
-    return name === this.#itemsDict.brie
+    return name === itemsDict.brie
   }
 
   #isSulfuras(name) {
-    return name === this.#itemsDict.sulfuras
+    return name === itemsDict.sulfuras
   }
 
   dayPassed() {

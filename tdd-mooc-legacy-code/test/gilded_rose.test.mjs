@@ -1,10 +1,6 @@
 import { describe, test } from "vitest";
 import { expect } from "chai";
-import { Item, Shop } from "../src/gilded_rose.mjs";
-
-const backStageItem = "Backstage passes to a TAFKAL80ETC concert"
-const agedBrie = "Aged Brie"
-const sulfuras = "Sulfuras, Hand of Ragnaros"
+import { Item, Shop, itemsDict } from "../src/gilded_rose.mjs";
 
 describe("Gilded Rose", () => {
   test("Empty shop defaults to empty array", () => {
@@ -94,7 +90,7 @@ describe("Gilded Rose", () => {
   })
 
   test("Aged Brie increases in Quality the older it gets", () => {
-    const shop = new Shop([new Item(agedBrie, 20, 20)])
+    const shop = new Shop([new Item(itemsDict.brie, 20, 20)])
 
     shop.dayPassed()
     shop.dayPassed()
@@ -103,7 +99,7 @@ describe("Gilded Rose", () => {
   })
 
   test("Aged Brie increases in Quality twice as fast after sellIn is negative", () => {
-    const shop = new Shop([new Item(agedBrie, 1, 20)])
+    const shop = new Shop([new Item(itemsDict.brie, 1, 20)])
 
     shop.dayPassed()
     shop.dayPassed()
@@ -112,7 +108,7 @@ describe("Gilded Rose", () => {
   })
 
   test("Sulfuras never has to be sold so sellIn remains the same", () => {
-    const shop = new Shop([new Item(sulfuras, 20)])
+    const shop = new Shop([new Item(itemsDict.sulfuras, 20)])
 
     shop.dayPassed()
     shop.dayPassed()
@@ -121,7 +117,7 @@ describe("Gilded Rose", () => {
   })
 
   test("Sulfuras never decreases in quality and it is always 80", () => {
-    const shop = new Shop([new Item(sulfuras, 20)])
+    const shop = new Shop([new Item(itemsDict.sulfuras, 20)])
 
     shop.dayPassed()
     shop.dayPassed()
@@ -130,7 +126,7 @@ describe("Gilded Rose", () => {
   })
 
   test("Backstage passes increases in Quality as its SellIn value approaches", () => {
-    const shop = new Shop([new Item(backStageItem, 20, 20)])
+    const shop = new Shop([new Item(itemsDict.backstage, 20, 20)])
 
     shop.dayPassed()
     shop.dayPassed()
@@ -139,7 +135,7 @@ describe("Gilded Rose", () => {
   })
 
   test("Backstage passes quality increases by 2 when there are 10 days or less left for the concert", () => {
-    const shop = new Shop([new Item(backStageItem, 11, 20)])
+    const shop = new Shop([new Item(itemsDict.backstage, 11, 20)])
 
     shop.dayPassed()
 
@@ -147,7 +143,7 @@ describe("Gilded Rose", () => {
   })
 
   test("Backstage passes quality increases by 3 when there are 5 days or less left for the concert 1", () => {
-    const shop = new Shop([new Item(backStageItem, 6, 20)])
+    const shop = new Shop([new Item(itemsDict.backstage, 6, 20)])
 
     shop.dayPassed()
 
@@ -155,7 +151,7 @@ describe("Gilded Rose", () => {
   })
 
   test("Backstage passes quality increases by 3 when there is 1 day left for the concert 2", () => {
-    const shop = new Shop([new Item(backStageItem, 1, 20)])
+    const shop = new Shop([new Item(itemsDict.backstage, 1, 20)])
 
     shop.dayPassed()
 
@@ -163,7 +159,7 @@ describe("Gilded Rose", () => {
   })
 
   test("Backstage passes quality drops to 0 after the concert", () => {
-    const shop = new Shop([new Item(backStageItem, 0, 20)])
+    const shop = new Shop([new Item(itemsDict.backstage, 0, 20)])
 
     shop.dayPassed()
 
