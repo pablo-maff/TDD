@@ -68,7 +68,23 @@ export class Shop {
       }
 
 
-      if (this.#isAgedBrie(item.name) || this.#isBackstagePass(item.name)) {
+      if (this.#isBackstagePass(item.name)) {
+        if (item.sellIn <= 5) {
+          item.updateQuality(item.quality + 3);
+          return item
+        }
+
+        if (item.sellIn <= 10) {
+          item.updateQuality(item.quality + 2);
+          return item
+        }
+
+        item.updateQuality(item.quality + 1);
+
+        return item
+      }
+
+      if (this.#isAgedBrie(item.name)) {
         item.updateQuality(item.quality + 1);
 
         return item

@@ -257,4 +257,22 @@ describe("Gilded Rose", () => {
 
     expect(shop.items[0].quality).to.equal(22)
   })
+
+  test("Backstage passes quality increases by 2 when there are 10 days or less for the concert", () => {
+    const shop = new Shop([new Item(backStageItem, 10, 20)])
+
+    shop.dayPassed()
+    shop.dayPassed()
+
+    expect(shop.items[0].quality).to.equal(24)
+  })
+
+  test("Backstage passes quality increases by 3 when there are 5 days or less for the concert", () => {
+    const shop = new Shop([new Item(backStageItem, 5, 20)])
+
+    shop.dayPassed()
+    shop.dayPassed()
+
+    expect(shop.items[0].quality).to.equal(26)
+  })
 });
