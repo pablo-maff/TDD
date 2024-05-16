@@ -53,6 +53,10 @@ export class Shop {
     return name === this.#specialItemsDict.sulfuras
   }
 
+  dayPassed() {
+    return this.items.map(item => item.updateSellIn(item.sellIn - 1))
+  }
+
   updateItems() {
     for (var i = 0; i < this.items.length; i++) {
       const currentItem = this.items[i]

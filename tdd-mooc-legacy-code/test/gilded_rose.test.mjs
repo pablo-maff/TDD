@@ -139,4 +139,48 @@ describe("Gilded Rose", () => {
     expect(items[0].sellIn).to.equal(-1);
     expect(items[0].quality).to.equal(99);
   });
+
+
+  // * ------ New tests for refactoring after reading the requirements using TDD + parallel changes strategy
+  test("Item has a sellIn value", () => {
+    const item = new Item("foo", 1, 1)
+
+    expect(item.sellIn).to.equal(1)
+  })
+
+  test("Item can update sellIn value", () => {
+    const item = new Item("foo", 1, 1).updateSellIn(2)
+
+    expect(item.sellIn).to.equal(2)
+  })
+
+  test("Item has a quality value", () => {
+    const item = new Item("foo", 1, 1)
+
+    expect(item.quality).to.equal(1)
+  })
+
+  test("Item can update quality value", () => {
+    const item = new Item("foo", 1, 1).updateQuality(2)
+
+    expect(item.quality).to.equal(2)
+  })
+
+  test("Item has a sellIn value", () => {
+    const item = new Item("foo", 1, 1)
+
+    expect(item.sellIn).to.equal(1)
+  })
+
+  test("Shop updates sellIn value for all items after a day has passed", () => {
+    const item1 = new Item("foo", 1, 1)
+    const item2 = new Item("bar", 11, 11)
+
+    const shop = new Shop([item1, item2])
+    const shopAfterDayPassed = shop.dayPassed()
+
+    const updatedShopItemsSellIn = shopAfterDayPassed.map(item => item.sellIn)
+
+    expect(updatedShopItemsSellIn).to.deep.equal([0, 10])
+  })
 });
