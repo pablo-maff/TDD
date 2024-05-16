@@ -43,18 +43,6 @@ export class Shop {
     sulfuras: "Sulfuras, Hand of Ragnaros"
   }
 
-  #updateItem(updatedItem) {
-    this.items = this.items.map(item => item.name !== updatedItem.name ? item : updatedItem)
-  }
-
-  #updateQuality(currentItem, newValue) {
-    this.#updateItem(currentItem.updateQuality(newValue))
-  }
-
-  #updateSellIn(currentItem, newValue) {
-    this.#updateItem(currentItem.updateSellIn(newValue))
-  }
-
   #isBackstagePass(name) {
     return name === this.#itemsDict.backstage
   }
