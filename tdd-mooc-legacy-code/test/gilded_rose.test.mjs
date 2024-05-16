@@ -204,4 +204,10 @@ describe("Gilded Rose", () => {
 
     expect(shop.items[0].quality).to.equal(7)
   })
+
+  test("The quality of an item is never negative", () => {
+    const item = new Item("foo", 1, 0).updateQuality(-1)
+
+    expect(item.quality).to.equal(0)
+  })
 });

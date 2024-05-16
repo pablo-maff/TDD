@@ -6,7 +6,9 @@ export class Item {
   }
 
   updateQuality(value) {
-    this.quality = value
+    if (value >= 0) {
+      this.quality = value
+    }
 
     return this
   }
