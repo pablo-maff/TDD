@@ -220,4 +220,13 @@ describe("Gilded Rose", () => {
 
     expect(shop.items[0].quality).to.equal(22)
   })
+
+  test("The Quality of an item is never more than 50", () => {
+    const shop = new Shop([new Item(agedBrie, 20, 49)])
+
+    shop.dayPassed()
+    shop.dayPassed()
+
+    expect(shop.items[0].quality).to.equal(50)
+  })
 });

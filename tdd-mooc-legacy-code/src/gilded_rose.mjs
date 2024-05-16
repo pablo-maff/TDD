@@ -59,6 +59,10 @@ export class Shop {
     return this.items.map(item => {
       item.updateSellIn(item.sellIn - 1);
 
+      if (item.quality === 50) {
+        return item
+      }
+
       if (item.name === this.#itemsDict.brie) {
         item.updateQuality(item.quality + 1);
 
