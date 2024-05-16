@@ -275,4 +275,13 @@ describe("Gilded Rose", () => {
 
     expect(shop.items[0].quality).to.equal(26)
   })
+
+  test("Backstage passes quality drops to 0 after the concert", () => {
+    const shop = new Shop([new Item(backStageItem, 1, 20)])
+
+    shop.dayPassed()
+    shop.dayPassed()
+
+    expect(shop.items[0].quality).to.equal(0)
+  })
 });

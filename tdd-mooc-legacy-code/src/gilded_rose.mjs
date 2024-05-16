@@ -69,6 +69,11 @@ export class Shop {
 
 
       if (this.#isBackstagePass(item.name)) {
+        if (item.sellIn < 0) {
+          item.updateQuality(0);
+          return item
+        }
+
         if (item.sellIn <= 5) {
           item.updateQuality(item.quality + 3);
           return item
