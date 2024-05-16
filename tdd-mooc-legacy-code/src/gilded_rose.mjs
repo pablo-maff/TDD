@@ -61,39 +61,30 @@ export class Shop {
 
   #updateBackstagePass(item) {
     if (item.sellIn < 0) {
-      item.updateQuality(0);
-      return item
+      return item.updateQuality(0);
     }
 
     if (item.sellIn <= 5) {
-      item.updateQuality(item.quality + 3);
-      return item
+      return item.updateQuality(item.quality + 3);
     }
 
     if (item.sellIn <= 10) {
-      item.updateQuality(item.quality + 2);
-      return item
+      return item.updateQuality(item.quality + 2);
     }
 
-    item.updateQuality(item.quality + 1);
-
-    return item
+    return item.updateQuality(item.quality + 1);
   }
 
   #updateAgedBrie(item) {
     if (item.sellIn < 0) {
-      item.updateQuality(item.quality + 2);
-
-      return item
+      return item.updateQuality(item.quality + 2);
     }
 
-    item.updateQuality(item.quality + 1);
-
-    return item
+    return item.updateQuality(item.quality + 1);
   }
 
   dayPassed() {
-    return this.items.map(item => {
+    this.items.map(item => {
       if (this.#isSulfuras(item.name)) {
         return item
       }
@@ -109,13 +100,10 @@ export class Shop {
       }
 
       if (item.sellIn >= 0) {
-        item.updateQuality(item.quality - 1);
-        return item
+        return item.updateQuality(item.quality - 1);
       }
 
-      item.updateQuality(item.quality - 2);
-
-      return item
+      return item.updateQuality(item.quality - 2);
     })
   }
 }

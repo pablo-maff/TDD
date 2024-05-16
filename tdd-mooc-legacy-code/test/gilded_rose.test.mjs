@@ -4,9 +4,9 @@ import { Item, Shop, itemsDict } from "../src/gilded_rose.mjs";
 
 describe("Gilded Rose", () => {
   test("Empty shop defaults to empty array", () => {
-    const gildedRose = new Shop();
-    const items = gildedRose.dayPassed()
-    expect(items).to.deep.equal([])
+    const shop = new Shop();
+    shop.dayPassed()
+    expect(shop.items).to.deep.equal([])
   })
 
   test("Item has a sellIn value", () => {
@@ -61,9 +61,9 @@ describe("Gilded Rose", () => {
     const item2 = new Item("bar", 11, 11)
 
     const shop = new Shop([item1, item2])
-    const shopAfterDayPassed = shop.dayPassed()
+    shop.dayPassed()
 
-    const updatedShopItemsSellIn = shopAfterDayPassed.map(item => item.sellIn)
+    const updatedShopItemsSellIn = shop.items.map(item => item.sellIn)
 
     expect(updatedShopItemsSellIn).to.deep.equal([0, 10])
   })
@@ -73,9 +73,9 @@ describe("Gilded Rose", () => {
     const item2 = new Item("bar", 11, 11)
 
     const shop = new Shop([item1, item2])
-    const shopAfterDayPassed = shop.dayPassed()
+    shop.dayPassed()
 
-    const updatedShopItemsQuality = shopAfterDayPassed.map(item => item.quality)
+    const updatedShopItemsQuality = shop.items.map(item => item.quality)
 
     expect(updatedShopItemsQuality).to.deep.equal([0, 10])
   })
