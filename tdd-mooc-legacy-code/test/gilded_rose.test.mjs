@@ -3,6 +3,7 @@ import { expect } from "chai";
 import { Item, Shop } from "../src/gilded_rose.mjs";
 
 const backStageItem = "Backstage passes to a TAFKAL80ETC concert"
+const agedBrie = "Aged Brie"
 
 describe("Gilded Rose", () => {
   test("foo, sellIn 0, quality 0", () => {
@@ -209,5 +210,14 @@ describe("Gilded Rose", () => {
     const item = new Item("foo", 1, 0).updateQuality(-1)
 
     expect(item.quality).to.equal(0)
+  })
+
+  test("Aged Brie increases in Quality the older it gets", () => {
+    const shop = new Shop([new Item(agedBrie, 20, 20)])
+
+    shop.dayPassed()
+    shop.dayPassed()
+
+    expect(shop.items[0].quality).to.equal(22)
   })
 });

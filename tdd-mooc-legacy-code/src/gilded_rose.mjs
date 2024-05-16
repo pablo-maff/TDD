@@ -25,7 +25,7 @@ export class Shop {
     this.items = items;
   }
 
-  #specialItemsDict = {
+  #itemsDict = {
     backstage: "Backstage passes to a TAFKAL80ETC concert",
     brie: "Aged Brie",
     sulfuras: "Sulfuras, Hand of Ragnaros"
@@ -44,20 +44,26 @@ export class Shop {
   }
 
   #isBackstagePass(name) {
-    return name === this.#specialItemsDict.backstage
+    return name === this.#itemsDict.backstage
   }
 
   #isAgedBrie(name) {
-    return name === this.#specialItemsDict.brie
+    return name === this.#itemsDict.brie
   }
 
   #isSulfuras(name) {
-    return name === this.#specialItemsDict.sulfuras
+    return name === this.#itemsDict.sulfuras
   }
 
   dayPassed() {
     return this.items.map(item => {
       item.updateSellIn(item.sellIn - 1);
+
+      if (item.name === this.#itemsDict.brie) {
+        item.updateQuality(item.quality + 1);
+
+        return item
+      }
 
       if (item.sellIn >= 0) {
         item.updateQuality(item.quality - 1);
