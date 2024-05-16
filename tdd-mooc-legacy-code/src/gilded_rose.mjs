@@ -6,18 +6,22 @@ export class Item {
 
     if (name === "Sulfuras, Hand of Ragnaros") {
       this.quality = 80
+    } else if (quality > 50) {
+      throw new Error("Quality can't be greater than 50")
     }
   }
 
   updateQuality(value) {
+    if (value > 50) {
+      return this
+    }
+
     if (value >= 0) {
       this.quality = value
-
       return this
     }
 
     this.quality = 0
-
     return this
   }
 
@@ -109,55 +113,13 @@ export class Shop {
       }
 
       if (item.sellIn >= 0) {
-        console.log("item", item);
         item.updateQuality(item.quality - 1);
         return item
       }
-      console.log("item2", item);
 
       item.updateQuality(item.quality - 2);
 
       return item
     })
-  }
-
-  updateItems() {
-    for (var i = 0; i < this.items.length; i++) {
-      const currentItem = this.items[i]
-
-      if (!this.#isAgedBrie(currentItem.name) && !this.#isBackstagePass(currentItem.name) && !this.#isSulfuras(currentItem.name) && currentItem.quality > 0) {
-        this.#updateQuality(currentItem, currentItem.quality - 1)
-
-      }
-
-      if (currentItem.quality < 50 && (this.#isAgedBrie(currentItem.name) || this.#isBackstagePass(currentItem.name))) {
-        this.#updateQuality(currentItem, currentItem.quality + 1)
-        if (this.#isBackstagePass(currentItem.name) && currentItem.sellIn < 11 && currentItem.quality < 50) {
-          if (currentItem.sellIn < 6) {
-            this.#updateQuality(currentItem, currentItem.quality + 2)
-          } else {
-            this.#updateQuality(currentItem, currentItem.quality + 1)
-          }
-        }
-      }
-
-      if (!this.#isSulfuras(currentItem.name)) {
-        this.#updateSellIn(currentItem, currentItem.sellIn - 1)
-      }
-
-      if (currentItem.sellIn < 0) {
-        if (this.#isBackstagePass(currentItem.name)) {
-          this.#updateQuality(currentItem, currentItem.quality - currentItem.quality)
-        }
-        if (this.#isAgedBrie(currentItem.name) && currentItem.quality < 50) {
-          this.#updateQuality(currentItem, currentItem.quality + currentItem.quality)
-        }
-        if (!this.#isSulfuras(currentItem.name) && !this.#isAgedBrie(currentItem.name) && currentItem.quality > 0) {
-          this.#updateQuality(currentItem, currentItem.quality - 1)
-        }
-      }
-    }
-
-    return this.items;
   }
 }
