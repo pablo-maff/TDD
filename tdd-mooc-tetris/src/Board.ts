@@ -28,12 +28,17 @@ class MovableShape implements Shape {
     }
 
     // * If col is not specified the shape is being dropped into the board so calculating the initial positions is necessary
-
-    this.#row = shape.width() === 1 ? 0 : -1;
+    // * If shape is a block then initial row is 0, for tetrominoes it is -1
+    this.#row = this.#isBlock(shape) ? 0 : -1;
 
     const middleCol = Math.floor((row - shape.width()) / 2);
 
     this.#col = middleCol;
+  }
+
+  // * A block is a 1*1 piece used to mock a Tetromino for some basic tests
+  #isBlock(shape: Shape) {
+    return shape.width() === 1;
   }
 
   floorKick(): MovableShape {
