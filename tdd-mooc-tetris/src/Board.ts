@@ -1,6 +1,7 @@
 import { EventsManager } from "./EventsManager.js";
 import { EmptyBlock, I_SHAPES, Shape, shapeToString } from "./shapes.js";
 import { LevelsFixedGoal } from "./LevelsFixedGoal.js";
+import { isMovableShape } from "./utils.js";
 
 export class Point {
   row: number;
@@ -12,7 +13,7 @@ export class Point {
   }
 }
 
-class MovableShape implements Shape {
+export class MovableShape implements Shape {
   #shape: Shape;
   #row: number; // * The row of the topmost row of the shape
   #col: number; // * The column of the leftmost column of the shape
@@ -65,7 +66,7 @@ class MovableShape implements Shape {
     return new MovableShape(this.#shape.rotateLeft(), this.#row < 0 ? 0 : this.#row, this.#col);
   }
 
-  // * Returns the block starting coordinates of the shape relative to the board
+  // * Returns the starting coordinates of the shape relative to the board
   nonEmptyBlocks(): Point[] {
     const points = [];
     for (let row = this.#row; row < this.height(); row++) {
@@ -424,14 +425,12 @@ export class Board implements Shape {
   blockAt(row: number, col: number): string {
     const emptyBlock = this.#immobile[row][col];
 
-    if (!this.hasFalling()) {
-      return emptyBlock;
-    }
+    if (isMovableShape(this.#falling)) {
+      const block = this.#falling.blockAt(row, col);
 
-    const block = this.#falling!.blockAt(row, col);
-
-    if (block !== EmptyBlock) {
-      return block;
+      if (block !== EmptyBlock) {
+        return block;
+      }
     }
 
     return emptyBlock;
