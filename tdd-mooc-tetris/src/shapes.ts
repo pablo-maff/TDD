@@ -105,6 +105,8 @@ export const Z_SHAPES = [
    .Z.`,
 ];
 
-export function isMovableShape(shape: Shape | null): shape is MovableShape {
-  return shape instanceof MovableShape;
+export function isMovableShape(shape: Shape | null | undefined): shape is Shape {
+  if (!shape) return false;
+
+  return "width" in shape && "height" in shape && "blockAt" in shape && "rotateRight" in shape && "rotateLeft" in shape;
 }

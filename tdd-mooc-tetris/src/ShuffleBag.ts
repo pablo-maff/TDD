@@ -1,4 +1,4 @@
-import { Shape } from "./shapes.js";
+import { isMovableShape, Shape } from "./shapes.js";
 import { getRandomInt } from "./utils.js";
 
 export class ShuffleBag {
@@ -23,8 +23,8 @@ export class ShuffleBag {
 
     const nextItem = this.#tempBag.pop();
 
-    if (!nextItem) {
-      throw new Error("Error: unable to find next item");
+    if (!isMovableShape(nextItem)) {
+      throw new Error("Error: next item is not a MovableShape or it doesn't exist");
     }
 
     return nextItem;
