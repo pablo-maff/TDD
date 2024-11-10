@@ -1,3 +1,5 @@
+import { MovableShape } from "./Board.js";
+
 export interface Shape {
   width(): number;
 
@@ -102,3 +104,7 @@ export const Z_SHAPES = [
    .ZZ
    .Z.`,
 ];
+
+export function isMovableShape(shape: Shape | null): shape is MovableShape {
+  return shape instanceof MovableShape;
+}

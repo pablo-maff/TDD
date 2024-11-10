@@ -1,7 +1,6 @@
 import { EventsManager } from "./EventsManager.js";
-import { EmptyBlock, I_SHAPES, Shape, shapeToString } from "./shapes.js";
+import { EmptyBlock, I_SHAPES, isMovableShape, Shape, shapeToString } from "./shapes.js";
 import { LevelsFixedGoal } from "./LevelsFixedGoal.js";
-import { isMovableShape } from "./utils.js";
 
 export class Point {
   row: number;
