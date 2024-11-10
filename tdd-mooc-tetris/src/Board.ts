@@ -395,6 +395,7 @@ export class Board implements Shape {
     if (!lineClearIndeces.length) {
       return;
     }
+
     lineClearIndeces.forEach((index) => {
       const beforeCleared = this.#immobile.slice(0, index);
       const afterCleared = this.#immobile.slice(index + 1);
