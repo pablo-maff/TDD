@@ -426,12 +426,8 @@ export class Board implements Shape {
   blockAt(row: number, col: number): string {
     const emptyBlock = this.#immobile[row][col];
 
-    if (isMovableShape(this.#falling)) {
-      const block = this.#falling.blockAt(row, col);
-
-      if (block !== EmptyBlock) {
-        return block;
-      }
+    if (isMovableShape(this.#falling) && this.#falling.blockAt(row, col) !== EmptyBlock) {
+      return this.#falling.blockAt(row, col);
     }
 
     return emptyBlock;
