@@ -392,17 +392,18 @@ export class Board implements Shape {
   #clearLine(): void {
     const lineClearIndeces = this.#findLineClearIndeces();
 
-    if (lineClearIndeces.length) {
-      lineClearIndeces.forEach((index) => {
-        const beforeCleared = this.#immobile.slice(0, index);
-        const afterCleared = this.#immobile.slice(index + 1);
-        const newLine = new Array(this.#width).fill(EmptyBlock);
-
-        this.#immobile = [newLine].concat(beforeCleared, afterCleared);
-      });
-
-      this.events.notify({ clearedLines: lineClearIndeces.length, level: this.level });
+    if (!lineClearIndeces.length) {
+      return;
     }
+    lineClearIndeces.forEach((index) => {
+      const beforeCleared = this.#immobile.slice(0, index);
+      const afterCleared = this.#immobile.slice(index + 1);
+      const newLine = new Array(this.#width).fill(EmptyBlock);
+
+      this.#immobile = [newLine].concat(beforeCleared, afterCleared);
+    });
+
+    this.events.notify({ clearedLines: lineClearIndeces.length, level: this.level });
   }
 
   #nextRowIsEmpty(): boolean {
