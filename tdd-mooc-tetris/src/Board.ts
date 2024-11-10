@@ -130,9 +130,7 @@ export class Board implements Shape {
 
     // * For loaded boards
     if (immobile) {
-      this.#immobile = immobile;
-      this.#level = new LevelsFixedGoal(level);
-      this.events.subscribe(this.#level);
+      this.loadGame(immobile, level);
       return;
     }
 
@@ -146,6 +144,12 @@ export class Board implements Shape {
       this.#immobile[row] = new Array(width).fill(EmptyBlock);
     }
 
+    this.#level = new LevelsFixedGoal(level);
+    this.events.subscribe(this.#level);
+  }
+
+  loadGame(immobile: string[][], level: number) {
+    this.#immobile = immobile;
     this.#level = new LevelsFixedGoal(level);
     this.events.subscribe(this.#level);
   }
