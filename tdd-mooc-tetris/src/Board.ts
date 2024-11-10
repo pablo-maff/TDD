@@ -137,6 +137,10 @@ export class Board implements Shape {
     }
 
     // * For fresh boards
+    this.startNewGame(width, height, level);
+  }
+
+  startNewGame(width: number, height: number, level: number) {
     this.#immobile = new Array(height);
     for (let row = 0; row < height; row++) {
       this.#immobile[row] = new Array(width).fill(EmptyBlock);
